@@ -5,85 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BetterStayOnline"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000"
+        Title="MainWindow" Height="600" Width="920"
         WindowStyle="None"
         ResizeMode="NoResize"
-        Background="#181735">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+        Background="Transparent"
+        AllowsTransparency="True">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Close"
+                        Executed="CloseCommandHandler"/>
+    </Window.CommandBindings>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-
-        <Grid Background="#0f0f2d"
-              Grid.ColumnSpan="2"
-              MouseDown="Grid_MouseDown">
+    <Border Background="#222F69"
+            CornerRadius="20"
+            BorderThickness="0,0,0,0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Better Stay Online"
-                       Foreground="White"
-                       Grid.Column="0"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       />
+            <Border Grid.ColumnSpan="2"
+                Background="#1B265A"
+                BorderThickness="0"
+                    CornerRadius="20,20,0,0">
+                <Grid
+                  Background="Transparent"
+                MouseDown="Grid_MouseDown">
 
-            <Button Content="x"
-                        Foreground="White"
-                        FontSize="14"
-                        FontWeight="Medium"
-                        Grid.Column="5"
-                    Margin="120,4,0,4">
-
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="Red"/>
-                        <Setter Property="Cursor" Value="Hand"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="Blue"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-
-                <Button.Template>
-                    <ControlTemplate>
-                        <Border Width="18"
-                                    CornerRadius="13"
-                                    Background="{TemplateBinding Background}">
-                            <ContentPresenter VerticalAlignment="Center"
-                                              HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </Grid>
-
-        <StackPanel Grid.Row="1">
-            <StackPanel Orientation="Horizontal">
                 <Button Content="x"
-                        Foreground="White"
-                        FontSize="14"
-                        FontWeight="Medium"
-                        Grid.Column="1"
-                        Panel.ZIndex="1">
+                    Foreground="White"
+                    FontSize="14"
+                    FontWeight="Medium"
+                    Grid.Column="5"
+                    Margin="880,4,0,4"
+                    Command="ApplicationCommands.Close">
 
                     <Button.Style>
                         <Style TargetType="Button">
-                            <Setter Property="Background" Value="Red"/>
+                            <Setter Property="Background" Value="#951d1d"/>
                             <Setter Property="Cursor" Value="Hand"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -95,8 +59,9 @@
 
                     <Button.Template>
                         <ControlTemplate>
-                            <Border Width="24"
-                                    CornerRadius="12"
+                            <Border Width="26"
+                                    Height="26"
+                                    CornerRadius="16"
                                     Background="{TemplateBinding Background}">
                                 <ContentPresenter VerticalAlignment="Center"
                                               HorizontalAlignment="Center"/>
@@ -104,7 +69,34 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+            </Grid>
+            </Border>
+
+            <TextBlock Text="Better Stay Online!"
+                       Foreground="#AFBCF5"
+                       FontSize="18"
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       />
+
+            <StackPanel Grid.Row="1">
+                <RadioButton Content="Run Test"
+                                 Height="50"
+                                 Foreground="White"
+                                 FontSize="14"
+                             Style="{StaticResource MenuButtonTheme}"/>
+                <RadioButton Content="View Results"
+                                 Height="50"
+                                 Foreground="White"
+                                 FontSize="14"
+                             Style="{StaticResource MenuButtonTheme}"/>
+                <RadioButton Content="Tips"
+                                 Height="50"
+                                 Foreground="White"
+                                 FontSize="14"
+                             Style="{StaticResource MenuButtonTheme}"/>
             </StackPanel>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </Border>
 </Window>
