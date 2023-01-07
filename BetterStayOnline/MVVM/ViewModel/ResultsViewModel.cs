@@ -18,8 +18,6 @@ namespace BetterStayOnline.MVVM.ViewModel
 {
     class ResultsViewModel : ObservableObject
     {
-        public readonly ResultList _results;
-
         public RelayCommand StartTestCommand { get; set; }
 
         private string _downloadSpeed;
@@ -63,10 +61,8 @@ namespace BetterStayOnline.MVVM.ViewModel
         }
 
 
-        public ResultsViewModel(ResultList results)
+        public ResultsViewModel()
         {
-            _results = results;
-
             ResultsTable = new WpfPlot();
             ResultsTable.Plot.YLabel("Speed (mbps)");
             ResultsTable.Plot.Style(ScottPlot.Style.Blue1);

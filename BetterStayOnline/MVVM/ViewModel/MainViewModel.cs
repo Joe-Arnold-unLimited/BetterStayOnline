@@ -36,10 +36,8 @@ namespace BetterStayOnline.MVVM.ViewModel
 
         public MainViewModel()
         {
-            ResultList results = new ResultList();
-
             HomeVm = new HomeViewModel();
-            ResultsVm = new ResultsViewModel(results);
+            ResultsVm = new ResultsViewModel();
             SettingsVm = new SettingsViewModel();
             TipsVm = new TipsViewModel();
             CurrentView = HomeVm;
