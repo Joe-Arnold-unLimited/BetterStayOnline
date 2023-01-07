@@ -8,16 +8,15 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Background="#07263b">
     <StackPanel>
-        <WpfPlot Name="ResultsTable" Margin="0,0,0,20" Height="350">
-            <ContentControl Content="{Binding ResultsTable}"/>
-        </WpfPlot>
+        <WpfPlot Name="ResultsTable" Margin="0,0,0,0" Height="375"/>
         <Border Width="300"
-                Height="150"
-                CornerRadius="20">
+                Height="160"
+                CornerRadius="20"
+                Margin="0,-15,0,0">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
-                    <GradientStop Color="#ffc554" Offset="0.0"/>
-                    <GradientStop Color="#ffb73a" Offset="1"/>
+                    <GradientStop Color="#3B758A" Offset="0.0"/>
+                    <GradientStop Color="#274770" Offset="1"/>
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
@@ -28,33 +27,47 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" 
                            Text="Download speed:"
+                            Foreground="White"
+                           FontFamily="Medium"
                            VerticalAlignment="Center"
-                           HorizontalAlignment="Center"/>
+                           HorizontalAlignment="Right"
+                           Margin="0,0,20,0"/>
                 <TextBlock Grid.Row="1" 
                            Text="Upload speed:"
+                            Foreground="White"
+                           FontFamily="Medium"
                            VerticalAlignment="Center"
-                           HorizontalAlignment="Center"/>
+                           HorizontalAlignment="Right"
+                           Margin="0,0,20,0"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="1"
-                           Text="{Binding DownloadSpeed}"
+                           Name="DownloadSpeed"
+                            Foreground="White"
+                           FontFamily="Medium"
+                           Text="--"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
                 <TextBlock Grid.Row="1" Grid.Column="1"
-                           Text="{Binding UploadSpeed}"
+                           Name="UploadSpeed"
+                            Foreground="White"
+                           FontFamily="Medium"
+                           Text="--"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
 
                 <Button Grid.Row="2"
+                        Name="StartTest"
                         Content="Start Test"
                         Foreground="White"
                         FontSize="14"
                         FontWeight="Bold" Grid.ColumnSpan="2"
-                        Command="{Binding StartTestCommand}">
+                        Click="StartTest_Click"
+                        Margin="0,0,0,12">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="#fe6584"/>

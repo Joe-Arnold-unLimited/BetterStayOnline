@@ -1,0 +1,44 @@
+{
+  "TestResults": [
+    {
+      "DateTime": "31/12/2022  12:20:49",
+      "Download": 48.12,
+      "Upload": 17.12
+    },
+    {
+      "DateTime": "02/01/2023  09:34:37",
+      "Download": 52.63,
+      "Upload": 16.2
+    },
+    {
+      "DateTime": "02/01/2023  09:37:04",
+      "Download": 55.62,
+      "Upload": 15.98
+    },
+    {
+      "DateTime": "03/01/2023  20:47:15",
+      "Download": 51.34,
+      "Upload": 16.2
+    },
+    {
+      "DateTime": "04/01/2023  17:38:04",
+      "Download": 47.87,
+      "Upload": 14.67
+    },
+    {
+      "DateTime": "05/01/2023  17:25:35",
+      "Download": 54.66,
+      "Upload": 16.19
+    },
+    {
+      "DateTime": "06/01/2023  08:56:38",
+      "Download": 69.56,
+      "Upload": 18.45
+    },
+    {
+      "DateTime": "06/01/2023  09:01:00",
+      "Download": 68.36,
+      "Upload": 18.69
+    }
+  ]
+}
