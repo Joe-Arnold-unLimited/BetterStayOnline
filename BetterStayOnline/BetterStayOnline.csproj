@@ -144,10 +144,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\View\RunTestView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MVVM\View\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -164,7 +160,6 @@
   <ItemGroup>
     <Compile Include="MVVM\Model\ResultList.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
-    <Compile Include="MVVM\ViewModel\RunTestViewModel.cs" />
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
     <Compile Include="MVVM\ViewModel\ResultsViewModel.cs" />
     <Compile Include="MVVM\ViewModel\SettingsViewModel.cs" />
@@ -174,9 +169,6 @@
     </Compile>
     <Compile Include="MVVM\View\ResultsView.xaml.cs">
       <DependentUpon>ResultsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MVVM\View\RunTestView.xaml.cs">
-      <DependentUpon>RunTestView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\View\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>

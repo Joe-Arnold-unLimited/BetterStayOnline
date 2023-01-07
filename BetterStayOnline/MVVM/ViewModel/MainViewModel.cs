@@ -18,7 +18,6 @@ namespace BetterStayOnline.MVVM.ViewModel
         public RelayCommand TipsViewCommand { get; set; }
 
         public HomeViewModel HomeVm { get; set; }
-        public RunTestViewModel RunTestVm { get; set; }
         public ResultsViewModel ResultsVm { get; set; }
         public SettingsViewModel SettingsVm { get; set; }
         public TipsViewModel TipsVm { get; set; }
@@ -40,14 +39,12 @@ namespace BetterStayOnline.MVVM.ViewModel
             ResultList results = new ResultList();
 
             HomeVm = new HomeViewModel();
-            RunTestVm = new RunTestViewModel(results);
             ResultsVm = new ResultsViewModel(results);
             SettingsVm = new SettingsViewModel();
             TipsVm = new TipsViewModel();
             CurrentView = HomeVm;
 
             HomeViewCommand = new RelayCommand(o => { CurrentView = HomeVm; });
-            RunTestViewCommand = new RelayCommand(o => { CurrentView = RunTestVm; });
             ResultsViewCommand = new RelayCommand(o => { CurrentView = ResultsVm; });
             SettingsViewCommand = new RelayCommand(o => { CurrentView = SettingsVm; });
             TipsViewCommand = new RelayCommand(o => { CurrentView = TipsVm; });
