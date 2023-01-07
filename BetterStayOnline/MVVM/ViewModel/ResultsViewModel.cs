@@ -9,6 +9,10 @@ using ScottPlot;
 using BetterStayOnline.Core;
 using BetterStayOnline.MVVM.Model;
 using BetterStayOnline.MVVM.View;
+using BetterStayOnline.SpeedTest;
+using System.Threading;
+using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace BetterStayOnline.MVVM.ViewModel
 {
@@ -46,6 +50,8 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
+        public WpfPlot ResultsTable { get; set; }
+
 
         private List<BandWidthTest> testResults = new List<BandWidthTest>();
 
@@ -55,8 +61,6 @@ namespace BetterStayOnline.MVVM.ViewModel
             public double downSpeed;
             public double upSpeed;
         }
-
-        public WpfPlot ResultsTable { get; set; }
 
 
         public ResultsViewModel(ResultList results)
@@ -68,19 +72,46 @@ namespace BetterStayOnline.MVVM.ViewModel
             ResultsTable.Plot.Style(ScottPlot.Style.Blue1);
             ResultsTable.Plot.Style(figureBackground: System.Drawing.Color.FromArgb(7, 38, 59));
             ResultsTable.Plot.XAxis.DateTimeFormat(true);
+            ResultsTable.Plot.SetAxisLimitsY(0, 100);
 
-            StartTestCommand = new RelayCommand(o =>
-            {
-                int x = 0;
+            ResultsTable.Refresh();
 
-                Random r = new Random();
-                int d = r.Next(40, 70);
-                DownloadSpeed = d + "";
-                int u = r.Next(8, 22);
-                UploadSpeed = d + "";
+            //StartTestCommand = new RelayCommand(o =>
+            //{
+            //    Thread thread = null;
+            //    thread = new Thread(new ThreadStart(() =>
+            //    {
+            //        string output = Speedtester.RunSpeedTest();
+            //        RegexOptions options = RegexOptions.None;
+            //        Regex regex = new Regex("[ ]{2,}", options);
+            //        output = regex.Replace(output, " ");
 
-                AddResult(DateTime.Now, 49, 21, true);
-            });
+            //        string[] lines = output.ToLower().Split(new[] { '\r', '\n' });
+
+            //        double down = 0, up = 0;
+            //        foreach(var line in lines)
+            //        {
+            //            string[] words = line.Trim().Split(' ');
+            //            if (words[0].Contains("download"))
+            //                try
+            //                {
+            //                    down = double.Parse(words[1]);
+            //                    DownloadSpeed = words[1];
+            //                }
+            //                catch (Exception) { }
+            //            if (words[0].Contains("upload"))
+            //                try
+            //                {
+            //                    up = double.Parse(words[1]);
+            //                    UploadSpeed = words[1];
+            //                }
+            //                catch (Exception) { }
+            //        }
+
+            //        AddResult(DateTime.Now, down, up, true);
+            //    }));
+            //    thread.Start();
+            //});
         }
 
         // Publicly facing for adding single results
@@ -131,7 +162,15 @@ namespace BetterStayOnline.MVVM.ViewModel
             ResultsTable.Plot.AddScatter(dates.ToArray().Select(x => x.ToOADate()).ToArray(), upSpeeds.ToArray());
 
             ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
-            ResultsTable.Refresh();
+
+            try
+            {
+                Application.Current.Dispatcher.Invoke((Action)(() =>
+                {//this refer to form in WPF application 
+                    ResultsTable.Refresh();
+                }));
+            }
+            catch (Exception) { }
         }
     }
 }

@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Background="#07263b">
     <StackPanel>
-        <WpfPlot Name="ResultsTable" Margin="0,0,0,20" Height="330">
+        <WpfPlot Name="ResultsTable" Margin="0,0,0,20" Height="350">
             <ContentControl Content="{Binding ResultsTable}"/>
         </WpfPlot>
         <Border Width="300"

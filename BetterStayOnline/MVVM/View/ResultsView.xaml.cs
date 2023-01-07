@@ -26,9 +26,6 @@ namespace BetterStayOnline.MVVM.View
         public ResultsView()
         {
             InitializeComponent();
-
-            //ResultsTable.Plot.SetAxisLimitsY(0, 70);
-
         }
     }
 }
