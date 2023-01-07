@@ -13,14 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BetterStayOnline
+namespace BetterStayOnline.MVVM.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for RunTestView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    ///
+
+    public partial class RunTestView : UserControl
     {
-        public MainWindow()
+        public RunTestView()
         {
             InitializeComponent();
         }
