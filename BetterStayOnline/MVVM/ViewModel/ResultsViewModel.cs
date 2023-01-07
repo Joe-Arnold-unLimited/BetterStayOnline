@@ -72,42 +72,42 @@ namespace BetterStayOnline.MVVM.ViewModel
 
             ResultsTable.Refresh();
 
-            //StartTestCommand = new RelayCommand(o =>
-            //{
-            //    Thread thread = null;
-            //    thread = new Thread(new ThreadStart(() =>
-            //    {
-            //        string output = Speedtester.RunSpeedTest();
-            //        RegexOptions options = RegexOptions.None;
-            //        Regex regex = new Regex("[ ]{2,}", options);
-            //        output = regex.Replace(output, " ");
+            StartTestCommand = new RelayCommand(o =>
+            {
+                Thread thread = null;
+                thread = new Thread(new ThreadStart(() =>
+                {
+                    string output = Speedtester.RunSpeedTest();
+                    RegexOptions options = RegexOptions.None;
+                    Regex regex = new Regex("[ ]{2,}", options);
+                    output = regex.Replace(output, " ");
 
-            //        string[] lines = output.ToLower().Split(new[] { '\r', '\n' });
+                    string[] lines = output.ToLower().Split(new[] { '\r', '\n' });
 
-            //        double down = 0, up = 0;
-            //        foreach(var line in lines)
-            //        {
-            //            string[] words = line.Trim().Split(' ');
-            //            if (words[0].Contains("download"))
-            //                try
-            //                {
-            //                    down = double.Parse(words[1]);
-            //                    DownloadSpeed = words[1];
-            //                }
-            //                catch (Exception) { }
-            //            if (words[0].Contains("upload"))
-            //                try
-            //                {
-            //                    up = double.Parse(words[1]);
-            //                    UploadSpeed = words[1];
-            //                }
-            //                catch (Exception) { }
-            //        }
+                    double down = 0, up = 0;
+                    foreach (var line in lines)
+                    {
+                        string[] words = line.Trim().Split(' ');
+                        if (words[0].Contains("download"))
+                            try
+                            {
+                                down = double.Parse(words[1]);
+                                DownloadSpeed = words[1];
+                            }
+                            catch (Exception) { }
+                        if (words[0].Contains("upload"))
+                            try
+                            {
+                                up = double.Parse(words[1]);
+                                UploadSpeed = words[1];
+                            }
+                            catch (Exception) { }
+                    }
 
-            //        AddResult(DateTime.Now, down, up, true);
-            //    }));
-            //    thread.Start();
-            //});
+                    AddResult(DateTime.Now, down, up, true);
+                }));
+                thread.Start();
+            });
         }
 
         // Publicly facing for adding single results
