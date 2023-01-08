@@ -31,6 +31,7 @@
                                  Height="50"
                                  Foreground="White"
                                  FontSize="14"
+                             IsEnabled="{Binding HomeButtonIsEnabled}"
                              IsChecked="{Binding HomeChecked}"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding HomeViewCommand}"/>
@@ -38,18 +39,21 @@
                                  Height="50"
                                  Foreground="White"
                                  FontSize="14"
+                             IsEnabled="{Binding ResultsButtonIsEnabled}"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding ResultsViewCommand}"/>
                 <RadioButton Content="Settings"
                                  Height="50"
                                  Foreground="White"
                                  FontSize="14"
+                             IsEnabled="{Binding SettingsButtonIsEnabled}"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding SettingsViewCommand}"/>
                 <RadioButton Content="Tips"
                                  Height="50"
                                  Foreground="White"
                                  FontSize="14"
+                             IsEnabled="{Binding TipsButtonIsEnabled}"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding TipsViewCommand}"/>
             </StackPanel>

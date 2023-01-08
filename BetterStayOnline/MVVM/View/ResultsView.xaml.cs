@@ -35,7 +35,6 @@ namespace BetterStayOnline.MVVM.View
             ResultsTable.Configuration.LockVerticalAxis = true;
 
             if (testResults.Count > 0) PlotGraph();
-            ResultsTable.Refresh();
         }
 
         private void ReadPreexistingData()
@@ -61,15 +60,9 @@ namespace BetterStayOnline.MVVM.View
             }
         }
 
-        //https://coderwall.com/p/app3ya/read-excel-file-in-c
-        //private string SaveToExcel()
-        //{
-        //}
-
         private void AddResult(BandwidthTest testResult, bool plot = false)
         {
             testResults.Add(testResult);
-            testResults.OrderBy(x => x.date);
 
             if (plot) PlotGraph();
         }
@@ -77,6 +70,7 @@ namespace BetterStayOnline.MVVM.View
         private void PlotGraph()
         {
             ResultsTable.Plot.Clear();
+            testResults = testResults.OrderBy(x => x.date).ToList();
 
             List<DateTime> dates = new List<DateTime>();
             List<double> downSpeeds = new List<double>();
@@ -110,8 +104,11 @@ namespace BetterStayOnline.MVVM.View
             try
             {
                 System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
-                {//this refer to form in WPF application 
+                {
                     ResultsTable.Refresh();
+
+                    DownloadSpeed.Text = testResults[testResults.Count - 1].downSpeed.ToString();
+                    UploadSpeed.Text = testResults[testResults.Count - 1].upSpeed.ToString();
                 }));
             }
             catch (Exception) { }

@@ -1,6 +1,9 @@
 ﻿using BetterStayOnline.Core;
 using BetterStayOnline.SpeedTest;
+using System;
+using System.ComponentModel;
 using System.Threading;
+using System.Windows;
 
 namespace BetterStayOnline.MVVM.ViewModel
 {
@@ -41,8 +44,57 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
+        private bool _homeButtonIsEnabled;
+        public bool HomeButtonIsEnabled
+        {
+            get { return _homeButtonIsEnabled; }
+            set
+            {
+                _homeButtonIsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _resultsButtonIsEnabled;
+        public bool ResultsButtonIsEnabled
+        {
+            get { return _resultsButtonIsEnabled; }
+            set
+            {
+                _resultsButtonIsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _settingsButtonIsEnabled;
+        public bool SettingsButtonIsEnabled
+        {
+            get { return _settingsButtonIsEnabled; }
+            set
+            {
+                _settingsButtonIsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _tipsButtonIsEnabled;
+        public bool TipsButtonIsEnabled
+        {
+            get { return _tipsButtonIsEnabled; }
+            set
+            {
+                _tipsButtonIsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainViewModel()
         {
+            HomeButtonIsEnabled = false;
+            ResultsButtonIsEnabled = false;
+            SettingsButtonIsEnabled = false;
+            TipsButtonIsEnabled = false;
+
             StartProcedureVm = new StartupProcedureViewModel();
             HomeVm = new HomeViewModel();
             ResultsVm = new ResultsViewModel();
@@ -55,25 +107,26 @@ namespace BetterStayOnline.MVVM.ViewModel
             SettingsViewCommand = new RelayCommand(o => { CurrentView = SettingsVm; });
             TipsViewCommand = new RelayCommand(o => { CurrentView = TipsVm; });
 
-            HomeViewCommand.ChangeCanExecute(false);
-            ResultsViewCommand.ChangeCanExecute(false);
-            SettingsViewCommand.ChangeCanExecute(false);
-            TipsViewCommand.ChangeCanExecute(false);
 
-            Thread thread = null;
-            thread = new Thread(new ThreadStart(() =>
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += (o, ea) =>
             {
-                Speedtester.RunSpeedTest();
+                try { Speedtester.RunSpeedTest(); }
+                catch (Exception) { }
+            };
 
-                HomeViewCommand.ChangeCanExecute(true);
-                ResultsViewCommand.ChangeCanExecute(true);
-                SettingsViewCommand.ChangeCanExecute(true);
-                TipsViewCommand.ChangeCanExecute(true);
-
-                HomeViewCommand.Execute(null);
+            //This event is raise on DoWork complete
+            worker.RunWorkerCompleted += (o, ea) =>
+            {
+                CurrentView = HomeVm;
                 HomeChecked = true;
-            }));
-            thread.Start();
+                HomeButtonIsEnabled = true;
+                ResultsButtonIsEnabled = true;
+                SettingsButtonIsEnabled = true;
+                TipsButtonIsEnabled = true;
+            };
+
+            worker.RunWorkerAsync();
         }
     }
 }
