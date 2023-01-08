@@ -10,6 +10,7 @@ using Microsoft.Office.Interop.Excel;
 using BetterStayOnline.SpeedTest;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using BetterStayOnline.MVVM.Model;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -19,14 +20,7 @@ namespace BetterStayOnline.MVVM.View
     public partial class ResultsView : UserControl
     {
         private JArray jsonTestResults = new JArray();
-        private List<BandWidthTest> testResults = new List<BandWidthTest>();
-
-        struct BandWidthTest
-        {
-            public DateTime date;
-            public double downSpeed;
-            public double upSpeed;
-        }
+        private List<BandwidthTest> testResults = new List<BandwidthTest>();
 
         public ResultsView()
         {
@@ -54,7 +48,7 @@ namespace BetterStayOnline.MVVM.View
 
                 foreach(var result in jsonTestResults)
                 {
-                    BandWidthTest newTest = new BandWidthTest();
+                    BandwidthTest newTest = new BandwidthTest();
                     newTest.date = DateTime.Parse((string)((JObject)result).GetValue("DateTime"));
                     newTest.downSpeed = double.Parse((string)((JObject)result).GetValue("Download"));
                     newTest.upSpeed = double.Parse((string)((JObject)result).GetValue("Upload"));
@@ -72,23 +66,10 @@ namespace BetterStayOnline.MVVM.View
         //{
         //}
 
-        public void AddResult(DateTime time, double downSpeed, double upSpeed, bool plot = true)
-        {
-            BandWidthTest newTest = new BandWidthTest();
-
-            newTest.date = time;
-            newTest.downSpeed = downSpeed;
-            newTest.upSpeed = upSpeed;
-
-            AddResult(newTest, plot);
-        }
-
-        private void AddResult(BandWidthTest testResult, bool plot = false)
+        private void AddResult(BandwidthTest testResult, bool plot = false)
         {
             testResults.Add(testResult);
             testResults.OrderBy(x => x.date);
-
-            Speedtester.SaveNewResult(testResult.date, testResult.downSpeed, testResult.upSpeed);
 
             if (plot) PlotGraph();
         }
@@ -144,40 +125,7 @@ namespace BetterStayOnline.MVVM.View
             StartTest.IsEnabled = false;
             thread = new Thread(new ThreadStart(() =>
             {
-                string output = Speedtester.RunSpeedTest();
-                RegexOptions options = RegexOptions.None;
-                Regex regex = new Regex("[ ]{2,}", options);
-                output = regex.Replace(output, " ");
-
-                string[] lines = output.ToLower().Split(new[] { '\r', '\n' });
-
-                double down = 0, up = 0;
-                foreach (var line in lines)
-                {
-                    string[] words = line.Trim().Split(' ');
-                    if (words[0].Contains("download"))
-                        try
-                        {
-                            down = double.Parse(words[1]);
-                            System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
-                            {
-                                DownloadSpeed.Text = words[1];
-                            }));
-                        }
-                        catch (Exception) { }
-                    if (words[0].Contains("upload"))
-                        try
-                        {
-                            up = double.Parse(words[1]);
-                            System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
-                            {
-                                UploadSpeed.Text = words[1];
-                            }));
-                        }
-                        catch (Exception) { }
-                }
-
-                AddResult(DateTime.Now, down, up, true);
+                AddResult(Speedtester.RunSpeedTest(), true);
                 System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
                 {
                     StartTest.IsEnabled = true;

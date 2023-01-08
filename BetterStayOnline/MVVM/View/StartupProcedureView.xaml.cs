@@ -3,11 +3,11 @@
 namespace BetterStayOnline.MVVM.View
 {
     /// <summary>
-    /// Interaction logic for SettingsView.xaml
+    /// Interaction logic for StartupProcedure.xaml
     /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class StartupProcedureView : UserControl
     {
-        public SettingsView()
+        public StartupProcedureView()
         {
             InitializeComponent();
         }

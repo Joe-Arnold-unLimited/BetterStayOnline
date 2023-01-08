@@ -31,8 +31,8 @@
                                  Height="50"
                                  Foreground="White"
                                  FontSize="14"
+                             IsChecked="{Binding HomeChecked}"
                              Style="{StaticResource MenuButtonTheme}"
-                             IsChecked="True"
                              Command="{Binding HomeViewCommand}"/>
                 <RadioButton Content="View Results"
                                  Height="50"

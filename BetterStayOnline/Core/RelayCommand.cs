@@ -33,5 +33,18 @@ namespace BetterStayOnline.Core
         {
             _execute(parameter);
         }
+
+        public void ChangeCanExecute(bool canExecute)
+        {
+            switch (canExecute)
+            {
+                case true:
+                    _canExecute = null;
+                    break;
+                case false:
+                    _canExecute = new Func<object, bool>(o => { return false; });
+                    break;
+            }
+        }
     }
 }
