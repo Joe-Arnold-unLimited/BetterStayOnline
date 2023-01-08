@@ -12,7 +12,7 @@
         <Border Width="300"
                 Height="160"
                 CornerRadius="20"
-                Margin="0,-15,0,0">
+                Margin="0,-10,0,0">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
                     <GradientStop Color="#3B758A" Offset="0.0"/>
