@@ -11,6 +11,7 @@ using BetterStayOnline.SpeedTest;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using BetterStayOnline.MVVM.Model;
+using ScottPlot.Plottable;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -21,6 +22,9 @@ namespace BetterStayOnline.MVVM.View
     {
         private JArray jsonTestResults = new JArray();
         private List<BandwidthTest> testResults = new List<BandwidthTest>();
+
+        private ScatterPlotList<double> downloadScatter;
+        private ScatterPlotList<double> uploadScatter;
 
         public ResultsView()
         {
@@ -34,7 +38,7 @@ namespace BetterStayOnline.MVVM.View
             ResultsTable.Plot.SetAxisLimitsY(0, 100);
             ResultsTable.Configuration.LockVerticalAxis = true;
 
-            if (testResults.Count > 0) PlotGraph();
+            SetUpTable();
         }
 
         private void ReadPreexistingData()
@@ -60,58 +64,72 @@ namespace BetterStayOnline.MVVM.View
             }
         }
 
-        private void AddResult(BandwidthTest testResult, bool plot = false)
-        {
-            testResults.Add(testResult);
-
-            if (plot) PlotGraph();
-        }
-
-        private void PlotGraph()
+        private void SetUpTable()
         {
             ResultsTable.Plot.Clear();
             testResults = testResults.OrderBy(x => x.date).ToList();
 
-            List<DateTime> dates = new List<DateTime>();
-            List<double> downSpeeds = new List<double>();
-            List<double> upSpeeds = new List<double>();
+            downloadScatter = ResultsTable.Plot.AddScatterList();
+            uploadScatter = ResultsTable.Plot.AddScatterList();
 
-            bool moreThan30DaysOfResults = false;
-            bool moreThan7Days = false;
+            bool moreThan31DaysOfResults = false;
             double highestYValue = 0;
             foreach (var testResult in testResults)
             {
-                dates.Add(testResult.date);
-                downSpeeds.Add(testResult.downSpeed);
-                upSpeeds.Add(testResult.upSpeed);
+                AddResult(testResult);
 
-                if (!moreThan30DaysOfResults && testResult.date < DateTime.Now.AddDays(-30)) moreThan30DaysOfResults = true;
-                if (!moreThan30DaysOfResults && !moreThan7Days && testResult.date < DateTime.Now.AddDays(-7)) moreThan7Days = true;
+                if (!moreThan31DaysOfResults && testResult.date < DateTime.Now.AddDays(-31)) moreThan31DaysOfResults = true;
                 if (testResult.downSpeed > highestYValue) highestYValue = testResult.downSpeed;
                 if (testResult.upSpeed > highestYValue) highestYValue = testResult.upSpeed;
             }
 
-            ResultsTable.Plot.AddScatter(dates.ToArray().Select(x => x.ToOADate()).ToArray(), downSpeeds.ToArray());
-            ResultsTable.Plot.AddScatter(dates.ToArray().Select(x => x.ToOADate()).ToArray(), upSpeeds.ToArray());
-
             ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
 
-            if(moreThan30DaysOfResults)
+            if (moreThan31DaysOfResults || testResults.Count <= 1)
                 ResultsTable.Plot.SetAxisLimitsX(DateTime.Now.AddDays(-32).ToOADate(), testResults[testResults.Count - 1].date.AddDays(1).ToOADate());
-            else if(!moreThan7Days)
-                ResultsTable.Plot.SetAxisLimitsX(DateTime.Now.AddDays(-7).ToOADate(), testResults[testResults.Count - 1].date.AddDays(1).ToOADate());
+            else
+            {
+                double lengthOfTests = (testResults[testResults.Count - 1].date - testResults[0].date).TotalMinutes;
+                if (lengthOfTests < TimeSpan.FromHours(6).TotalMinutes)
+                {
+                    ResultsTable.Plot.SetAxisLimitsX(testResults[0].date.AddHours(-1).ToOADate(),
+                        testResults[testResults.Count - 1].date.AddHours(1).ToOADate());
+                }
+                else
+                {
+                    ResultsTable.Plot.SetAxisLimitsX(testResults[0].date.AddMinutes(-(lengthOfTests/5)).ToOADate(),
+                        testResults[testResults.Count - 1].date.AddMinutes(lengthOfTests / 5).ToOADate());
+                }
+            }
 
             try
             {
                 System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
                 {
-                    ResultsTable.Refresh();
+                    ResultsTable.Render();
 
                     DownloadSpeed.Text = testResults[testResults.Count - 1].downSpeed.ToString();
                     UploadSpeed.Text = testResults[testResults.Count - 1].upSpeed.ToString();
                 }));
             }
             catch (Exception) { }
+        }
+
+        private void AddResult(BandwidthTest testResult, bool render = false)
+        {
+            downloadScatter.Add(testResult.date.ToOADate(), testResult.downSpeed);
+            uploadScatter.Add(testResult.date.ToOADate(), testResult.upSpeed);
+
+            if (render)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
+                {
+                    ResultsTable.Render();
+
+                    DownloadSpeed.Text = testResult.downSpeed.ToString();
+                    UploadSpeed.Text = testResult.upSpeed.ToString();
+                }));
+            }
         }
 
         //*--------------------- Event handlers ---------------------*//
