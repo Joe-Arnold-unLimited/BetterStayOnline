@@ -140,11 +140,15 @@ namespace BetterStayOnline.MVVM.View
             StartTest.IsEnabled = false;
             thread = new Thread(new ThreadStart(() =>
             {
-                AddResult(Speedtester.RunSpeedTest(), true);
-                System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
+                BandwidthTest? test = Speedtester.RunSpeedTest();
+                if(test != null)
                 {
-                    StartTest.IsEnabled = true;
-                }));
+                    AddResult((BandwidthTest)test, true);
+                    System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
+                    {
+                        StartTest.IsEnabled = true;
+                    }));
+                }
             }));
             thread.Start();
         }
