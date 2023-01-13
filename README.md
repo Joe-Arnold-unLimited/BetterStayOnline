@@ -8,5 +8,3 @@ TODO
 
 
 SETTINGS
-* minimum down and up
-* run on startup?
