@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Office.Interop.Excel;
 using BetterStayOnline.SpeedTest;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using BetterStayOnline.MVVM.Model;
 using ScottPlot.Plottable;
+using Microsoft.Win32;
+using IronXL;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -141,7 +141,7 @@ namespace BetterStayOnline.MVVM.View
             thread = new Thread(new ThreadStart(() =>
             {
                 BandwidthTest? test = Speedtester.RunSpeedTest();
-                if(test != null)
+                if (test != null)
                 {
                     AddResult((BandwidthTest)test, true);
                     System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
@@ -151,6 +151,50 @@ namespace BetterStayOnline.MVVM.View
                 }
             }));
             thread.Start();
+        }
+
+        private void ExportToExcel_Click(object sender, RoutedEventArgs e)
+        {
+            ExportToExcel.IsEnabled = false;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Excel file |*.xlsx";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            saveFileDialog.OverwritePrompt = true;
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                if (File.Exists(saveFileDialog.FileName))
+                    File.Delete(saveFileDialog.FileName);
+
+                string path = Environment.CurrentDirectory + "\\External\\speedtestsTemplate.xlsx";
+                try
+                {
+                    File.Copy(path, saveFileDialog.FileName);
+                    WorkBook wb = WorkBook.Load(saveFileDialog.FileName);
+                    WorkSheet ws = wb.GetWorkSheet("tests");
+
+                    var x = ws.Rows;
+
+                    int row = 1;
+                    while (ws.GetCellAt(row, 0).ToString() != "")
+                        row++;
+
+                    foreach(var result in testResults)
+                    {
+                        ws.SetCellValue(row, 0, result.date);
+                        ws.SetCellValue(row, 1, result.downSpeed);
+                        ws.SetCellValue(row, 2, result.upSpeed);
+                        row++;
+                    }
+
+                    wb.SaveAs(saveFileDialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            ExportToExcel.IsEnabled = true;
         }
     }
 }
