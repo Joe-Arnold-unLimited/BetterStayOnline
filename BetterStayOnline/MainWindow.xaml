@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BetterStayOnline"
         xmlns:viewModel="clr-namespace:BetterStayOnline.MVVM.ViewModel"
         mc:Ignorable="d"
-        Title="Better Stay Online" Height="600" Width="920"
+        Title="Better Stay Online" Height="750" Width="1020"
         WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize">
 
@@ -18,39 +18,36 @@
             BorderThickness="0,0,0,0">
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Background="#202C62">
+            <StackPanel Background="#202C62"
+                        Orientation="Horizontal">
                 <RadioButton Content="Home"
-                                 Height="50"
                                  Foreground="White"
                                  FontSize="14"
                              IsEnabled="{Binding HomeButtonIsEnabled}"
                              IsChecked="{Binding HomeChecked}"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding HomeViewCommand}"/>
-                <RadioButton Content="View Results"
-                                 Height="50"
+                <RadioButton Content="Results"
                                  Foreground="White"
                                  FontSize="14"
                              IsEnabled="{Binding ResultsButtonIsEnabled}"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding ResultsViewCommand}"/>
                 <RadioButton Content="Settings"
-                                 Height="50"
                                  Foreground="White"
                                  FontSize="14"
                              IsEnabled="{Binding SettingsButtonIsEnabled}"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding SettingsViewCommand}"/>
                 <RadioButton Content="Tips"
-                                 Height="50"
                                  Foreground="White"
                                  FontSize="14"
                              IsEnabled="{Binding TipsButtonIsEnabled}"
@@ -58,7 +55,7 @@
                              Command="{Binding TipsViewCommand}"/>
             </StackPanel>
 
-            <ContentControl Grid.Column="1"
+            <ContentControl Grid.Row="1"
                             Margin="10"
                             Content="{Binding CurrentView}">
                 

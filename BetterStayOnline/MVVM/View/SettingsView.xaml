@@ -6,8 +6,126 @@
              xmlns:local="clr-namespace:BetterStayOnline.MVVM.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#4b1b1b">
+             Background="#07263b">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0" Grid.Row="0"
+                        Orientation="Horizontal">
+                    <TextBlock Text="Show minimum download"
+                               Width="150"
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                    <CheckBox IsChecked="{Binding ShowMinDownload}"
+                              VerticalAlignment="Center"
+                          Margin="20,0,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Grid.Row="0"
+                        Orientation="Horizontal"
+                          Margin="20,0,0,0">
+                    <TextBlock Text="Minimum download"
+                               Width="120"
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding MinDownload}"
+                               Width="30"
+                               HorizontalAlignment="Right"
+                               IsEnabled="False"
+                        Foreground="White"
+                        VerticalAlignment="Center"
+                               Margin="20,0,0,0"/>
+                    <StackPanel Margin="10,0,0,0">
+                        <Button Content="&#9650;" Command="{Binding MinDownloadUpCommand}"/>
+                        <Button Content="&#9660;" Command="{Binding MinDownloadDownCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="1"
+                            Margin="0,20,0,0"
+                        Orientation="Horizontal">
+                    <TextBlock Text="Show minimum upload"
+                               Width="150"
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                    <CheckBox IsChecked="{Binding ShowMinUpload}"
+                              VerticalAlignment="Center"
+                          Margin="20,0,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Grid.Row="1"
+                        Orientation="Horizontal"
+                          Margin="20,20,0,0">
+                    <TextBlock Text="Minimum upload"
+                               Width="120"
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding MinUpload}"
+                               IsEnabled="False"
+                               Width="30"
+                               HorizontalAlignment="Right"
+                        Foreground="White"
+                        VerticalAlignment="Center"
+                               Margin="20,0,0,0"/>
+                    <StackPanel Margin="10,0,0,0">
+                        <Button Content="&#9650;" Command="{Binding MinUploadUpCommand}"/>
+                        <Button Content="&#9660;" Command="{Binding MinUploadDownCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+
+        <Button Grid.Column="1" Grid.Row="1"
+                        Content="Save"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Bold" Grid.ColumnSpan="2"
+                        Command="{Binding SaveSettingsCommand}"
+                        Margin="0,0,0,12">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#fe6584"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#1b911b"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="150" Height="50"
+                                    CornerRadius="10"
+                                    Background="{TemplateBinding Background}">
+                        <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
     </Grid>
 </UserControl>

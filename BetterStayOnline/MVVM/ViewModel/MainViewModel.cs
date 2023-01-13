@@ -1,4 +1,5 @@
 ﻿using BetterStayOnline.Core;
+using BetterStayOnline.MVVM.Model;
 using BetterStayOnline.SpeedTest;
 using System;
 using System.ComponentModel;
@@ -107,12 +108,15 @@ namespace BetterStayOnline.MVVM.ViewModel
             SettingsViewCommand = new RelayCommand(o => { CurrentView = SettingsVm; });
             TipsViewCommand = new RelayCommand(o => { CurrentView = TipsVm; });
 
-
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += (o, ea) =>
             {
-                try { Speedtester.RunSpeedTest(); }
-                catch (Exception) { }
+#if DEBUG == False
+                if(Configuration.RunTestOnStartup()){
+                    try { Speedtester.RunSpeedTest(); }
+                    catch (Exception) { }
+                }
+#endif
             };
 
             //This event is raise on DoWork complete

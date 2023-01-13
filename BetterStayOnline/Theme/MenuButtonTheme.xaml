@@ -18,6 +18,7 @@
                 </Setter.Value>
             </Setter>
 
+            <Setter Property="Width" Value="150"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style.Setters>

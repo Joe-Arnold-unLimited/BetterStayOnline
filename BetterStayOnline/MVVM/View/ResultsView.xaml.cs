@@ -12,6 +12,8 @@ using BetterStayOnline.MVVM.Model;
 using ScottPlot.Plottable;
 using Microsoft.Win32;
 using IronXL;
+using System.Drawing;
+using System.Windows.Shapes;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -47,15 +49,18 @@ namespace BetterStayOnline.MVVM.View
             {
                 string data = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\\External\\testresults.json");
                 JObject obj = JObject.Parse(data);
-                jsonTestResults = (JArray)obj.GetValue("TestResults");
-
-                foreach(var result in jsonTestResults)
+                if (obj.ContainsKey("TestResults"))
                 {
-                    BandwidthTest newTest = new BandwidthTest();
-                    newTest.date = DateTime.Parse((string)((JObject)result).GetValue("DateTime"));
-                    newTest.downSpeed = double.Parse((string)((JObject)result).GetValue("Download"));
-                    newTest.upSpeed = double.Parse((string)((JObject)result).GetValue("Upload"));
-                    testResults.Add(newTest);
+                    jsonTestResults = (JArray)obj.GetValue("TestResults");
+
+                    foreach (var result in jsonTestResults)
+                    {
+                        BandwidthTest newTest = new BandwidthTest();
+                        newTest.date = DateTime.Parse((string)((JObject)result).GetValue("DateTime"));
+                        newTest.downSpeed = double.Parse((string)((JObject)result).GetValue("Download"));
+                        newTest.upSpeed = double.Parse((string)((JObject)result).GetValue("Upload"));
+                        testResults.Add(newTest);
+                    }
                 }
             }
             catch(Exception e)
@@ -70,7 +75,14 @@ namespace BetterStayOnline.MVVM.View
             testResults = testResults.OrderBy(x => x.date).ToList();
 
             downloadScatter = ResultsTable.Plot.AddScatterList();
+            downloadScatter.Label = "Download";
+            downloadScatter.MarkerSize = 6;
+            downloadScatter.LineWidth = 2;
             uploadScatter = ResultsTable.Plot.AddScatterList();
+            uploadScatter.Label = "Upload";
+            uploadScatter.MarkerSize = 6;
+            uploadScatter.LineWidth = 2;
+
 
             bool moreThan31DaysOfResults = false;
             double highestYValue = 0;
@@ -83,14 +95,15 @@ namespace BetterStayOnline.MVVM.View
                 if (testResult.upSpeed > highestYValue) highestYValue = testResult.upSpeed;
             }
 
+            highestYValue += 2;
             ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
 
             if (moreThan31DaysOfResults || testResults.Count <= 1)
-                ResultsTable.Plot.SetAxisLimitsX(DateTime.Now.AddDays(-32).ToOADate(), testResults[testResults.Count - 1].date.AddDays(1).ToOADate());
+                ResultsTable.Plot.SetAxisLimitsX(DateTime.Now.AddDays(-34).ToOADate(), testResults[testResults.Count - 1].date.AddDays(3).ToOADate());
             else
             {
                 double lengthOfTests = (testResults[testResults.Count - 1].date - testResults[0].date).TotalMinutes;
-                if (lengthOfTests < TimeSpan.FromHours(6).TotalMinutes)
+                if (lengthOfTests < TimeSpan.FromHours(1).TotalMinutes)
                 {
                     ResultsTable.Plot.SetAxisLimitsX(testResults[0].date.AddHours(-1).ToOADate(),
                         testResults[testResults.Count - 1].date.AddHours(1).ToOADate());
@@ -102,17 +115,29 @@ namespace BetterStayOnline.MVVM.View
                 }
             }
 
-            try
+            if (Configuration.ShowMinDown())
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
-                {
-                    ResultsTable.Render();
-
-                    DownloadSpeed.Text = testResults[testResults.Count - 1].downSpeed.ToString();
-                    UploadSpeed.Text = testResults[testResults.Count - 1].upSpeed.ToString();
-                }));
+                double minDown = Configuration.MinDown();
+                var downloadHLineVector = ResultsTable.Plot.AddHorizontalLine(minDown);
+                downloadHLineVector.Label = "Min. Download";
+                downloadHLineVector.Color = Color.DeepSkyBlue;
+                downloadHLineVector.LineStyle = ScottPlot.LineStyle.Dash;
             }
-            catch (Exception) { }
+
+            if (Configuration.ShowMinUp())
+            {
+                double minUp = Configuration.MinUp();
+                var uploadHLineVector = ResultsTable.Plot.AddHorizontalLine(minUp);
+                uploadHLineVector.Label = "Min. Upload";
+                uploadHLineVector.Color = Color.Orange;
+                uploadHLineVector.LineStyle = ScottPlot.LineStyle.Dash;
+            }
+
+            ResultsTable.Plot.Legend();
+            ResultsTable.Render();
+
+            DownloadSpeed.Text = testResults[testResults.Count - 1].downSpeed.ToString();
+            UploadSpeed.Text = testResults[testResults.Count - 1].upSpeed.ToString();
         }
 
         private void AddResult(BandwidthTest testResult, bool render = false)
