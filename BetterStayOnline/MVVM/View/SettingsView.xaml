@@ -9,33 +9,35 @@
              Background="#07263b">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="620"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="120"/>
         </Grid.RowDefinitions>
 
         <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center">
             <Grid Margin="20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="210"/>
                     <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="80"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
-                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="120"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Column="0" Grid.Row="0"
                         Text="Show minimum download"
                         Foreground="White"
+                       FontSize="14"
+                       FontFamily="Medium"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
                 <CheckBox Grid.Column="1" Grid.Row="0"
@@ -47,6 +49,8 @@
                 <TextBlock Grid.Column="2" Grid.Row="0"
                         Text="Minimum download"
                         Foreground="White"
+                       FontSize="14"
+                       FontFamily="Medium"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
 
@@ -56,9 +60,11 @@
                         HorizontalAlignment="Right"
                         IsEnabled="False"
                         Foreground="Black"
+                       FontSize="14"
+                       FontFamily="Medium"
                         VerticalAlignment="Center"
                         Margin="10"
-                        Width="30"
+                        Width="32"
                         Background="Gray"/>
                     <StackPanel>
                         <RepeatButton Content="&#9650;" Command="{Binding MinDownloadUpCommand}" Interval="100"/>
@@ -70,6 +76,8 @@
                 <TextBlock Grid.Column="0" Grid.Row="1"
                         Text="Show minimum upload"
                         Foreground="White"
+                       FontSize="14"
+                       FontFamily="Medium"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
                 <CheckBox Grid.Column="1" Grid.Row="1"
@@ -80,6 +88,8 @@
                 <TextBlock Grid.Column="2" Grid.Row="1"
                         Text="Minimum upload"
                         Foreground="White"
+                       FontSize="14"
+                       FontFamily="Medium"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
 
@@ -91,7 +101,7 @@
                         Foreground="Black"
                         VerticalAlignment="Center"
                         Margin="10"
-                        Width="30"
+                        Width="32"
                         Background="Gray"/>
                     <StackPanel>
                         <RepeatButton Content="&#9650;" Command="{Binding MinUploadUpCommand}" Interval="100"/>
@@ -102,6 +112,8 @@
                 <TextBlock Grid.Column="0" Grid.Row="2"
                         Text="Show percent below minimums"
                         Foreground="White"
+                       FontSize="14"
+                       FontFamily="Medium"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
                 <CheckBox Grid.Column="1" Grid.Row="2"
@@ -134,6 +146,8 @@
                 <TextBlock Grid.Column="0" Grid.Row="3"
                         Text="Run speedtest on startup"
                         Foreground="White"
+                       FontSize="14"
+                       FontFamily="Medium"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
                 <CheckBox Grid.Column="1" Grid.Row="3"
@@ -146,8 +160,11 @@
                         Text="Turning this off will mean speedtests will not be run on app startup&#x0a;&#x0a;Turn this off if you just want to run tests manually or with events"
                            TextWrapping="Wrap"
                         Foreground="White"
+                       FontSize="13"
+                       FontFamily="Medium"
                         HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                        VerticalAlignment="Center"
+                           Margin="10,0,0,0"/>
             </Grid>
         </StackPanel>
 
@@ -155,7 +172,7 @@
         <Button Grid.Column="1" Grid.Row="1"
                         Content="Save"
                         Foreground="White"
-                        FontSize="14"
+                        FontSize="14 "
                         FontWeight="Bold" Grid.ColumnSpan="2"
                         Command="{Binding SaveSettingsCommand}"
                         Margin="0,0,0,12">

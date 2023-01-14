@@ -35,21 +35,24 @@
                     <TextBlock Grid.Row="0" 
                            Text="Download speed:"
                             Foreground="White"
-                           FontFamily="Medium"
+                       FontSize="14"
+                       FontFamily="Medium"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"
-                           Margin="0,0,20,0"/>
+                           Margin="0,0,10,0"/>
                     <TextBlock Grid.Row="1" 
                            Text="Upload speed:"
                             Foreground="White"
-                           FontFamily="Medium"
+                       FontSize="14"
+                       FontFamily="Medium"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"
-                           Margin="0,0,20,0"/>
+                           Margin="0,0,10,0"/>
 
                     <TextBlock Grid.Row="0" Grid.Column="1"
                            Name="DownloadSpeed"
                             Foreground="White"
+                           FontSize="14"
                            FontFamily="Medium"
                            Text="--"
                            VerticalAlignment="Center"
@@ -57,7 +60,8 @@
                     <TextBlock Grid.Row="1" Grid.Column="1"
                            Name="UploadSpeed"
                             Foreground="White"
-                           FontFamily="Medium"
+                           FontSize="14"
+                           FontFamily="Medium"  
                            Text="--"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
@@ -118,13 +122,15 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.ColumnSpan="2" 
                             Foreground="White"
-                            FontFamily="Medium"
+                           FontSize="14"
+                           FontFamily="Medium"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Text="Percentage below minimum"/>
                     <TextBlock Grid.Row="1"
                             Foreground="White"
-                            FontFamily="Medium"
+                           FontSize="14"
+                           FontFamily="Medium"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Margin="0,0,20,0"
@@ -132,7 +138,8 @@
                                 Name="DownloadMinPercentage"/>
                     <TextBlock Grid.Row="1" Grid.Column="1"
                             Foreground="White"
-                            FontFamily="Medium"
+                           FontSize="14"
+                           FontFamily="Medium"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Margin="20,0,0,0"
@@ -140,7 +147,8 @@
                                 Name="DownloadMinPercentageValue"/>
                     <TextBlock Grid.Row="2"
                             Foreground="White"
-                            FontFamily="Medium"
+                           FontSize="14"
+                           FontFamily="Medium"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Margin="0,0,20,0"
@@ -148,7 +156,8 @@
                                 Name="UploadMinPercentage"/>
                     <TextBlock Grid.Row="2" Grid.Column="1"
                             Foreground="White"
-                            FontFamily="Medium"
+                           FontSize="14"
+                           FontFamily="Medium"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Margin="20,0,0,0"

@@ -150,9 +150,9 @@ namespace BetterStayOnline.MVVM.ViewModel
                 Timer timer;
 
                 int daysUntil = 0;
-                int daysUntilBetweenRunning = 7;
+                int daysBetweenRunning = 7;
                 if(e.Day == "Every day")
-                    daysUntilBetweenRunning = 1;
+                    daysBetweenRunning = 1;
                 else
                 {
                     DayOfWeek dayToRun = DayOfWeek.Monday;
@@ -185,12 +185,15 @@ namespace BetterStayOnline.MVVM.ViewModel
                 }
 
                 TimeSpan timeToGo = (new TimeSpan(hour, minute, second) - current.TimeOfDay) + TimeSpan.FromDays(daysUntil);
+                if (timeToGo < TimeSpan.Zero)
+                    timeToGo += TimeSpan.FromDays(daysBetweenRunning);
+
                 if (timeToGo > TimeSpan.Zero)
                 {
                     timer = new System.Threading.Timer(x =>
                     {
                         Speedtester.RunSpeedTest();
-                    }, null, timeToGo, new TimeSpan(daysUntilBetweenRunning, 0, 0, 0, 0));
+                    }, null, timeToGo, new TimeSpan(daysBetweenRunning, 0, 0, 0, 0));
                     _eventRunners.Add(timer);
                 }
             }
