@@ -111,7 +111,7 @@ namespace BetterStayOnline.MVVM.ViewModel
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += (o, ea) =>
             {
-#if DEBUG == False
+#if !DEBUG
                 if(Configuration.RunTestOnStartup()){
                     try { Speedtester.RunSpeedTest(); }
                     catch (Exception) { }

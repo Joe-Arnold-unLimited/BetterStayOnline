@@ -21,9 +21,9 @@
                         Foreground="White"
                         FontFamily="Medium"
                         FontSize="18"
-                        Text="Running startup procedure"
+                        Text="Running startup speedtest"
                         VerticalAlignment="Center"
-                        HorizontalAlignment="Left"
+                        HorizontalAlignment="Center"
                         Margin="40"/>
         </Border>
     </Grid>

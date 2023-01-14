@@ -5,14 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BetterStayOnline.MVVM.View" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="800" d:DesignWidth="800"
              Background="#07263b">
     <StackPanel>
         <WpfPlot Name="ResultsTable" Margin="0,0,0,0" Height="475"/>
         <StackPanel Orientation="Horizontal"
-                Margin="0,-10,0,0"
-                    HorizontalAlignment="Center">
-            <Border Width="300"
+            Margin="0,-10,0,0"
+            HorizontalAlignment="Center">
+            <Border Width="200"
                 Height="160"
                 CornerRadius="20">
                 <Border.Background>
@@ -23,12 +23,12 @@
                 </Border.Background>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="130"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="45"/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
 
@@ -93,6 +93,67 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
+                </Grid>
+            </Border>
+            <Border Name="PercentagesBelowMinimumsBlock" Width="200"
+                Height="160"
+                CornerRadius="20"
+                Margin="20,0,0,0"
+                    Visibility="Collapsed">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                        <GradientStop Color="#3B758A" Offset="0.0"/>
+                        <GradientStop Color="#274770" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="45"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.ColumnSpan="2" 
+                            Foreground="White"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="Percentage below minimum"/>
+                    <TextBlock Grid.Row="1"
+                            Foreground="White"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,20,0"
+                            Text="Download:"
+                                Name="DownloadMinPercentage"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1"
+                            Foreground="White"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Margin="20,0,0,0"
+                            Text="" 
+                                Name="DownloadMinPercentageValue"/>
+                    <TextBlock Grid.Row="2"
+                            Foreground="White"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,20,0"
+                            Text="Upload:"
+                                Name="UploadMinPercentage"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1"
+                            Foreground="White"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Margin="20,0,0,0"
+                            Text=""
+                                Name="UploadMinPercentageValue"/>
                 </Grid>
             </Border>
             <Border Width="200"

@@ -63,6 +63,7 @@ namespace BetterStayOnline.MVVM.Model
         public static bool ShowMinUp() { return Get("ShowMinUp").ToLower() == "true"; }
         public static int MinDown() { return int.Parse(Get("MinDown")); }
         public static int MinUp() { return int.Parse(Get("MinUp")); }
+        public static bool ShowPercentagesBelowMinimums() { return Get("ShowPercentagesBelowMinimums").ToLower() == "true"; }
         public static bool RunTestOnStartup() { return Get("RunTestOnStartup").ToLower() == "true"; }
 
         // Setters
@@ -70,6 +71,7 @@ namespace BetterStayOnline.MVVM.Model
         public static void SetShowMinUp(bool value) { Set("ShowMinUp", value); }
         public static void SetMinDown(int value) { Set("MinDown", value); }
         public static void SetMinUp(int value) { Set("MinUp", value); }
+        public static void SetShowPercentagesBelowMinimums(bool value) { Set("ShowPercentagesBelowMinimums", value); }
         public static void SetRunTestOnStartup(bool value) { Set("RunTestOnStartup", value); }
     }
 }

@@ -60,6 +60,28 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
+        private bool _showPercentagesBelowMinimums;
+        public bool ShowPercentagesBelowMinimums
+        {
+            get { return _showPercentagesBelowMinimums; }
+            set
+            {
+                _showPercentagesBelowMinimums = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _runSpeedtestOnStartup;
+        public bool RunSpeedtestOnStartup
+        {
+            get { return _runSpeedtestOnStartup; }
+            set
+            {
+                _runSpeedtestOnStartup = value;
+                OnPropertyChanged();
+            }
+        }
+
 
 
 
@@ -69,11 +91,13 @@ namespace BetterStayOnline.MVVM.ViewModel
             MinUpload = Configuration.MinUp();
             ShowMinDownload = Configuration.ShowMinDown();
             ShowMinUpload = Configuration.ShowMinUp();
+            ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
+            RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
 
-            MinDownloadUpCommand = new RelayCommand(o => { MinDownload += 1; });
-            MinDownloadDownCommand = new RelayCommand(o => { if (MinDownload > 0) MinDownload -= 1; });
-            MinUploadUpCommand = new RelayCommand(o => { MinUpload += 1; });
-            MinUploadDownCommand = new RelayCommand(o => { if (MinUpload > 0) MinUpload -= 1; });
+            MinDownloadUpCommand = new RelayCommand(o => { MinDownload++; });
+            MinDownloadDownCommand = new RelayCommand(o => { if (MinDownload > 0) MinDownload--; });
+            MinUploadUpCommand = new RelayCommand(o => { MinUpload++; });
+            MinUploadDownCommand = new RelayCommand(o => { if (MinUpload > 0) MinUpload--; });
 
             SaveSettingsCommand = new RelayCommand(o =>
             {
@@ -81,6 +105,7 @@ namespace BetterStayOnline.MVVM.ViewModel
                 Configuration.SetMinUp(MinUpload);
                 Configuration.SetShowMinDown(ShowMinDownload);
                 Configuration.SetShowMinUp(ShowMinUpload);
+                Configuration.SetShowPercentagesBelowMinimums(ShowPercentagesBelowMinimums);
             });
         }
     }

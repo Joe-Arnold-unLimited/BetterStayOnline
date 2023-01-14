@@ -3,5 +3,6 @@
   "ShowMinUp": false,
   "MinDown": 50,
   "MinUp": 10,
-  "RunTestOnStartup": true
+  "RunTestOnStartup": true,
+  "ShowPercentagesBelowMinimums": false
 }

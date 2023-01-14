@@ -28,6 +28,11 @@ namespace BetterStayOnline.MVVM.View
         private ScatterPlotList<double> downloadScatter;
         private ScatterPlotList<double> uploadScatter;
 
+        private int minimumDownload;
+        private int minimumUpload;
+        int countBelowMinDownload;
+        int countBelowMinUpload;
+
         public ResultsView()
         {
             InitializeComponent();
@@ -39,6 +44,37 @@ namespace BetterStayOnline.MVVM.View
             ResultsTable.Plot.XAxis.DateTimeFormat(true);
             ResultsTable.Plot.SetAxisLimitsY(0, 100);
             ResultsTable.Configuration.LockVerticalAxis = true;
+
+            minimumDownload = Configuration.MinDown();
+            minimumUpload = Configuration.MinUp();
+            countBelowMinDownload = 0;
+            countBelowMinUpload = 0;
+
+            if (Configuration.ShowPercentagesBelowMinimums() && (Configuration.ShowMinDown() || Configuration.ShowMinUp()))
+            {
+                PercentagesBelowMinimumsBlock.Visibility = Visibility.Visible;
+                if (Configuration.ShowMinDown())
+                {
+                    DownloadMinPercentage.Visibility = Visibility.Visible;
+                    DownloadMinPercentageValue.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    DownloadMinPercentage.Visibility = Visibility.Collapsed;
+                    DownloadMinPercentageValue.Visibility = Visibility.Collapsed;
+                }
+                if (Configuration.ShowMinUp())
+                {
+                    UploadMinPercentage.Visibility = Visibility.Visible;
+                    UploadMinPercentageValue.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    UploadMinPercentage.Visibility = Visibility.Collapsed;
+                    UploadMinPercentageValue.Visibility = Visibility.Collapsed;
+                }
+            }
+            else PercentagesBelowMinimumsBlock.Visibility = Visibility.Collapsed;
 
             SetUpTable();
         }
@@ -83,7 +119,6 @@ namespace BetterStayOnline.MVVM.View
             uploadScatter.MarkerSize = 6;
             uploadScatter.LineWidth = 2;
 
-
             bool moreThan31DaysOfResults = false;
             double highestYValue = 0;
             foreach (var testResult in testResults)
@@ -103,7 +138,7 @@ namespace BetterStayOnline.MVVM.View
             else
             {
                 double lengthOfTests = (testResults[testResults.Count - 1].date - testResults[0].date).TotalMinutes;
-                if (lengthOfTests < TimeSpan.FromHours(1).TotalMinutes)
+                if (lengthOfTests < TimeSpan.FromHours(2).TotalMinutes)
                 {
                     ResultsTable.Plot.SetAxisLimitsX(testResults[0].date.AddHours(-1).ToOADate(),
                         testResults[testResults.Count - 1].date.AddHours(1).ToOADate());
@@ -133,6 +168,7 @@ namespace BetterStayOnline.MVVM.View
                 uploadHLineVector.LineStyle = ScottPlot.LineStyle.Dash;
             }
 
+            CalculatePercentageBelowMinimums();
             ResultsTable.Plot.Legend();
             ResultsTable.Render();
 
@@ -145,16 +181,26 @@ namespace BetterStayOnline.MVVM.View
             downloadScatter.Add(testResult.date.ToOADate(), testResult.downSpeed);
             uploadScatter.Add(testResult.date.ToOADate(), testResult.upSpeed);
 
+            if (testResult.downSpeed < minimumDownload) countBelowMinDownload++;
+            if (testResult.upSpeed < minimumUpload) countBelowMinUpload++;
+
             if (render)
             {
                 System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
                 {
+                    CalculatePercentageBelowMinimums();
                     ResultsTable.Render();
 
                     DownloadSpeed.Text = testResult.downSpeed.ToString();
                     UploadSpeed.Text = testResult.upSpeed.ToString();
                 }));
             }
+        }
+
+        private void CalculatePercentageBelowMinimums()
+        {
+            DownloadMinPercentageValue.Text = (Math.Round(((double)countBelowMinDownload / testResults.Count) * 100, 1)).ToString() + "%";
+            UploadMinPercentageValue.Text = (Math.Round(((double)countBelowMinUpload / testResults.Count) * 100, 1)).ToString() + "%";
         }
 
         //*--------------------- Event handlers ---------------------*//
