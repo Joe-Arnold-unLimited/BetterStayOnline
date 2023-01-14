@@ -158,7 +158,11 @@
     </ApplicationDefinition>
     <Compile Include="MVVM\Model\BandwidthTest.cs" />
     <Compile Include="MVVM\Model\Configuration.cs" />
+    <Compile Include="MVVM\ViewModel\EventsViewModel.cs" />
     <Compile Include="MVVM\ViewModel\StartupProcedureViewModel.cs" />
+    <Compile Include="MVVM\View\EventsView.xaml.cs">
+      <DependentUpon>EventsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\View\StartupProcedureView.xaml.cs">
       <DependentUpon>StartupProcedureView.xaml</DependentUpon>
     </Compile>
@@ -177,6 +181,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MVVM\View\EventsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\View\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -241,7 +249,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="External\testresults.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="External\speedtestsTemplate.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

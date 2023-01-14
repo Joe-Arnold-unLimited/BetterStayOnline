@@ -14,12 +14,14 @@ namespace BetterStayOnline.MVVM.ViewModel
         public RelayCommand RunTestViewCommand { get; set; }
         public RelayCommand ResultsViewCommand { get; set; }
         public RelayCommand SettingsViewCommand { get; set; }
+        public RelayCommand EventsViewCommand { get; set; }
         public RelayCommand TipsViewCommand { get; set; }
 
         public StartupProcedureViewModel StartProcedureVm { get; set; }
         public HomeViewModel HomeVm { get; set; }
         public ResultsViewModel ResultsVm { get; set; }
         public SettingsViewModel SettingsVm { get; set; }
+        public EventsViewModel EventsVm { get; set; }
         public TipsViewModel TipsVm { get; set; }
 
         private object _currentView;
@@ -78,6 +80,17 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
+        private bool _eventsButtonIsEnabled;
+        public bool EventsButtonIsEnabled
+        {
+            get { return _eventsButtonIsEnabled; }
+            set
+            {
+                _eventsButtonIsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _tipsButtonIsEnabled;
         public bool TipsButtonIsEnabled
         {
@@ -94,18 +107,21 @@ namespace BetterStayOnline.MVVM.ViewModel
             HomeButtonIsEnabled = false;
             ResultsButtonIsEnabled = false;
             SettingsButtonIsEnabled = false;
+            EventsButtonIsEnabled = false;
             TipsButtonIsEnabled = false;
 
             StartProcedureVm = new StartupProcedureViewModel();
             HomeVm = new HomeViewModel();
             ResultsVm = new ResultsViewModel();
             SettingsVm = new SettingsViewModel();
+            EventsVm = new EventsViewModel();
             TipsVm = new TipsViewModel();
             CurrentView = StartProcedureVm;
 
             HomeViewCommand = new RelayCommand(o => { CurrentView = HomeVm; });
             ResultsViewCommand = new RelayCommand(o => { CurrentView = ResultsVm; });
             SettingsViewCommand = new RelayCommand(o => { CurrentView = SettingsVm; });
+            EventsViewCommand = new RelayCommand(o => { CurrentView = EventsVm; });
             TipsViewCommand = new RelayCommand(o => { CurrentView = TipsVm; });
 
             BackgroundWorker worker = new BackgroundWorker();
@@ -127,6 +143,7 @@ namespace BetterStayOnline.MVVM.ViewModel
                 HomeButtonIsEnabled = true;
                 ResultsButtonIsEnabled = true;
                 SettingsButtonIsEnabled = true;
+                EventsButtonIsEnabled = true;
                 TipsButtonIsEnabled = true;
             };
 

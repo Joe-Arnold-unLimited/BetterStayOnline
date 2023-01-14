@@ -131,9 +131,14 @@ namespace BetterStayOnline.MVVM.View
             }
 
             highestYValue += 2;
-            ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
+            if (testResults.Count == 0)
+                ResultsTable.Plot.SetAxisLimitsY(0, 100);
+            else
+                ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
 
-            if (moreThan31DaysOfResults || testResults.Count <= 1)
+            if (testResults.Count == 0)
+                ResultsTable.Plot.SetAxisLimitsX(DateTime.Now.AddDays(-1).ToOADate(), DateTime.Now.AddDays(1).ToOADate());
+            else if(moreThan31DaysOfResults || testResults.Count == 1)
                 ResultsTable.Plot.SetAxisLimitsX(DateTime.Now.AddDays(-34).ToOADate(), testResults[testResults.Count - 1].date.AddDays(3).ToOADate());
             else
             {
@@ -172,8 +177,11 @@ namespace BetterStayOnline.MVVM.View
             ResultsTable.Plot.Legend();
             ResultsTable.Render();
 
-            DownloadSpeed.Text = testResults[testResults.Count - 1].downSpeed.ToString();
-            UploadSpeed.Text = testResults[testResults.Count - 1].upSpeed.ToString();
+            if(testResults.Count > 0)
+            {
+                DownloadSpeed.Text = testResults[testResults.Count - 1].downSpeed.ToString();
+                UploadSpeed.Text = testResults[testResults.Count - 1].upSpeed.ToString();
+            }
         }
 
         private void AddResult(BandwidthTest testResult, bool render = false)
@@ -199,8 +207,16 @@ namespace BetterStayOnline.MVVM.View
 
         private void CalculatePercentageBelowMinimums()
         {
-            DownloadMinPercentageValue.Text = (Math.Round(((double)countBelowMinDownload / testResults.Count) * 100, 1)).ToString() + "%";
-            UploadMinPercentageValue.Text = (Math.Round(((double)countBelowMinUpload / testResults.Count) * 100, 1)).ToString() + "%";
+            if (testResults.Count > 0)
+            {
+                DownloadMinPercentageValue.Text = (Math.Round(((double)countBelowMinDownload / testResults.Count) * 100, 1)).ToString() + "%";
+                UploadMinPercentageValue.Text = (Math.Round(((double)countBelowMinUpload / testResults.Count) * 100, 1)).ToString() + "%";
+            }
+            else
+            {
+                DownloadMinPercentageValue.Text = "--";
+                UploadMinPercentageValue.Text = "--";
+            }
         }
 
         //*--------------------- Event handlers ---------------------*//
