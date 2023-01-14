@@ -160,7 +160,6 @@
     <Compile Include="MVVM\Model\EventReader.cs" />
     <Compile Include="MVVM\Model\Configuration.cs" />
     <Compile Include="MVVM\Model\Event.cs" />
-    <Compile Include="MVVM\Model\EventRunner.cs" />
     <Compile Include="MVVM\ViewModel\EventsViewModel.cs" />
     <Compile Include="MVVM\ViewModel\StartupProcedureViewModel.cs" />
     <Compile Include="MVVM\View\EventsView.xaml.cs">
@@ -249,7 +248,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="External\config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="External\events.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -276,9 +275,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Bugs_Bunny.png" />
+    <Folder Include="Images\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SkiaSharp.NativeAssets.macOS.2.88.3\build\net462\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('..\packages\SkiaSharp.NativeAssets.macOS.2.88.3\build\net462\SkiaSharp.NativeAssets.macOS.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -5,94 +5,84 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BetterStayOnline.MVVM.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <TextBlock Text="Discover"
+             d:DesignHeight="800" d:DesignWidth="800">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" Margin="0,40,0,0">
+            <TextBlock Text="Better Stay Online Beta"
                        Foreground="White"
                        FontSize="28"
                        HorizontalAlignment="Left"
                        Margin="0,0,0,20"/>
 
-        <StackPanel Orientation="Horizontal">
-            <Border Width="400"
+            <StackPanel Orientation="Horizontal">
+                <Border Width="400"
                     Height="200">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
-                        <GradientStop Color="#5b3cff" Offset="0.0"/>
-                        <GradientStop Color="#3aa0ff" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                            <GradientStop Color="#5b3cff" Offset="0.0"/>
+                            <GradientStop Color="#3aa0ff" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
 
-                <Border.Clip>
-                    <RectangleGeometry RadiusX="10"
+                    <Border.Clip>
+                        <RectangleGeometry RadiusX="10"
                                        RadiusY="10"
                                        Rect="0,0,400,200"/>
-                </Border.Clip>
+                    </Border.Clip>
 
-                <Grid>
-                    <StackPanel>
-                        <TextBlock Text="World leader&#xA;in broadband testing"
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="You have been invited&#xA;to the Beta program"
                                    Foreground="White"
                                    FontSize="28"
                                    Margin="20,10,10,0"/>
-                        <TextBlock Text="Start testing today!"
+                            <TextBlock Text="Start testing today!"
                                    Foreground="White"
                                    FontSize="18"
                                    Margin="20,10,10,0"/>
-                    </StackPanel>
-                    <Image Width="285"
-                            Source="/Images/Bugs_Bunny.png"
-                            HorizontalAlignment="Right" 
-                            Margin="0,10,10,-66"/>
-                </Grid>
-            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
 
-            <Border Width="200"
+                <Border Width="200"
                     Height="200"
                     CornerRadius="10"
                     Margin="20,0,0,0">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
-                        <GradientStop Color="#ffc554" Offset="0.0"/>
-                        <GradientStop Color="#ffb73a" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
-            </Border>
-        </StackPanel>
-        <StackPanel>
-            <StackPanel.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="Margin" Value="0,0,20,0"/>
-                </Style>
-            </StackPanel.Resources>
-            
-            <TextBlock Text="Testy Test"
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                            <GradientStop Color="#ffc554" Offset="0.0"/>
+                            <GradientStop Color="#ffb73a" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Margin" Value="0,0,20,0"/>
+                    </Style>
+                </StackPanel.Resources>
+
+                <TextBlock Text="What do you think?"
                            Foreground="White"
                            FontSize="20"
                            HorizontalAlignment="Left"
                            Margin="0,10,0,10"/>
 
-            <StackPanel Orientation="Horizontal">
-                <Border Width="140"
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="620"
                             Height="140"
                             Background="#844eff"
-                            CornerRadius="10"/>
-
-                <Border Width="140"
-                            Height="140"
-                            Background="#844eff"
-                            CornerRadius="10"/>
-
-                <Border Width="140"
-                            Height="140"
-                            Background="#844eff"
-                            CornerRadius="10"/>
-                <Border Width="140"
-                            Height="140"
-                            Background="#844eff"
-                            CornerRadius="10"/>
-
+                            CornerRadius="10">
+                        <TextBlock Text="Let me know how this could be improved and of any features you want or bugs you find"
+                                   Foreground="White"
+                                   FontSize="18"
+                               TextWrapping="Wrap"
+                                   Margin="20,10,100,0"/>
+                    </Border>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
-    </StackPanel>
+    </Grid>
+
 </UserControl>
