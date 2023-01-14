@@ -9,6 +9,7 @@
              Background="#07263b">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
             <RowDefinition Height="200"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -41,7 +42,7 @@
                 <ComboBox Width="90" Height="30"
                           HorizontalAlignment="Right"
                           ItemsSource="{Binding Days}"
-                          SelectedValue="Every day">
+                          SelectedValue="{Binding SelectedDay}">
                 </ComboBox>
             </StackPanel>
 
@@ -55,7 +56,7 @@
                 <ComboBox Width="90" Height="30"
                           HorizontalAlignment="Right"
                           ItemsSource="{Binding Hours}"
-                          SelectedValue="Midnight">
+                          SelectedValue="{Binding SelectedHour}">
                 </ComboBox>
             </StackPanel>
 
@@ -66,6 +67,11 @@
                         Text="Minute"
                         Margin="20"
                         Width="95"/>
+                <ComboBox Width="90" Height="30"
+                          HorizontalAlignment="Right"
+                          ItemsSource="{Binding Minutes}"
+                          SelectedValue="{Binding SelectedMinute}">
+                </ComboBox>
             </StackPanel>
 
             <Button Grid.Row="1" Grid.Column="3"
@@ -73,7 +79,58 @@
                         Foreground="White"
                         FontSize="14"
                         FontWeight="Bold"
-                        Margin="0,0,0,12">
+                        Margin="0,0,0,12"
+                    Command="{Binding CreateEventCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#fe6584"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1b911b"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="150" Height="50"
+                                    CornerRadius="10"
+                                    Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding EventList}" 
+                  AutoGenerateColumns="False" CanUserAddRows="false"
+                  Foreground="Black" Background="#07263b">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header = "Day" Binding = "{Binding Day}" Width="80"/>
+                <DataGridTextColumn Header = "Hour" Binding = "{Binding Hour}" Width="80"/>
+                <DataGridTextColumn Header = "Minute" Binding = "{Binding Minute}" Width="80"/>
+                <DataGridCheckBoxColumn Header="Select" Binding="{Binding Selected}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1"
+                        Content="Remove"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Margin="0,0,0,12"
+                        Command="{Binding RemoveEventCommand}">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="#fe6584"/>
