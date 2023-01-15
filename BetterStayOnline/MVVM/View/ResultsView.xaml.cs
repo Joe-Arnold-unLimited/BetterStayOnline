@@ -11,9 +11,8 @@ using Newtonsoft.Json.Linq;
 using BetterStayOnline.MVVM.Model;
 using ScottPlot.Plottable;
 using Microsoft.Win32;
-using IronXL;
 using System.Drawing;
-using System.Windows.Shapes;
+using Microsoft.Office.Interop.Excel;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -253,6 +252,21 @@ namespace BetterStayOnline.MVVM.View
                 ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
         }
 
+        private static void DeleteFile(String fileToDelete)
+        {
+            var fi = new System.IO.FileInfo(fileToDelete);
+            if (fi.Exists)
+            {
+                fi.Delete();
+                fi.Refresh();
+                while (fi.Exists)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    fi.Refresh();
+                }
+            }
+        }
+
         //*--------------------- Event handlers ---------------------*//
 
         private void StartTest_Click(object sender, RoutedEventArgs e)
@@ -278,41 +292,56 @@ namespace BetterStayOnline.MVVM.View
         {
             ExportToExcel.IsEnabled = false;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Excel file |*.xlsx";
+            saveFileDialog.Filter = "Excel file|*.xlsx";
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             saveFileDialog.OverwritePrompt = true;
 
             if (saveFileDialog.ShowDialog() == true)
             {
                 if (File.Exists(saveFileDialog.FileName))
-                    File.Delete(saveFileDialog.FileName);
+                    DeleteFile(saveFileDialog.FileName);
 
                 string path = Environment.CurrentDirectory + "\\External\\speedtestsTemplate.xlsx";
                 try
                 {
                     File.Copy(path, saveFileDialog.FileName);
-                    WorkBook wb = WorkBook.Load(saveFileDialog.FileName);
-                    WorkSheet ws = wb.GetWorkSheet("tests");
 
-                    var x = ws.Rows;
+                    var excellApp = new Microsoft.Office.Interop.Excel.Application();
 
-                    int row = 1;
-                    while (ws.GetCellAt(row, 0).ToString() != "")
+                    excellApp.DisplayAlerts = false;
+                    excellApp.ScreenUpdating = false;
+
+                    var wb = excellApp.Workbooks.Open(saveFileDialog.FileName);
+                    Worksheet ws = wb.ActiveSheet;
+
+                    int row = 2;
+                    while (ws.Cells[row, 1].Value != null)
                         row++;
+
+
+                    //while (ws.GetCellAt(row, 0).ToString() != "")
+                    //    row++;
 
                     foreach(var result in testResults)
                     {
-                        ws.SetCellValue(row, 0, result.date);
-                        ws.SetCellValue(row, 1, result.downSpeed);
-                        ws.SetCellValue(row, 2, result.upSpeed);
+                        ws.Cells[row, 1].Value = result.date;
+                        ws.Cells[row, 2].Value = result.downSpeed;
+                        ws.Cells[row, 3].Value = result.upSpeed;
+
+                        //ws.SetCellValue(row, 0, result.date);
+                        //ws.SetCellValue(row, 1, result.downSpeed);
+                        //ws.SetCellValue(row, 2, result.upSpeed);
                         row++;
                     }
 
                     wb.SaveAs(saveFileDialog.FileName);
+                    wb.Close();
+                    excellApp.Quit();
+                    //wb.SaveAs(saveFileDialog.FileName);
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    MessageBox.Show(ex.Message + "" + ex.InnerException.Message, "");
                 }
             }
             ExportToExcel.IsEnabled = true;
