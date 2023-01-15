@@ -94,6 +94,7 @@ namespace BetterStayOnline.MVVM.ViewModel
 
 
         public List<Timer> _eventRunners;
+        private Func<bool> runSpeedTest = () => { Speedtester.RunSpeedTest(); return true; };
 
         public EventsViewModel()
         {
@@ -108,7 +109,7 @@ namespace BetterStayOnline.MVVM.ViewModel
             _eventList = EventReader.GetEvents();
 
             _eventRunners = new List<Timer>();
-            SetupEventRunners();
+            _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest);
 
             var threads = System.Diagnostics.Process.GetCurrentProcess().Threads;
 
@@ -126,7 +127,7 @@ namespace BetterStayOnline.MVVM.ViewModel
 
                     EventReader.AddEvent(e);
                     _eventList.Add(e);
-                    SetupEventRunners();
+                    _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest);
                 }
             });
 
@@ -135,7 +136,7 @@ namespace BetterStayOnline.MVVM.ViewModel
                 foreach(var e in _eventList.Where(e => e.Selected).ToList())
                     _eventList .Remove(e);
                 EventReader.RemoveSelected();
-                SetupEventRunners();
+                _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest);
             });
         }
 

@@ -23,7 +23,7 @@ namespace BetterStayOnline.MVVM.View
     public partial class ResultsView : UserControl
     {
         private JArray jsonTestResults = new JArray();
-        private List<BandwidthTest> testResults = new List<BandwidthTest>();
+        public List<BandwidthTest> testResults = new List<BandwidthTest>();
 
         private ScatterPlotList<double> downloadScatter;
         private ScatterPlotList<double> uploadScatter;
@@ -32,6 +32,31 @@ namespace BetterStayOnline.MVVM.View
         private int minimumUpload;
         int countBelowMinDownload;
         int countBelowMinUpload;
+
+        List<Timer> eventTimers;
+        Func<ResultsView, bool> redraw = (r) =>
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
+            {
+                r.ReadPreexistingData();
+
+                r.downloadScatter.Clear();
+                r.uploadScatter.Clear();
+
+                double highestYValue = 0;
+                foreach (var testResult in r.testResults)
+                {
+                    r.AddResult(testResult);
+                    if (testResult.downSpeed > highestYValue) highestYValue = testResult.downSpeed;
+                    if (testResult.upSpeed > highestYValue) highestYValue = testResult.upSpeed;
+                }
+                r.SetYAxisLimits(highestYValue);
+
+                r.CalculatePercentageBelowMinimums();
+                r.ResultsTable.Render();
+            }));
+            return true;
+        }; 
 
         public ResultsView()
         {
@@ -77,6 +102,8 @@ namespace BetterStayOnline.MVVM.View
             else PercentagesBelowMinimumsBlock.Visibility = Visibility.Collapsed;
 
             SetUpTable();
+            eventTimers = new List<Timer>();
+            eventTimers = TimerFactory.CreateTimers(eventTimers, EventReader.GetEvents(), redraw, this);
         }
 
         private void ReadPreexistingData()
@@ -130,11 +157,7 @@ namespace BetterStayOnline.MVVM.View
                 if (testResult.upSpeed > highestYValue) highestYValue = testResult.upSpeed;
             }
 
-            highestYValue += 2;
-            if (testResults.Count == 0)
-                ResultsTable.Plot.SetAxisLimitsY(0, 100);
-            else
-                ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
+            SetYAxisLimits(highestYValue);
 
             if (testResults.Count == 0)
                 ResultsTable.Plot.SetAxisLimitsX(DateTime.Now.AddDays(-1).ToOADate(), DateTime.Now.AddDays(1).ToOADate());
@@ -217,6 +240,15 @@ namespace BetterStayOnline.MVVM.View
                 DownloadMinPercentageValue.Text = "--";
                 UploadMinPercentageValue.Text = "--";
             }
+        }
+
+        private void SetYAxisLimits(double highestYValue)
+        {
+            highestYValue += 2;
+            if (testResults.Count == 0)
+                ResultsTable.Plot.SetAxisLimitsY(0, 100);
+            else
+                ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
         }
 
         //*--------------------- Event handlers ---------------------*//

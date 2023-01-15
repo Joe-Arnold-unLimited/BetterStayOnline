@@ -157,6 +157,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="MVVM\Model\BandwidthTest.cs" />
+    <Compile Include="MVVM\Model\TimerFactory.cs" />
     <Compile Include="MVVM\Model\EventReader.cs" />
     <Compile Include="MVVM\Model\Configuration.cs" />
     <Compile Include="MVVM\Model\Event.cs" />
