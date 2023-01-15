@@ -169,12 +169,19 @@
             </Grid>
         </Border>
 
-        <TextBlock Grid.Row="2" Grid.ColumnSpan="2"
-                   Foreground="White" 
-                   FontSize="14"
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
+            <TextBlock Foreground="White" 
+                    FontSize="14"
                     FontFamily="Medium"
-                   Text="You can set a maximum of 10 events of your choosing"
-                   HorizontalAlignment="Center"
-                   Margin="0,30,0,0"/>
+                    Text="You can set a maximum of 10 events of your choosing"
+                    HorizontalAlignment="Center"
+                    Margin="0,30,0,0"/>
+            <TextBlock Foreground="White" 
+                    FontSize="14"
+                    FontFamily="Medium"
+                    Text="You can run multiple tests at the same time but they could compromise each other's results"
+                    HorizontalAlignment="Center"
+                    Margin="0,20,0,0"/>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -39,6 +39,7 @@ namespace BetterStayOnline.MVVM.View
             System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
             {
                 r.ReadPreexistingData();
+                r.testResults = r.testResults.OrderBy(x => x.date).ToList();
 
                 r.downloadScatter.Clear();
                 r.uploadScatter.Clear();
@@ -116,6 +117,7 @@ namespace BetterStayOnline.MVVM.View
                 {
                     jsonTestResults = (JArray)obj.GetValue("TestResults");
 
+                    testResults.Clear();
                     foreach (var result in jsonTestResults)
                     {
                         BandwidthTest newTest = new BandwidthTest();

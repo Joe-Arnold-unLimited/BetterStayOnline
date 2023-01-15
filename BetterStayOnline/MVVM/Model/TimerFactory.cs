@@ -10,6 +10,10 @@ namespace BetterStayOnline.MVVM.Model
 {
     static class TimerFactory
     {
+        public static readonly string[] Days = new string[] { "Every day", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+        public static readonly string[] Hours = new string[] { "Midnight", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "Midday", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
+        public static readonly string[] Minutes = new string[] { "00", "15", "30", "45" };
+
         private static int CalcHour(Event e)
         {
             int hour;
