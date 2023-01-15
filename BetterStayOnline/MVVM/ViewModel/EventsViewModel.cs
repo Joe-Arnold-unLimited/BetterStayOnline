@@ -135,7 +135,7 @@ namespace BetterStayOnline.MVVM.ViewModel
             {
                 foreach(var e in _eventList.Where(e => e.Selected).ToList())
                     _eventList .Remove(e);
-                EventReader.RemoveSelected();
+                EventReader.SaveEvents(_eventList);
                 _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest);
             });
         }

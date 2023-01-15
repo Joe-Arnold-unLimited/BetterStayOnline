@@ -36,7 +36,7 @@
                        VerticalAlignment="Center"
                        FontSize="14"
                        FontFamily="Medium"
-                       Text="Here you can create events to run tests at your chosen time, provided the app is running."/>
+                       Text="Here you can create events to run tests at your chosen time, provided the app is running"/>
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
                 <TextBlock Foreground="White"
@@ -175,6 +175,6 @@
                     FontFamily="Medium"
                    Text="You can set a maximum of 10 events of your choosing"
                    HorizontalAlignment="Center"
-                   Margin="0,40,0,0"/>
+                   Margin="0,30,0,0"/>
     </Grid>
 </UserControl>

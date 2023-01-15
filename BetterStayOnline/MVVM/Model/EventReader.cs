@@ -45,7 +45,7 @@ namespace BetterStayOnline.MVVM.Model
             SaveEvents(events);
         }
 
-        private static void SaveEvents(ObservableCollection<Event> events)
+        public static void SaveEvents(ObservableCollection<Event> events)
         {
             JArray arr = new JArray();
 
