@@ -29,13 +29,13 @@ namespace BetterStayOnline.MVVM.View
 
         private int minimumDownload;
         private int minimumUpload;
-        int countBelowMinDownload;
-        int countBelowMinUpload;
+        private int countBelowMinDownload;
+        private int countBelowMinUpload;
 
         List<Timer> eventTimers;
         Func<ResultsView, bool> redraw = (r) =>
         {
-            System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 r.ReadPreexistingData();
                 r.testResults = r.testResults.OrderBy(x => x.date).ToList();
@@ -54,7 +54,7 @@ namespace BetterStayOnline.MVVM.View
 
                 r.CalculatePercentageBelowMinimums();
                 r.ResultsTable.Render();
-            }));
+            });
             return true;
         }; 
 
@@ -127,7 +127,7 @@ namespace BetterStayOnline.MVVM.View
                     }
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 int x = 0;
             }
@@ -261,7 +261,7 @@ namespace BetterStayOnline.MVVM.View
                 fi.Refresh();
                 while (fi.Exists)
                 {
-                    System.Threading.Thread.Sleep(100);
+                    Thread.Sleep(100);
                     fi.Refresh();
                 }
             }
