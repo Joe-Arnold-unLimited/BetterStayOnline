@@ -36,6 +36,14 @@ namespace BetterStayOnline.MVVM.Model
             return daysBetweenRunning;
         }
 
+        private static ICollection<Timer> ClearTimers(ICollection<Timer> timers)
+        {
+            foreach (var timer in timers)
+                timer.Dispose();
+            timers.Clear();
+            return timers;
+        }
+
         private static TimeSpan TimeUntil(Event e)
         {
             DateTime current = DateTime.Now;
@@ -70,9 +78,7 @@ namespace BetterStayOnline.MVVM.Model
 
         public static ICollection<Timer> CreateTimers(ICollection<Timer> timers, IEnumerable<Event> events, Func<bool> job)
         {
-            foreach (var timer in timers)
-                timer.Dispose();
-            timers.Clear();
+            timers = ClearTimers(timers);
 
             foreach (var e in events)
             {
@@ -91,11 +97,9 @@ namespace BetterStayOnline.MVVM.Model
             return timers;
         }
 
-        public static ICollection<Timer> CreateTimers(ICollection<Timer> timers, IEnumerable<Event> events, Func<ResultsView, bool> job, ResultsView resultsView)
+        public static ICollection<Timer> CreateTimers(ICollection<Timer> timers, IEnumerable<Event> events, Func<object, bool> job, object o)
         {
-            foreach(var timer in timers)
-                timer.Dispose();
-            timers.Clear();
+            timers = ClearTimers(timers);
 
             foreach (var e in events)
             {
@@ -106,7 +110,7 @@ namespace BetterStayOnline.MVVM.Model
                 {
                     Timer timer = new Timer(x =>
                     {
-                        job(resultsView);
+                        job(o);
                     }, null, timeToGo, new TimeSpan(CalcDaysBetween(e), 0, 0, 0, 0));
                     timers.Add(timer);
                 }
