@@ -60,15 +60,8 @@ namespace BetterStayOnline.MVVM.Model
 
             int hour = CalcHour(e);
             int minute = CalcMinute(e);
-            int second = 0;
-            if (hour == 0 && minute == 0)
-            {
-                hour = 23;
-                minute = 59;
-                second = 59;
-            }
 
-            TimeSpan timeToGo = (new TimeSpan(hour, minute, second) - current.TimeOfDay) + TimeSpan.FromDays(daysUntil);
+            TimeSpan timeToGo = (new TimeSpan(hour, minute, 0) - current.TimeOfDay) + TimeSpan.FromDays(daysUntil);
             if (timeToGo < TimeSpan.Zero)
                 timeToGo += TimeSpan.FromDays(daysBetweenRunning);
 
