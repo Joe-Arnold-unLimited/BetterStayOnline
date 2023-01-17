@@ -97,7 +97,7 @@ namespace BetterStayOnline.MVVM.Model
             return timers;
         }
 
-        public static ICollection<Timer> CreateTimers(ICollection<Timer> timers, IEnumerable<Event> events, Func<object, bool> job, object o)
+        public static ICollection<Timer> CreateTimers(ICollection<Timer> timers, IEnumerable<Event> events, Func<ResultsView, bool> job, ResultsView resultsView)
         {
             timers = ClearTimers(timers);
 
@@ -110,7 +110,7 @@ namespace BetterStayOnline.MVVM.Model
                 {
                     Timer timer = new Timer(x =>
                     {
-                        job(o);
+                        job(resultsView);
                     }, null, timeToGo, new TimeSpan(CalcDaysBetween(e), 0, 0, 0, 0));
                     timers.Add(timer);
                 }
