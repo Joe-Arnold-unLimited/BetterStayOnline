@@ -75,9 +75,12 @@ namespace BetterStayOnline.MVVM.Model
             return timeToGo;
         }
 
-        public static List<Timer> CreateTimers(List<Timer> timers, IEnumerable<Event> events, Func<bool> job)
+        public static ICollection<Timer> CreateTimers(ICollection<Timer> timers, IEnumerable<Event> events, Func<bool> job)
         {
+            foreach (var timer in timers)
+                timer.Dispose();
             timers.Clear();
+
             foreach (var e in events)
             {
                 TimeSpan timeToGo = TimeUntil(e);
@@ -95,9 +98,12 @@ namespace BetterStayOnline.MVVM.Model
             return timers;
         }
 
-        public static List<Timer> CreateTimers(List<Timer> timers, IEnumerable<Event> events, Func<ResultsView, bool> job, ResultsView resultsView)
+        public static ICollection<Timer> CreateTimers(ICollection<Timer> timers, IEnumerable<Event> events, Func<ResultsView, bool> job, ResultsView resultsView)
         {
+            foreach(var timer in timers)
+                timer.Dispose();
             timers.Clear();
+
             foreach (var e in events)
             {
                 TimeSpan timeToGo = TimeUntil(e);

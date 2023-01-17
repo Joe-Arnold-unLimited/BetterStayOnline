@@ -103,7 +103,7 @@ namespace BetterStayOnline.MVVM.View
 
             SetUpTable();
             eventTimers = new List<Timer>();
-            eventTimers = TimerFactory.CreateTimers(eventTimers, EventReader.GetEvents(), redraw, this);
+            eventTimers = TimerFactory.CreateTimers(eventTimers, EventReader.GetEvents(), redraw, this).ToList();
         }
 
         private void ReadPreexistingData()
