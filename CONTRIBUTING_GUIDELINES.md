@@ -19,6 +19,7 @@ TODO
 * borderless GUI
 * combined download/upload minimum for users with matching down/up speeds?
 * scottplot custom right click menu
+* a better UI in general with better styling and more styling put into seperate stylesheets
 
 NEW SETTINGS
 ?
