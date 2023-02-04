@@ -1,7 +1,7 @@
 # BetterStayOnline
 
 Google Drive link for install https://drive.google.com/file/d/1ZIg6DfyKIEd_X-zbs-MwtSXCtGAQ0ePe/view?usp=share_link
-Be aware! This is not a signed executable file! Windows Defender will flag it because of that. If you want peace of mind and are able to, I would prefer you took the code and built it yourself. This is link is jsut for those that can't!
+Be aware! This is not a signed executable file! Windows Defender will flag it because of that. If you want peace of mind and are able to, I would prefer you took the code and built it yourself. This is link is just for those that can't!
 
 We all hate pesky ISPs out there that use common tricks to limit your bandwidth, BUT NO MORE! Better Stay Online is a free tool to help you monitor your bandwidth over time and make sure you Better Stay Online!
 
