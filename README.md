@@ -12,4 +12,7 @@ I hope someone out there gets some use of this tool and saves some money on bad 
 
 This project is in it's infancy still and what we need is more useful features for anyone out there who might use it. That means more settings, features, maybe more things to test (people have suggested ping tests to local servers for mobile internet). 
 
-To help out go to the COMMUNITY_GUIDELINES file where you can find guidelines for getting involved and submitted features requests and support tickets.
+To help out go to the CONTRIBUTING_GUIDELINES file where you can find guidelines for getting involved and submitted features requests and support tickets.
+
+
+This is a C# WPF app built using the MVVM structure. The graphing tool used is ScottPlot. 
