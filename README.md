@@ -8,14 +8,6 @@ So I decided to build a more user friendly tool that could hopefully help more o
 
 I hope someone out there gets some use of this tool and saves some money on bad ISP contracts and gets a better deal because that's what it did for me. 
 
-TODO
-* WE MUST MOVE AWAAY FROM SPEEDTEST cannot use for commercial purposes
-* installer? must do something with licence agreement
-* windows code certificate?
-* go borderless
-* combined download/upload minimum for users with matching down/up speeds?
-* scottplot custom right click menu
+This project is in it's infancy still and what we need is more useful features for anyone out there who might use it. That means more settings, features, maybe more things to test (people have suggested ping tests to local servers for mobile internet). 
 
-
-NEW SETTINGS
-?
+To help out go to the GUMMUNITY_GUIDELINES file where you can find guidelines for getting involved and submitted features requests and support tickets.
