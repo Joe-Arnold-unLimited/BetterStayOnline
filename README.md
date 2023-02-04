@@ -1,5 +1,7 @@
 # BetterStayOnline
 
+Google Drive link for install https://drive.google.com/file/d/1ZIg6DfyKIEd_X-zbs-MwtSXCtGAQ0ePe/view?usp=share_link
+
 We all hate pesky ISPs out there that use common tricks to limit your bandwidth, BUT NO MORE! Better Stay Online is a free tool to help you monitor your bandwidth over time and make sure you Better Stay Online!
 
 This project came about when I was stuck in a bad contract with my ISP who was continuously cutting my bandwidth speeds. After one month, they cut it by 20%. Then after another two months they did that again. And without my noticing they cut it again to just 13mbps, which in the world of streaming services is just unusable. I created a very basic version of this tool to monitor my speeds by performing an Ookla Speedtest (speedtest.net the most trusted bandwidth tester by most ISPs at least in the UK) every time I turned on my PC. Over time I built up proof that they were cutting my speeds and brought it to them. Aftesr being hung up on by many of their customer service staff who didn't want to deal with me, finally I got through to a manager and they let me out of the contract with no early termination fees.
