@@ -17,5 +17,5 @@ To help out go to the CONTRIBUTING_GUIDELINES file where you can find guidelines
 
 This is a C# WPF app built using the MVVM structure. The graphing tool used is ScottPlot. 
 
-Google Drive link for install https://drive.google.com/file/d/1ZIg6DfyKIEd_X-zbs-MwtSXCtGAQ0ePe/view?usp=share_link
+[Google Drive link for install](https://drive.google.com/drive/folders/1Zxl6au1OMKNHPwOTp7yNSWBwyJETbk0K?usp=share_link)
 Be aware! This is not a signed executable file! Windows Defender will flag it because of that. If you want peace of mind and are able to, I would prefer you took the code and built it yourself. This is link is just for those that can't!
