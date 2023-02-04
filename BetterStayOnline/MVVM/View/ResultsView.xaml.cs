@@ -249,7 +249,7 @@ namespace BetterStayOnline.MVVM.View
             if (testResults.Count == 0)
                 ResultsTable.Plot.SetAxisLimitsY(0, 100);
             else
-                ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
+                ResultsTable.Plot.SetAxisLimitsY(0, (highestYValue * (9/8) + 5) - (highestYValue % 10));
         }
 
         private static void DeleteFile(String fileToDelete)
