@@ -14,6 +14,10 @@ namespace BetterStayOnline.MVVM.ViewModel
         public RelayCommand MinDownloadDownCommand { get; set; }
         public RelayCommand MinUploadUpCommand { get; set; }
         public RelayCommand MinUploadDownCommand { get; set; }
+        public RelayCommand DownloadRangeUpCommand { get; set; }
+        public RelayCommand DownloadRangeDownCommand { get; set; }
+        public RelayCommand UploadRangeUpCommand { get; set; }
+        public RelayCommand UploadRangeDownCommand { get; set; }
         public RelayCommand SaveSettingsCommand { get; set; }
 
         private int _minDownload;
@@ -34,6 +38,28 @@ namespace BetterStayOnline.MVVM.ViewModel
             set
             {
                 _minUpload = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _downloadRange;
+        public int DownloadRange
+        {
+            get { return _downloadRange; }
+            set
+            {
+                _downloadRange = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _uploadRange;
+        public int UploadRange
+        {
+            get { return _uploadRange; }
+            set
+            {
+                _uploadRange = value;
                 OnPropertyChanged();
             }
         }
@@ -71,6 +97,28 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
+        private bool _showDownloadRange;
+        public bool ShowDownloadRange
+        {
+            get { return _showDownloadRange; }
+            set
+            {
+                _showDownloadRange = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _showUploadRange;
+        public bool ShowUploadRange
+        {
+            get { return _showUploadRange; }
+            set
+            {
+                _showUploadRange = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _runSpeedtestOnStartup;
         public bool RunSpeedtestOnStartup
         {
@@ -82,15 +130,16 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
-
-
-
         public SettingsViewModel()
         {
             MinDownload = Configuration.MinDown();
             MinUpload = Configuration.MinUp();
+            DownloadRange = (int)(Configuration.DownloadRange() * 100);
+            UploadRange = (int)(Configuration.UploadRange() * 100);
             ShowMinDownload = Configuration.ShowMinDown();
             ShowMinUpload = Configuration.ShowMinUp();
+            ShowDownloadRange = Configuration.ShowDownloadRange();
+            ShowUploadRange = Configuration.ShowUploadRange();
             ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
 
@@ -98,13 +147,21 @@ namespace BetterStayOnline.MVVM.ViewModel
             MinDownloadDownCommand = new RelayCommand(o => { if (MinDownload > 0) MinDownload--; });
             MinUploadUpCommand = new RelayCommand(o => { MinUpload++; });
             MinUploadDownCommand = new RelayCommand(o => { if (MinUpload > 0) MinUpload--; });
+            DownloadRangeUpCommand = new RelayCommand(o => { if(DownloadRange <= 95) DownloadRange+=5; });
+            DownloadRangeDownCommand = new RelayCommand(o => { if (UploadRange > 0) DownloadRange-=5; });
+            UploadRangeUpCommand = new RelayCommand(o => { if (UploadRange <= 95) UploadRange += 5; });
+            UploadRangeDownCommand = new RelayCommand(o => { if (UploadRange > 0) UploadRange-=5; });
 
             SaveSettingsCommand = new RelayCommand(o =>
             {
                 Configuration.SetMinDown(MinDownload);
                 Configuration.SetMinUp(MinUpload);
+                Configuration.SetDownloadRange(DownloadRange);
+                Configuration.SetUploadRange(UploadRange);
                 Configuration.SetShowMinDown(ShowMinDownload);
                 Configuration.SetShowMinUp(ShowMinUpload);
+                Configuration.SetShowDownloadRange(ShowDownloadRange);
+                Configuration.SetShowUploadRange(ShowUploadRange);
                 Configuration.SetShowPercentagesBelowMinimums(ShowPercentagesBelowMinimums);
             });
         }

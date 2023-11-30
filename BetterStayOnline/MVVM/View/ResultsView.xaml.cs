@@ -13,6 +13,8 @@ using ScottPlot.Plottable;
 using Microsoft.Win32;
 using System.Drawing;
 using Microsoft.Office.Interop.Excel;
+using ScottPlot;
+using ScottPlot.Drawing;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -27,6 +29,12 @@ namespace BetterStayOnline.MVVM.View
         private ScatterPlotList<double> downloadScatter;
         private ScatterPlotList<double> uploadScatter;
 
+        // Keep a local copy of speeds for spans because we can't keep testResults live
+        private List<double> downloadSpeeds = new List<double>();
+        private VSpan vSpanDownload;
+        private List<double> uploadSpeeds = new List<double>();
+        private VSpan vSpanUpload;
+
         private int minimumDownload;
         private int minimumUpload;
         private int countBelowMinDownload;
@@ -39,6 +47,8 @@ namespace BetterStayOnline.MVVM.View
             {
                 r.ReadPreexistingData();
                 r.testResults = r.testResults.OrderBy(x => x.date).ToList();
+                //r.downloadSpeeds = r.testResults.Where(tr => tr.date >= DateTime.Now.AddMinutes(-1)).Select(tr => tr.downSpeed).ToList();
+                //r.uploadSpeeds = r.testResults.Where(tr => tr.date >= DateTime.Now.AddDays(-1)).Select(tr => tr.upSpeed).ToList();
 
                 r.downloadScatter.Clear();
                 r.uploadScatter.Clear();
@@ -51,6 +61,7 @@ namespace BetterStayOnline.MVVM.View
                     if (testResult.upSpeed > highestYValue) highestYValue = testResult.upSpeed;
                 }
                 r.SetYAxisLimits(highestYValue);
+                r.AddVerticalSpan();
 
                 r.CalculatePercentageBelowMinimums();
                 r.ResultsTable.Render();
@@ -101,6 +112,7 @@ namespace BetterStayOnline.MVVM.View
             }
             else PercentagesBelowMinimumsBlock.Visibility = Visibility.Collapsed;
 
+            AddVerticalSpan();
             SetUpTable();
             eventTimers = new List<Timer>();
             eventTimers = TimerFactory.CreateTimers(eventTimers, EventReader.GetEvents(), redraw, this).ToList();
@@ -127,7 +139,7 @@ namespace BetterStayOnline.MVVM.View
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 int x = 0;
             }
@@ -185,7 +197,7 @@ namespace BetterStayOnline.MVVM.View
                 var downloadHLineVector = ResultsTable.Plot.AddHorizontalLine(minDown);
                 downloadHLineVector.Label = "Min. Download";
                 downloadHLineVector.Color = Color.DeepSkyBlue;
-                downloadHLineVector.LineStyle = ScottPlot.LineStyle.Dash;
+                downloadHLineVector.LineStyle = LineStyle.Dash;
             }
 
             if (Configuration.ShowMinUp())
@@ -194,10 +206,11 @@ namespace BetterStayOnline.MVVM.View
                 var uploadHLineVector = ResultsTable.Plot.AddHorizontalLine(minUp);
                 uploadHLineVector.Label = "Min. Upload";
                 uploadHLineVector.Color = Color.Orange;
-                uploadHLineVector.LineStyle = ScottPlot.LineStyle.Dash;
+                uploadHLineVector.LineStyle = LineStyle.Dash;
             }
 
             CalculatePercentageBelowMinimums();
+            AddVerticalSpan();
             ResultsTable.Plot.Legend();
             ResultsTable.Render();
 
@@ -213,6 +226,12 @@ namespace BetterStayOnline.MVVM.View
             downloadScatter.Add(testResult.date.ToOADate(), testResult.downSpeed);
             uploadScatter.Add(testResult.date.ToOADate(), testResult.upSpeed);
 
+            if(testResult.date >= DateTime.Now.AddDays(-30))
+            {
+                downloadSpeeds.Add(testResult.downSpeed);
+                uploadSpeeds.Add(testResult.upSpeed);
+            }
+
             if (testResult.downSpeed < minimumDownload) countBelowMinDownload++;
             if (testResult.upSpeed < minimumUpload) countBelowMinUpload++;
 
@@ -221,11 +240,75 @@ namespace BetterStayOnline.MVVM.View
                 System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
                 {
                     CalculatePercentageBelowMinimums();
+                    AddVerticalSpan();
                     ResultsTable.Render();
 
                     DownloadSpeed.Text = testResult.downSpeed.ToString();
                     UploadSpeed.Text = testResult.upSpeed.ToString();
                 }));
+            }
+        }
+
+        private void AddVerticalSpan()
+        {
+            if (Configuration.ShowDownloadRange())
+            {
+                double downloadRange = Configuration.DownloadRange();
+
+                if (downloadSpeeds.Count > 3)
+                {
+                    int middle80Percent = (int)(downloadRange * downloadSpeeds.Count);
+
+                    // Sort the list in ascending order
+                    downloadSpeeds.Sort();
+
+                    // Calculate the start and end indices for the middle 80% range
+                    int startIndex = (downloadSpeeds.Count - middle80Percent) / 2;
+
+                    // Get the temperature values for the middle 80% range
+                    List<double> middle80PercentValues = downloadSpeeds.GetRange(startIndex, middle80Percent);
+
+                    if (middle80PercentValues.Count > 1)
+                    {
+                        ResultsTable.Plot.Remove(vSpanDownload);
+                        vSpanDownload = ResultsTable.Plot.AddVerticalSpan(middle80PercentValues.First(), middle80PercentValues.Last());
+                        vSpanDownload.BorderColor = Color.Teal;
+                        vSpanDownload.BorderLineStyle = LineStyle.None;
+                        vSpanDownload.BorderLineWidth = 2;
+                        vSpanDownload.Color = Color.FromArgb(75, Color.Aqua);
+                        vSpanDownload.IsVisible = true;
+                    }
+                }
+            }
+
+            if (Configuration.ShowUploadRange())
+            {
+                double uploadRange = Configuration.UploadRange();
+
+                if (uploadSpeeds.Count > 3)
+                {
+                    int middle80Percent = (int)(uploadRange * uploadSpeeds.Count);
+
+                    // Sort the list in ascending order
+                    uploadSpeeds.Sort();
+
+                    // Calculate the start and end indices for the middle 80% range
+                    int startIndex = (uploadSpeeds.Count - middle80Percent) / 2;
+
+                    // Get the temperature values for the middle 80% range
+                    List<double> middle80PercentValues = uploadSpeeds.GetRange(startIndex, middle80Percent);
+
+                    if (middle80PercentValues.Count > 1)
+                    {
+                        ResultsTable.Plot.Remove(vSpanUpload);
+                        vSpanUpload = ResultsTable.Plot.AddVerticalSpan(middle80PercentValues.First(), middle80PercentValues.Last());
+                        vSpanUpload.BorderColor = Color.Red;
+                        vSpanUpload.BorderLineStyle = LineStyle.None;
+                        vSpanUpload.BorderLineWidth = 2;
+                        vSpanUpload.Color = Color.FromArgb(75, Color.Red);
+                        vSpanUpload.IsVisible = true;
+                    }
+                }
             }
         }
 
@@ -249,7 +332,7 @@ namespace BetterStayOnline.MVVM.View
             if (testResults.Count == 0)
                 ResultsTable.Plot.SetAxisLimitsY(0, 100);
             else
-                ResultsTable.Plot.SetAxisLimitsY(0, (highestYValue * (9/8) + 5) - (highestYValue % 10));
+                ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
         }
 
         private static void DeleteFile(String fileToDelete)

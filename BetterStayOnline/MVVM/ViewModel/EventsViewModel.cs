@@ -115,7 +115,7 @@ namespace BetterStayOnline.MVVM.ViewModel
 
             CreateEventCommand = new RelayCommand(o =>
             {
-                if (_eventList.Count < 10)
+                if (_eventList.Count < 50)
                 {
                     Event e = new Event()
                     {

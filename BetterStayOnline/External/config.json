@@ -4,5 +4,9 @@
   "MinDown": 50,
   "MinUp": 10,
   "RunTestOnStartup": true,
-  "ShowPercentagesBelowMinimums": false
+  "ShowPercentagesBelowMinimums": false,
+  "ShowDownloadRange": true,
+  "ShowUploadRange": true,
+  "DownloadRange": 80,
+  "UploadRange": 80
 }
