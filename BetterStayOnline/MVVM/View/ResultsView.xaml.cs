@@ -46,6 +46,8 @@ namespace BetterStayOnline.MVVM.View
         private int countBelowMinDownload;
         private int countBelowMinUpload;
 
+        double highestYValue = 0;
+
         List<Timer> eventTimers;
         Func<ResultsView, bool> redraw = (r) =>
         {
@@ -59,14 +61,14 @@ namespace BetterStayOnline.MVVM.View
                 r.downloadScatter.Clear();
                 r.uploadScatter.Clear();
 
-                double highestYValue = 0;
+                r.highestYValue = 0;
                 foreach (var testResult in r.testResults)
                 {
                     r.AddResult(testResult);
-                    if (testResult.downSpeed > highestYValue) highestYValue = testResult.downSpeed;
-                    if (testResult.upSpeed > highestYValue) highestYValue = testResult.upSpeed;
+                    if (testResult.downSpeed > r.highestYValue) r.highestYValue = testResult.downSpeed;
+                    if (testResult.upSpeed > r.highestYValue) r.highestYValue = testResult.upSpeed;
                 }
-                r.SetYAxisLimits(highestYValue);
+                r.SetYAxisLimits(r.ResultsTable.Plot, r.highestYValue);
                 r.AddVerticalSpan();
 
                 r.CalculatePercentageBelowMinimums();
@@ -169,7 +171,7 @@ namespace BetterStayOnline.MVVM.View
             uploadScatter.LineWidth = 2;
 
             bool moreThan31DaysOfResults = false;
-            double highestYValue = 0;
+            highestYValue = 0;
             foreach (var testResult in testResults)
             {
                 AddResult(testResult);
@@ -179,7 +181,7 @@ namespace BetterStayOnline.MVVM.View
                 if (testResult.upSpeed > highestYValue) highestYValue = testResult.upSpeed;
             }
 
-            SetYAxisLimits(highestYValue);
+            SetYAxisLimits(ResultsTable.Plot, highestYValue);
 
             if (testResults.Count == 0)
                 ResultsTable.Plot.SetAxisLimitsX(DateTime.Now.AddDays(-1).ToOADate(), DateTime.Now.AddDays(1).ToOADate());
@@ -254,6 +256,8 @@ namespace BetterStayOnline.MVVM.View
 
                     DownloadSpeed.Text = testResult.downSpeed.ToString();
                     UploadSpeed.Text = testResult.upSpeed.ToString();
+
+                    if(viewer != null) viewer.wpfPlot1.Render();
                 }));
             }
         }
@@ -335,13 +339,13 @@ namespace BetterStayOnline.MVVM.View
             }
         }
 
-        private void SetYAxisLimits(double highestYValue)
+        private void SetYAxisLimits(Plot plot, double highestYValue)
         {
             highestYValue += 2;
             if (testResults.Count == 0)
-                ResultsTable.Plot.SetAxisLimitsY(0, 100);
+                plot.SetAxisLimitsY(0, 100);
             else
-                ResultsTable.Plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
+                plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
         }
 
         private static void DeleteFile(String fileToDelete)
@@ -450,7 +454,7 @@ namespace BetterStayOnline.MVVM.View
             rightClickMenu.IsOpen = true;
         }
 
-        public void DeployViewerMenu(object sender, EventArgs e)
+        public void DeploySaveImageMenu(object sender, EventArgs e)
         {
             var cm = new ContextMenu();
 
@@ -484,11 +488,13 @@ namespace BetterStayOnline.MVVM.View
             resultsTableCopy.Style(ScottPlot.Style.Gray2);
             resultsTableCopy.Style(figureBackground: System.Drawing.Color.FromArgb(7, 38, 59));
             resultsTableCopy.XAxis.DateTimeFormat(true);
-
+            resultsTableCopy.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
             viewer = new WpfPlotViewer(resultsTableCopy);
 
+            viewer.wpfPlot1.Configuration.AllowDroppedFramesWhileDragging = true;
+            viewer.wpfPlot1.Configuration.LockVerticalAxis = true;
             viewer.wpfPlot1.RightClicked -= ResultsTable.DefaultRightClickEvent;
-            viewer.wpfPlot1.RightClicked += DeployViewerMenu;
+            viewer.wpfPlot1.RightClicked += DeploySaveImageMenu;
             viewer.Show();
         }
     }
