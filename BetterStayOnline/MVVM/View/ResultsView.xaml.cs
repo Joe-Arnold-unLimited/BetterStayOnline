@@ -75,65 +75,12 @@ namespace BetterStayOnline.MVVM.View
             return true;
         };
 
-        private void DeployCustomMenu(object sender, EventArgs e)
-        {
-            MenuItem openInNewWindow = new MenuItem() { Header = "Open in new window" };
-            openInNewWindow.Click += OpenInNewWindow;
-
-            ContextMenu rightClickMenu = new ContextMenu();
-            rightClickMenu.Items.Add(openInNewWindow);
-
-            rightClickMenu.IsOpen = true;
-        }
-
-        public void DeploySaveImageMenu(object sender, EventArgs e)
-        {
-            var cm = new ContextMenu();
-
-            MenuItem SaveImageMenuItem = new MenuItem() { Header = "Save Image" };
-            SaveImageMenuItem.Click += RightClickMenuSaveImageClick;
-            cm.Items.Add(SaveImageMenuItem);
-
-            cm.IsOpen = true;
-        }
-
-        private void RightClickMenuSaveImageClick(object sender, EventArgs e)
-        {
-            var sfd = new SaveFileDialog
-            {
-                FileName = "Speedtest Results.png",
-                Filter = "PNG Files (*.png)|*.png;*.png" +
-                         "|JPG Files (*.jpg, *.jpeg)|*.jpg;*.jpeg" +
-                         "|BMP Files (*.bmp)|*.bmp;*.bmp" +
-                         "|All files (*.*)|*.*"
-            };
-
-            if (sfd.ShowDialog() is true)
-                resultsTableCopy.SaveFig(sfd.FileName);
-        }
-
-        private void OpenInNewWindow(object sender, RoutedEventArgs e)
-        {
-            if (viewer != null) viewer.Close();
-            resultsTableCopy = ResultsTable.Plot.Copy();
-            resultsTableCopy.YLabel("Speed (mbps)");
-            resultsTableCopy.Style(ScottPlot.Style.Gray2);
-            resultsTableCopy.Style(figureBackground: System.Drawing.Color.FromArgb(7, 38, 59));
-            resultsTableCopy.XAxis.DateTimeFormat(true);
-
-            viewer = new WpfPlotViewer(resultsTableCopy);
-
-            viewer.wpfPlot1.RightClicked -= ResultsTable.DefaultRightClickEvent;
-            viewer.wpfPlot1.RightClicked += DeploySaveImageMenu;
-            viewer.Show();
-        }
-
         public ResultsView()
         {
             InitializeComponent();
 
             ResultsTable.RightClicked -= ResultsTable.DefaultRightClickEvent;
-            ResultsTable.RightClicked += DeployCustomMenu;
+            ResultsTable.RightClicked += DeployMainWindowMenu;
 
             ReadPreexistingData();
             ResultsTable.Plot.YLabel("Speed (mbps)");
@@ -490,6 +437,59 @@ namespace BetterStayOnline.MVVM.View
                 }
             }
             ExportToExcel.IsEnabled = true;
+        }
+
+        private void DeployMainWindowMenu(object sender, EventArgs e)
+        {
+            MenuItem openInNewWindow = new MenuItem() { Header = "Open in new window" };
+            openInNewWindow.Click += OpenInNewWindow;
+
+            ContextMenu rightClickMenu = new ContextMenu();
+            rightClickMenu.Items.Add(openInNewWindow);
+
+            rightClickMenu.IsOpen = true;
+        }
+
+        public void DeployViewerMenu(object sender, EventArgs e)
+        {
+            var cm = new ContextMenu();
+
+            MenuItem SaveImageMenuItem = new MenuItem() { Header = "Save Image" };
+            SaveImageMenuItem.Click += RightClickMenuSaveImageClick;
+            cm.Items.Add(SaveImageMenuItem);
+
+            cm.IsOpen = true;
+        }
+
+        private void RightClickMenuSaveImageClick(object sender, EventArgs e)
+        {
+            var sfd = new SaveFileDialog
+            {
+                FileName = "Speedtest Results.png",
+                Filter = "PNG Files (*.png)|*.png;*.png" +
+                         "|JPG Files (*.jpg, *.jpeg)|*.jpg;*.jpeg" +
+                         "|BMP Files (*.bmp)|*.bmp;*.bmp" +
+                         "|All files (*.*)|*.*"
+            };
+
+            if (sfd.ShowDialog() is true)
+                resultsTableCopy.SaveFig(sfd.FileName);
+        }
+
+        private void OpenInNewWindow(object sender, RoutedEventArgs e)
+        {
+            if (viewer != null) viewer.Close();
+            resultsTableCopy = ResultsTable.Plot.Copy();
+            resultsTableCopy.YLabel("Speed (mbps)");
+            resultsTableCopy.Style(ScottPlot.Style.Gray2);
+            resultsTableCopy.Style(figureBackground: System.Drawing.Color.FromArgb(7, 38, 59));
+            resultsTableCopy.XAxis.DateTimeFormat(true);
+
+            viewer = new WpfPlotViewer(resultsTableCopy);
+
+            viewer.wpfPlot1.RightClicked -= ResultsTable.DefaultRightClickEvent;
+            viewer.wpfPlot1.RightClicked += DeployViewerMenu;
+            viewer.Show();
         }
     }
 }
