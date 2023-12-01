@@ -6,8 +6,125 @@
              xmlns:local="clr-namespace:BetterStayOnline.MVVM.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#1b5b1b">
+             Background="#07263b">
     <Grid>
-            
+        <ScrollViewer>
+            <Grid
+                Margin="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" 
+                    Text="IN PROGRESS"
+                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,0"/>
+                <TextBlock Grid.Row="1" 
+                    Text="There are plenty of reasons your internet may be slow, ranging from the genuine to the more scummy tactics some ISPs may use. We are here to help you with that."                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,0,0"/>
+                <TextBlock Grid.Row="2" 
+                    Text="1. Restarting your router is a big help. It's not just a 'try turning it off and on again' trick, every time your router restarts it looks for the best channels to run on, clears out memory and sometimes refreshes your IP address. Most routers have some sort of restart schedule, maybe every couple weeks. "
+                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+                <TextBlock Grid.Row="3" 
+                    Text="If restarting your router seems to help, you can try getting your router to restart automatically. Some routers give you the option to change the schedule. You can try this by Googling your type of router and settings. If you find that your router does not allow you to do this, you can buy a plug in mechanical timer to turn your router off some time you're not using it so that it restarts."                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+                <TextBlock Grid.Row="4" 
+                    Text="2. Speak to your provider. Let them know of any faults as soon as you are aware of them. They have to assist you if you are not getting what you are paying for. BUT!!! When speaking to them make sure you do these things:"                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+                <TextBlock Grid.Row="5" 
+                    Text="  * KEEP YOUR OWN NOTES! Tech support is there to assist you and yes they do keep notes on your account of the discussions you have with them, but when dealing with a fault you will quite often speak to many different people, all who will say different things. If someone says you will get your money back for the time your service was down, RECORD IT. Which brings me onto the next point.&#x0a;&#x0a;  * RECORD YOUR PHONE CALLS WITH TECH SUPPORT. If you live somewhere it is legal to record your phone calls without the other party's permmission, do it. There are apps to do it for you. You don't want to be speaking to someone who offers a fix or compensation, then be passed to someone else who has no knowledge of what you're talking about.&#x0a;&#x0a;  * EXPLAIN THE PROBLEM TO ANY ENGINEERS YOU HAVE CONTACT WITH. It is all too easy for an engineer to come out, do a first line check on your line and say there is no problem. Do another speedtest, show them that there clearly is still a problem and convince them to do the next measure while they are still there. You don't want to let them leave, wait a week for the ISP to check up on you, tell them that it didn't help only to have to wait yet another week for another engineer. Also, the engineers do different jobs. The first time one comes out you might be told they are a low level or first line engineer only, and that they only do the standard check and nothing more complicated. Later they may send a higher level engineer only for the same person to turn up. So ask when they're there if they can help in any other way.&#x0a;&#x0a;  * BE NICE. Yes it is annoying spending so much time on the phone, and yes the hold music is infuriating, but the person on the other end is at least trying to help. If you annoy them, they can quite easily tell you they are putting you through to a manager, then just stick you back on hold and put you to the back of the queue for another operator. All because they didn't want to deal with you. A lot of people are working from home now too, and if you scream at someone who is in their living room heating up their lunch, they might just want to get rid of you. This also leads onto the next point.&#x0a;&#x0a;  * SPEAK TO SOMEONE IN THE OFFICE. Tech support often don't have all the questions. If you get through to someone who is working from home, that means they don't have immediate access to their colleagues who may be able to answer questions they can't. You can politely ask if you can speak to someone in an office and often you will be passed on.&#x0a;&#x0a;  * KEEP A LOG OF HOW LONG YOU SPEND ON THE PHONE. If you have a fault that goes on for a long time, it might be worth some compensation. It will help your case if you can say exactly how long you have spent on the phone trying to get this fixed. You can also point out how much time of that is spent on hold too."
+                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+                <TextBlock Grid.Row="6" 
+                    Text="  * RECORD YOUR PHONE CALLS WITH TECH SUPPORT. If you live somewhere it is legal to record your phone calls without the other party's permmission, do it. There are apps to do it for you. You don't want to be speaking to someone who offers a fix or compensation, then be passed to someone else who has no knowledge of what you're talking about.&#x0a;&#x0a;  * EXPLAIN THE PROBLEM TO ANY ENGINEERS YOU HAVE CONTACT WITH. It is all too easy for an engineer to come out, do a first line check on your line and say there is no problem. Do another speedtest, show them that there clearly is still a problem and convince them to do the next measure while they are still there. You don't want to let them leave, wait a week for the ISP to check up on you, tell them that it didn't help only to have to wait yet another week for another engineer. Also, the engineers do different jobs. The first time one comes out you might be told they are a low level or first line engineer only, and that they only do the standard check and nothing more complicated. Later they may send a higher level engineer only for the same person to turn up. So ask when they're there if they can help in any other way."
+                           Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+                <TextBlock Grid.Row="7" 
+                    Text="  * EXPLAIN THE PROBLEM TO ANY ENGINEERS YOU HAVE CONTACT WITH. It is all too easy for an engineer to come out, do a first line check on your line and say there is no problem. Do another speedtest, show them that there clearly is still a problem and convince them to do the next measure while they are still there. You don't want to let them leave, wait a week for the ISP to check up on you, tell them that it didn't help only to have to wait yet another week for another engineer. Also, the engineers do different jobs. The first time one comes out you might be told they are a low level or first line engineer only, and that they only do the standard check and nothing more complicated. Later they may send a higher level engineer only for the same person to turn up. So ask when they're there if they can help in any other way."
+                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+                <TextBlock Grid.Row="8" 
+                    Text="  * BE NICE. Yes it is annoying spending so much time on the phone, and yes the hold music is infuriating, but the person on the other end is at least trying to help. If you annoy them, they can quite easily tell you they are putting you through to a manager, then just stick you back on hold and put you to the back of the queue for another operator. All because they didn't want to deal with you. A lot of people are working from home now too, and if you scream at someone who is in their living room heating up their lunch, they might just want to get rid of you. This also leads onto the next point."
+                           Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+                <TextBlock Grid.Row="9" 
+                    Text="  * SPEAK TO SOMEONE IN THE OFFICE. Tech support often don't have all the questions. If you get through to someone who is working from home, that means they don't have immediate access to their colleagues who may be able to answer questions they can't. You can politely ask if you can speak to someone in an office and often you will be passed on."
+                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+                <TextBlock Grid.Row="10" 
+                    Text="  * KEEP A LOG OF HOW LONG YOU SPEND ON THE PHONE. If you have a fault that goes on for a long time, it might be worth some compensation. It will help your case if you can say exactly how long you have spent on the phone trying to get this fixed. You can also point out how much time of that is spent on hold too."
+                    Foreground="White"
+                    FontSize="18"
+                    FontFamily="Medium"
+                           TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0,14,00,0"/>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>
