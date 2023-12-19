@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BetterStayOnline.MVVM.View"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="800"
+             d:DesignHeight="800" d:DesignWidth="1580"
              Background="#061d2d">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -14,23 +15,24 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
-            <RowDefinition Height="270"/>
+            <RowDefinition Height="500"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.ColumnSpan="2" Background="#07263b">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+        <Border Grid.ColumnSpan="2" Background="#07263b">
+            <Grid Grid.ColumnSpan="2" Width="1000">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.ColumnSpan="4"
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="4"
                        Foreground="White"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
@@ -38,8 +40,8 @@
                        FontFamily="Medium"
                        Text="Here you can create events to run tests at your chosen time, provided the app is running"/>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-                <TextBlock Foreground="White"
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                    <TextBlock Foreground="White"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="14"
@@ -47,15 +49,15 @@
                         Text="Day"
                         Margin="20"
                         Width="95"/>
-                <ComboBox Width="90" Height="30"
+                    <ComboBox Width="90" Height="30"
                           HorizontalAlignment="Right"
                           ItemsSource="{Binding Days}"
                           SelectedValue="{Binding SelectedDay}">
-                </ComboBox>
-            </StackPanel>
+                    </ComboBox>
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-                <TextBlock Foreground="White"
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                    <TextBlock Foreground="White"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="14"
@@ -63,15 +65,15 @@
                         Text="Hour"
                         Margin="20"
                         Width="95"/>
-                <ComboBox Width="90" Height="30"
+                    <ComboBox Width="90" Height="30"
                           HorizontalAlignment="Right"
                           ItemsSource="{Binding Hours}"
                           SelectedValue="{Binding SelectedHour}">
-                </ComboBox>
-            </StackPanel>
+                    </ComboBox>
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
-                <TextBlock Foreground="White"
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
+                    <TextBlock Foreground="White"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="14"
@@ -79,62 +81,70 @@
                         Text="Minute"
                         Margin="20"
                         Width="95"/>
-                <ComboBox Width="90" Height="30"
+                    <ComboBox Width="90" Height="30"
                           HorizontalAlignment="Right"
                           ItemsSource="{Binding Minutes}"
                           SelectedValue="{Binding SelectedMinute}">
-                </ComboBox>
-            </StackPanel>
+                    </ComboBox>
+                </StackPanel>
 
-            <Button Grid.Row="1" Grid.Column="3"
+                <Button Grid.Row="1" Grid.Column="3"
                         Content="Add Event"
                         Foreground="White"
                         FontSize="14"
                         FontWeight="Bold"
                         Margin="0,0,0,12"
                     Command="{Binding CreateEventCommand}">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="#fe6584"/>
-                        <Setter Property="Cursor" Value="Hand"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#1b911b"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#fe6584"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#1b911b"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
 
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Width="150" Height="50"
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="150" Height="50"
                                     CornerRadius="10"
                                     Background="{TemplateBinding Background}">
-                            <ContentPresenter VerticalAlignment="Center"
+                                <ContentPresenter VerticalAlignment="Center"
                                                   HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Border>
 
-        <Border Grid.Row="1" Grid.ColumnSpan="2">
+        
+
+        <Border Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="500"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="300"/>
                 </Grid.ColumnDefinitions>
                 <DataGrid ItemsSource="{Binding EventList}" 
-                  AutoGenerateColumns="False" CanUserAddRows="false"
-                  Foreground="Black" Background="#030f17"
-                          Margin="20,20,0,20">
-
+                      AutoGenerateColumns="False" CanUserAddRows="false"
+                      Foreground="Black" Background="#030f17"
+                      Margin="20,20,0,20">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header = "Day" Binding = "{Binding Day}" Width="80"/>
-                        <DataGridTextColumn Header = "Hour" Binding = "{Binding Hour}" Width="80"/>
-                        <DataGridTextColumn Header = "Minute" Binding = "{Binding Minute}" Width="80"/>
+                        <DataGridTextColumn Header="Day" Binding="{Binding Day}" Width="80" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Hour" Binding="{Binding Hour}" Width="80" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Minute" Binding="{Binding Minute}" Width="80" IsReadOnly="True"/>
                         <DataGridCheckBoxColumn Header="Select" Binding="{Binding Selected}"/>
                     </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="PreviewMouseDown" Handler="DataGridRow_PreviewMouseDown"/>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
 
                 <Button Grid.Row="1" Grid.Column="1"
@@ -173,7 +183,7 @@
             <TextBlock Foreground="White" 
                     FontSize="14"
                     FontFamily="Medium"
-                    Text="You can set a maximum of 10 events of your choosing"
+                    Text="You can set a maximum of 50 events of your choosing"
                     HorizontalAlignment="Center"
                     Margin="0,30,0,0"/>
             <TextBlock Foreground="White" 

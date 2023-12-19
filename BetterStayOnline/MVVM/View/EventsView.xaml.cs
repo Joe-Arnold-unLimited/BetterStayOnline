@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BetterStayOnline.MVVM.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,20 @@ namespace BetterStayOnline.MVVM.View
         public EventsView()
         {
             InitializeComponent();
+        }
+
+        // When row is clicked, select the checkbox
+        private void DataGridRow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.OriginalSource is CheckBox)
+                return; // Let the CheckBox handle the click
+
+            if (sender is DataGridRow row)
+            {
+                e.Handled = true;
+                Event rowData = (Event)row.Item; // Replace Event with the actual type of your data items
+                rowData.Selected = !rowData.Selected; // Toggle Selected property
+            }
         }
     }
 }

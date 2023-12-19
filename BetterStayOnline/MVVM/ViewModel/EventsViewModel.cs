@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows;
 
 namespace BetterStayOnline.MVVM.ViewModel
 {

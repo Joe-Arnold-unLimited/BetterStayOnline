@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BetterStayOnline"
         xmlns:viewModel="clr-namespace:BetterStayOnline.MVVM.ViewModel"
         mc:Ignorable="d"
-        Title="Better Stay Online" Height="900" Width="1380"
+        Title="Better Stay Online" Height="900" Width="1580"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanMinimize">
 

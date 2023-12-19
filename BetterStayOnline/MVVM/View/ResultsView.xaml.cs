@@ -167,14 +167,6 @@ namespace BetterStayOnline.MVVM.View
             ResultsTable.Plot.Clear();
             testResults = testResults.OrderBy(x => x.date).ToList();
 
-            downloadAverageScatter = ResultsTable.Plot.AddScatterList();
-            downloadAverageScatter.Label = "Download Avg";
-            downloadAverageScatter.MarkerSize = 0;
-            downloadAverageScatter.LineWidth = 8;
-            downloadAverageScatter.Color = Color.DarkSlateBlue;
-            downloadAverageScatter.Smooth = true;
-            downloadAverageScatter.IsVisible = Configuration.ShowAverages();
-
             uploadAverageScatter = ResultsTable.Plot.AddScatterList();
             uploadAverageScatter.Label = "Download Avg";
             uploadAverageScatter.MarkerSize = 0;
@@ -183,17 +175,25 @@ namespace BetterStayOnline.MVVM.View
             uploadAverageScatter.Smooth = true;
             uploadAverageScatter.IsVisible = Configuration.ShowAverages();
 
-            downloadScatter = ResultsTable.Plot.AddScatterList();
-            downloadScatter.Label = "Download";
-            downloadScatter.MarkerSize = 6;
-            downloadScatter.Color = Color.CornflowerBlue;
-            downloadScatter.LineWidth = 2;
+            downloadAverageScatter = ResultsTable.Plot.AddScatterList();
+            downloadAverageScatter.Label = "Download Avg";
+            downloadAverageScatter.MarkerSize = 0;
+            downloadAverageScatter.LineWidth = 8;
+            downloadAverageScatter.Color = Color.DarkSlateBlue;
+            downloadAverageScatter.Smooth = true;
+            downloadAverageScatter.IsVisible = Configuration.ShowAverages();
 
             uploadScatter = ResultsTable.Plot.AddScatterList();
             uploadScatter.Label = "Upload";
             uploadScatter.MarkerSize = 6;
             uploadScatter.Color = Color.Orange;
             uploadScatter.LineWidth = 2;
+
+            downloadScatter = ResultsTable.Plot.AddScatterList();
+            downloadScatter.Label = "Download";
+            downloadScatter.MarkerSize = 6;
+            downloadScatter.Color = Color.CornflowerBlue;
+            downloadScatter.LineWidth = 2;
 
             bool moreThan31DaysOfResults = false;
             highestYValue = testResults.Select(result => result.downSpeed > result.upSpeed ? result.downSpeed : result.upSpeed).Max();
