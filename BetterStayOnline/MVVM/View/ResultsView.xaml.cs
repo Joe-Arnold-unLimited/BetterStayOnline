@@ -168,7 +168,7 @@ namespace BetterStayOnline.MVVM.View
             testResults = testResults.OrderBy(x => x.date).ToList();
 
             uploadAverageScatter = ResultsTable.Plot.AddScatterList();
-            uploadAverageScatter.Label = "Download Avg";
+            uploadAverageScatter.Label = "Upload Avg";
             uploadAverageScatter.MarkerSize = 0;
             uploadAverageScatter.LineWidth = 8;
             uploadAverageScatter.Color = Color.OrangeRed;
