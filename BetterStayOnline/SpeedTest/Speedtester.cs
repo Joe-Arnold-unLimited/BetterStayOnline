@@ -1,10 +1,12 @@
 ﻿using BetterStayOnline.MVVM.Model;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Transactions;
 
 namespace BetterStayOnline.SpeedTest
 {
@@ -97,21 +99,75 @@ namespace BetterStayOnline.SpeedTest
                 }
 
                 // Save result to json
+                //string path = AppDomain.CurrentDomain.BaseDirectory + "\\External\\testresults.json";
+                //string data = File.ReadAllText(path);
+                //JObject obj = JObject.Parse(data);
+                //JArray jsonTestResults = (JArray)obj.GetValue("TestResults");
+
+                //JObject newTest = new JObject();
+                //newTest.Add("DateTime", bandwidthTest.date.ToString("dd/MM/yyyy hh:mm tt"));
+                //newTest.Add("Download", bandwidthTest.downSpeed);
+                //newTest.Add("Upload", bandwidthTest.upSpeed);
+
+                //jsonTestResults.Add(newTest);
+                //obj = new JObject();
+                //obj.Add("TestResults", jsonTestResults);
+
+                //File.WriteAllText(path, obj.ToString());
                 string path = AppDomain.CurrentDomain.BaseDirectory + "\\External\\testresults.json";
-                string data = File.ReadAllText(path);
-                JObject obj = JObject.Parse(data);
-                JArray jsonTestResults = (JArray)obj.GetValue("TestResults");
 
-                JObject newTest = new JObject();
-                newTest.Add("DateTime", bandwidthTest.date.ToString("dd/MM/yyyy hh:mm tt"));
-                newTest.Add("Download", bandwidthTest.downSpeed);
-                newTest.Add("Upload", bandwidthTest.upSpeed);
+                try
+                {
+                    using (var scope = new TransactionScope())
+                    {
+                        try
+                        {
+                            // Read existing data
+                            string existingData = File.ReadAllText(path);
+                            JObject obj = JObject.Parse(existingData);
+                            JArray jsonTestResults = (JArray)obj.GetValue("TestResults");
 
-                jsonTestResults.Add(newTest);
-                obj = new JObject();
-                obj.Add("TestResults", jsonTestResults);
+                            // Add new test data
+                            JObject newTest = new JObject();
+                            newTest.Add("DateTime", bandwidthTest.date.ToString("dd/MM/yyyy hh:mm tt"));
+                            newTest.Add("Download", bandwidthTest.downSpeed);
+                            newTest.Add("Upload", bandwidthTest.upSpeed);
 
-                File.WriteAllText(path, obj.ToString());
+                            jsonTestResults.Add(newTest);
+                            obj["TestResults"] = jsonTestResults;
+
+                            // Validate updated JSON
+                            try
+                            {
+                                JToken.Parse(obj.ToString());
+                            }
+                            catch (JsonReaderException)
+                            {
+                                Console.WriteLine("Updated JSON is not valid. Aborting update.");
+                                return bandwidthTest;
+                            }
+                            finally
+                            {
+                                // Perform atomic write to the file
+                                string tempPath = path + ".temp";
+                                File.WriteAllText(tempPath, obj.ToString());
+                                File.Replace(tempPath, path, null);
+
+                                scope.Complete(); // Commit the transaction
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Handle exceptions or log errors
+                            Console.WriteLine($"Error processing speed test: {ex.Message}");
+                        }
+                    }
+                }
+                catch (TransactionAbortedException)
+                {
+                    // Transaction was rolled back
+                    Console.WriteLine("Transaction aborted. File not modified.");
+                }
                 return bandwidthTest;
             }
             return null;
