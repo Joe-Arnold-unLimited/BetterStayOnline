@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Navigation;
+using System.Collections;
 
 namespace BetterStayOnline.MVVM.ViewModel
 {
@@ -17,6 +19,7 @@ namespace BetterStayOnline.MVVM.ViewModel
     {
         public RelayCommand CreateEventCommand { get; set; }
         public RelayCommand RemoveEventCommand { get; set; }
+        public RelayCommand RemoveAllEventsCommand { get; set; }
 
         private string[] _days;
         public string[] Days
@@ -103,7 +106,7 @@ namespace BetterStayOnline.MVVM.ViewModel
         public EventsViewModel()
         {
             Days = TimerFactory.Days;
-            Hours = TimerFactory.Hours;
+            Hours = new string[] { "Every hour", "Every 2 hours", "Every 4 hours" }.Concat(TimerFactory.Hours).ToArray();
             Minutes = TimerFactory.Minutes;
 
             _selectedDay = Days[0];
@@ -119,18 +122,58 @@ namespace BetterStayOnline.MVVM.ViewModel
 
             CreateEventCommand = new RelayCommand(o =>
             {
-                if (_eventList.Count < 50)
-                {
-                    Event e = new Event()
-                    {
-                        Day = _selectedDay,
-                        Hour = _selectedHour,
-                        Minute = _selectedMinute,
-                        Selected = false
-                    };
+                int maxNumberOfEvents = 9999;
 
-                    EventReader.AddEvent(e);
-                    _eventList.Add(e);
+                if (_eventList.Count < maxNumberOfEvents)
+                {
+                    Event e;
+                    switch (_selectedHour)
+                    {
+                        case "Every hour":
+                        case "Every 2 hours":
+                        case "Every 4 hours":
+                            int numberOfHours = _selectedHour.Contains("2") ? 2 : _selectedHour.Contains("4") ? 4 : 1;
+
+                            for(int hour = 0; hour < 24 && _eventList.Count < maxNumberOfEvents; hour += numberOfHours)
+                            {
+                                e = new Event()
+                                {
+                                    Day = _selectedDay,
+                                    Hour = TimerFactory.Hours[hour],
+                                    Minute = _selectedMinute,
+                                    Selected = false
+                                };
+
+                                EventReader.AddEvent(e);
+                                if(_eventList.All(item => !item.Equals(e)))
+                                    _eventList.Add(e);
+                            }
+                            break;
+                        default:
+                            e = new Event()
+                            {
+                                Day = _selectedDay,
+                                Hour = _selectedHour,
+                                Minute = _selectedMinute,
+                                Selected = false
+                            };
+
+                            EventReader.AddEvent(e);
+                            if (_eventList.All(item => !item.Equals(e)))
+                                _eventList.Add(e);
+                            break;
+                    }
+
+                    List<Event> sortedEventList = _eventList
+                        .OrderBy(item => Array.IndexOf(TimerFactory.Days, item.Day))
+                        .ThenBy(item => Array.IndexOf(TimerFactory.Hours, item.Hour))
+                        .ThenBy(item => Array.IndexOf(TimerFactory.Minutes, item.Minute)).ToList();
+                    _eventList.Clear();
+                    foreach (var item in sortedEventList)
+                    {
+                        _eventList.Add(item);
+                    }
+
                     _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
                 }
             });
@@ -139,6 +182,13 @@ namespace BetterStayOnline.MVVM.ViewModel
             {
                 foreach(var e in _eventList.Where(e => e.Selected).ToList())
                     _eventList .Remove(e);
+                EventReader.SaveEvents(_eventList);
+                _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
+            });
+
+            RemoveAllEventsCommand = new RelayCommand(o =>
+            {
+                _eventList.Clear();
                 EventReader.SaveEvents(_eventList);
                 _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
             });
