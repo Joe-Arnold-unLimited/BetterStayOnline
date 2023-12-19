@@ -35,6 +35,9 @@ namespace BetterStayOnline.MVVM.View
         private ScatterPlotList<double> downloadScatter;
         private ScatterPlotList<double> uploadScatter;
 
+        private ScatterPlotList<double> downloadAverageScatter;
+        private ScatterPlotList<double> uploadAverageScatter;
+
         // Keep a local copy of speeds for spans because we can't keep testResults live
         private List<double> downloadSpeeds = new List<double>();
         private VSpan vSpanDownload;
@@ -68,6 +71,9 @@ namespace BetterStayOnline.MVVM.View
                     if (testResult.downSpeed > r.highestYValue) r.highestYValue = testResult.downSpeed;
                     if (testResult.upSpeed > r.highestYValue) r.highestYValue = testResult.upSpeed;
                 }
+
+                r.RedrawAverages();
+
                 r.SetYAxisLimits(r.ResultsTable.Plot, r.highestYValue);
                 r.AddVerticalSpan();
 
@@ -161,24 +167,40 @@ namespace BetterStayOnline.MVVM.View
             ResultsTable.Plot.Clear();
             testResults = testResults.OrderBy(x => x.date).ToList();
 
+            downloadAverageScatter = ResultsTable.Plot.AddScatterList();
+            downloadAverageScatter.Label = "Download Avg";
+            downloadAverageScatter.MarkerSize = 0;
+            downloadAverageScatter.LineWidth = 8;
+            downloadAverageScatter.Color = Color.DarkSlateBlue;
+            downloadAverageScatter.Smooth = true;
+            downloadAverageScatter.IsVisible = Configuration.ShowAverages();
+
+            uploadAverageScatter = ResultsTable.Plot.AddScatterList();
+            uploadAverageScatter.Label = "Download Avg";
+            uploadAverageScatter.MarkerSize = 0;
+            uploadAverageScatter.LineWidth = 8;
+            uploadAverageScatter.Color = Color.OrangeRed;
+            uploadAverageScatter.Smooth = true;
+            uploadAverageScatter.IsVisible = Configuration.ShowAverages();
+
             downloadScatter = ResultsTable.Plot.AddScatterList();
             downloadScatter.Label = "Download";
             downloadScatter.MarkerSize = 6;
+            downloadScatter.Color = Color.CornflowerBlue;
             downloadScatter.LineWidth = 2;
+
             uploadScatter = ResultsTable.Plot.AddScatterList();
             uploadScatter.Label = "Upload";
             uploadScatter.MarkerSize = 6;
+            uploadScatter.Color = Color.Orange;
             uploadScatter.LineWidth = 2;
 
             bool moreThan31DaysOfResults = false;
-            highestYValue = 0;
+            highestYValue = testResults.Select(result => result.downSpeed > result.upSpeed ? result.downSpeed : result.upSpeed).Max();
             foreach (var testResult in testResults)
             {
                 AddResult(testResult);
-
                 if (!moreThan31DaysOfResults && testResult.date < DateTime.Now.AddDays(-31)) moreThan31DaysOfResults = true;
-                if (testResult.downSpeed > highestYValue) highestYValue = testResult.downSpeed;
-                if (testResult.upSpeed > highestYValue) highestYValue = testResult.upSpeed;
             }
 
             SetYAxisLimits(ResultsTable.Plot, highestYValue);
@@ -220,6 +242,7 @@ namespace BetterStayOnline.MVVM.View
                 uploadHLineVector.LineStyle = LineStyle.Dash;
             }
 
+            RedrawAverages();
             CalculatePercentageBelowMinimums();
             AddVerticalSpan();
             ResultsTable.Plot.Legend();
@@ -229,6 +252,30 @@ namespace BetterStayOnline.MVVM.View
             {
                 DownloadSpeed.Text = testResults[testResults.Count - 1].downSpeed.ToString();
                 UploadSpeed.Text = testResults[testResults.Count - 1].upSpeed.ToString();
+            }
+        }
+
+        private void RedrawAverages()
+        {
+            downloadAverageScatter.Clear();
+            uploadAverageScatter.Clear();
+
+            var groupingIntervalInDays = Configuration.DaysForAverage(); // You can let users set this value
+
+            var groupedByInterval = testResults
+                .GroupBy(result => result.date.Date.AddDays(-(result.date.Day % groupingIntervalInDays)))
+                .Select(group => new BandwidthTest()
+                {
+                    downSpeed = group.Average(result => result.downSpeed),
+                    upSpeed = group.Average(result => result.upSpeed),
+                    date = group.Key.AddHours(12) // Set the time to midday
+                })
+                .ToList();
+
+            foreach (var avg in groupedByInterval)
+            {
+                downloadAverageScatter.Add(avg.date.ToOADate(), avg.downSpeed);
+                uploadAverageScatter.Add(avg.date.ToOADate(), avg.upSpeed);
             }
         }
 
@@ -250,6 +297,8 @@ namespace BetterStayOnline.MVVM.View
             {
                 System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
                 {
+                    RedrawAverages();
+
                     CalculatePercentageBelowMinimums();
                     AddVerticalSpan();
                     ResultsTable.Render();

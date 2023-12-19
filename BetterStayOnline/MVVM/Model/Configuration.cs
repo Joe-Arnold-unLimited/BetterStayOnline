@@ -74,6 +74,8 @@ namespace BetterStayOnline.MVVM.Model
         public static bool ShowUploadRange() { return Get("ShowUploadRange").ToLower() == "true"; }
         public static double DownloadRange() { return double.Parse(Get("DownloadRange")) / 100; }
         public static double UploadRange() { return double.Parse(Get("UploadRange")) / 100; }
+        public static bool ShowAverages() { return Get("ShowAverages").ToLower() == "true"; }
+        public static int DaysForAverage() { return int.Parse(Get("DaysForAverage")); }
         public static bool ShowPercentagesBelowMinimums() { return Get("ShowPercentagesBelowMinimums").ToLower() == "true"; }
         public static bool RunTestOnStartup() { return Get("RunTestOnStartup").ToLower() == "true"; }
 
@@ -86,6 +88,8 @@ namespace BetterStayOnline.MVVM.Model
         public static void SetShowUploadRange(bool value) { Set("ShowUploadRange", value); }
         public static void SetDownloadRange(double value) { Set("DownloadRange", value); }
         public static void SetUploadRange(double value) { Set("UploadRange", value); }
+        public static void SetShowAverages(bool value) { Set("ShowAverages", value); }
+        public static void SetDaysForAverage(int value) { Set("DaysForAverage", value); }
         public static void SetShowPercentagesBelowMinimums(bool value) { Set("ShowPercentagesBelowMinimums", value); }
         public static void SetRunTestOnStartup(bool value) { Set("RunTestOnStartup", value); }
     }

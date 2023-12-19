@@ -18,7 +18,10 @@ namespace BetterStayOnline.MVVM.ViewModel
         public RelayCommand DownloadRangeDownCommand { get; set; }
         public RelayCommand UploadRangeUpCommand { get; set; }
         public RelayCommand UploadRangeDownCommand { get; set; }
+        public RelayCommand DaysForAverageUpCommand { get; set; }
+        public RelayCommand DaysForAverageDownCommand { get; set; }
         public RelayCommand SaveSettingsCommand { get; set; }
+
 
         private int _minDownload;
         public int MinDownload
@@ -60,6 +63,17 @@ namespace BetterStayOnline.MVVM.ViewModel
             set
             {
                 _uploadRange = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _daysForAverage;
+        public int DaysForAverage
+        {
+            get { return _daysForAverage; }
+            set
+            {
+                _daysForAverage = value;
                 OnPropertyChanged();
             }
         }
@@ -119,6 +133,17 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
+        private bool _showAverages;
+        public bool ShowAverages
+        {
+            get { return _showAverages; }
+            set
+            {
+                _showAverages = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _runSpeedtestOnStartup;
         public bool RunSpeedtestOnStartup
         {
@@ -140,6 +165,8 @@ namespace BetterStayOnline.MVVM.ViewModel
             ShowMinUpload = Configuration.ShowMinUp();
             ShowDownloadRange = Configuration.ShowDownloadRange();
             ShowUploadRange = Configuration.ShowUploadRange();
+            ShowAverages = Configuration.ShowUploadRange();
+            DaysForAverage = Configuration.DaysForAverage();
             ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
 
@@ -151,6 +178,8 @@ namespace BetterStayOnline.MVVM.ViewModel
             DownloadRangeDownCommand = new RelayCommand(o => { if (UploadRange > 0) DownloadRange-=5; });
             UploadRangeUpCommand = new RelayCommand(o => { if (UploadRange <= 95) UploadRange += 5; });
             UploadRangeDownCommand = new RelayCommand(o => { if (UploadRange > 0) UploadRange-=5; });
+            DaysForAverageUpCommand = new RelayCommand(o => { if(DaysForAverage < 14) DaysForAverage++; });
+            DaysForAverageDownCommand = new RelayCommand(o => { if (DaysForAverage > 0) DaysForAverage--; });
 
             SaveSettingsCommand = new RelayCommand(o =>
             {
@@ -162,6 +191,8 @@ namespace BetterStayOnline.MVVM.ViewModel
                 Configuration.SetShowMinUp(ShowMinUpload);
                 Configuration.SetShowDownloadRange(ShowDownloadRange);
                 Configuration.SetShowUploadRange(ShowUploadRange);
+                Configuration.SetShowAverages(ShowAverages);
+                Configuration.SetDaysForAverage(DaysForAverage);
                 Configuration.SetShowPercentagesBelowMinimums(ShowPercentagesBelowMinimums);
             });
         }

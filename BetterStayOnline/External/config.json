@@ -5,8 +5,10 @@
   "MinUp": 10,
   "RunTestOnStartup": true,
   "ShowPercentagesBelowMinimums": false,
-  "ShowDownloadRange": true,
-  "ShowUploadRange": true,
+  "ShowDownloadRange": false,
+  "ShowUploadRange": false,
   "DownloadRange": 80,
-  "UploadRange": 80
+  "UploadRange": 80,
+  "ShowAverages": false,
+  "DaysForAverage": 1
 }
