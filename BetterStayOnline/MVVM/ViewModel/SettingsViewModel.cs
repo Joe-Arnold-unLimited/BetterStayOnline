@@ -165,7 +165,7 @@ namespace BetterStayOnline.MVVM.ViewModel
             ShowMinUpload = Configuration.ShowMinUp();
             ShowDownloadRange = Configuration.ShowDownloadRange();
             ShowUploadRange = Configuration.ShowUploadRange();
-            ShowAverages = Configuration.ShowUploadRange();
+            ShowAverages = Configuration.ShowAverages();
             DaysForAverage = Configuration.DaysForAverage();
             ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
