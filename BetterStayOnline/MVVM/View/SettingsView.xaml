@@ -221,7 +221,7 @@
                 </StackPanel>
 
                 <TextBlock Grid.Column="4" Grid.Row="3"
-                        Text="This is based on all values recorded in that time, not by averages"
+                        Text="These are based on all values recorded in that time, not grouped averages"
                         Foreground="White"
                        FontSize="14"
                        FontFamily="Medium"
@@ -232,7 +232,7 @@
 
 
                 <TextBlock Grid.Column="0" Grid.Row="5"
-                        Text="Show download/upload averages over time"
+                        Text="Show download/upload trendlines&#x0a;calculated using grouped averages"
                         Foreground="White"
                        FontSize="14"
                        FontFamily="Medium"
@@ -285,7 +285,7 @@
                         VerticalAlignment="Center">
                 </CheckBox>
                 <TextBlock Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="2"
-                        Text="Turning this off will mean speedtests will not be run on app startup&#x0a;&#x0a;Turn this off if you just want to run tests manually or with events"
+                        Text="Turning this off will mean speedtests will not be run on app startup&#x0a;&#x0a;Turn this off if you just want to run tests manually or with events only"
                            TextWrapping="Wrap"
                         Foreground="White"
                        FontSize="13"

@@ -255,30 +255,6 @@ namespace BetterStayOnline.MVVM.View
             }
         }
 
-        private void RedrawAverages()
-        {
-            downloadAverageScatter.Clear();
-            uploadAverageScatter.Clear();
-
-            var groupingIntervalInDays = Configuration.DaysForAverage(); // You can let users set this value
-
-            var groupedByInterval = testResults
-                .GroupBy(result => result.date.Date.AddDays(-(result.date.Day % groupingIntervalInDays)))
-                .Select(group => new BandwidthTest()
-                {
-                    downSpeed = group.Average(result => result.downSpeed),
-                    upSpeed = group.Average(result => result.upSpeed),
-                    date = group.Key.AddHours(12) // Set the time to midday
-                })
-                .ToList();
-
-            foreach (var avg in groupedByInterval)
-            {
-                downloadAverageScatter.Add(avg.date.ToOADate(), avg.downSpeed);
-                uploadAverageScatter.Add(avg.date.ToOADate(), avg.upSpeed);
-            }
-        }
-
         private void AddResult(BandwidthTest testResult, bool render = false)
         {
             downloadScatter.Add(testResult.date.ToOADate(), testResult.downSpeed);
@@ -308,6 +284,30 @@ namespace BetterStayOnline.MVVM.View
 
                     if(viewer != null) viewer.wpfPlot1.Render();
                 }));
+            }
+        }
+
+        private void RedrawAverages()
+        {
+            downloadAverageScatter.Clear();
+            uploadAverageScatter.Clear();
+
+            var groupingIntervalInDays = Configuration.DaysForAverage(); // You can let users set this value
+
+            var groupedByInterval = testResults
+                .GroupBy(result => result.date.Date.AddDays(-(result.date.Day % groupingIntervalInDays)))
+                .Select(group => new BandwidthTest()
+                {
+                    downSpeed = group.Average(result => result.downSpeed),
+                    upSpeed = group.Average(result => result.upSpeed),
+                    date = group.Key.AddHours(12) // Set the time to midday
+                })
+                .ToList();
+
+            foreach (var avg in groupedByInterval)
+            {
+                downloadAverageScatter.Add(avg.date.ToOADate(), avg.downSpeed);
+                uploadAverageScatter.Add(avg.date.ToOADate(), avg.upSpeed);
             }
         }
 
