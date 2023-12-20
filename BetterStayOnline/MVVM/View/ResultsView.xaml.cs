@@ -147,6 +147,7 @@ namespace BetterStayOnline.MVVM.View
             else PercentagesBelowMinimumsBlock.Visibility = Visibility.Collapsed;
 
             AddVerticalSpan();
+            DrawMonthLines();
             SetUpTable();
             eventTimers = new List<Timer>();
             eventTimers = TimerFactory.CreateTimers(eventTimers, EventReader.GetEvents(), redraw, this).ToList();
@@ -259,6 +260,7 @@ namespace BetterStayOnline.MVVM.View
                 downloadHLineVector.LineStyle = LineStyle.Dash;
             }
 
+            DrawMonthLines();
             RedrawAverages();
             CalculatePercentageBelowMinimums();
             AddVerticalSpan();
@@ -290,6 +292,7 @@ namespace BetterStayOnline.MVVM.View
             {
                 System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
                 {
+                    DrawMonthLines();
                     RedrawAverages();
 
                     CalculatePercentageBelowMinimums();
@@ -301,6 +304,24 @@ namespace BetterStayOnline.MVVM.View
 
                     if(viewer != null) viewer.wpfPlot1.Render();
                 }));
+            }
+        }
+
+        private void DrawMonthLines()
+        {
+            string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+            if(testResults.Count > 1)
+            {
+                var firstDate = testResults.First().date.AddMonths(-24);
+                var lastDate = DateTime.Now.AddMonths(24);
+
+                for(DateTime month = new DateTime(firstDate.Year, firstDate.Month, 1); month < lastDate; month = month.AddMonths(1))
+                {
+                    var monthLine = ResultsTable.Plot.AddVerticalLine(x: month.ToOADate(), color: Color.DarkSlateGray, width: 1, style: LineStyle.Solid);
+
+                    string monthText = months[month.Month -1];
+                    ResultsTable.Plot.AddText(monthText, new DateTime(month.Year, month.Month, 2).ToOADate(), 3, size: 12, color: Color.DarkSlateGray);
+                }
             }
         }
 
