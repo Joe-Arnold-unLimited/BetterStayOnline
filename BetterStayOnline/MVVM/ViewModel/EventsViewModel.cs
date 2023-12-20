@@ -98,8 +98,6 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
-
-
         public List<Timer> _eventRunners;
         private Func<bool> runSpeedTest = () => { Speedtester.RunSpeedTest(); return true; };
 
@@ -114,6 +112,8 @@ namespace BetterStayOnline.MVVM.ViewModel
             _selectedMinute = Minutes[0];
 
             _eventList = EventReader.GetEvents();
+
+            _eventList = SortEvents(_eventList);
 
             _eventRunners = new List<Timer>();
             _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
@@ -164,15 +164,7 @@ namespace BetterStayOnline.MVVM.ViewModel
                             break;
                     }
 
-                    List<Event> sortedEventList = _eventList
-                        .OrderBy(item => Array.IndexOf(TimerFactory.Days, item.Day))
-                        .ThenBy(item => Array.IndexOf(TimerFactory.Hours, item.Hour))
-                        .ThenBy(item => Array.IndexOf(TimerFactory.Minutes, item.Minute)).ToList();
-                    _eventList.Clear();
-                    foreach (var item in sortedEventList)
-                    {
-                        _eventList.Add(item);
-                    }
+                    _eventList = SortEvents(_eventList);
 
                     _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
                 }
@@ -183,6 +175,9 @@ namespace BetterStayOnline.MVVM.ViewModel
                 foreach(var e in _eventList.Where(e => e.Selected).ToList())
                     _eventList .Remove(e);
                 EventReader.SaveEvents(_eventList);
+
+                _eventList = SortEvents(_eventList);
+
                 _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
             });
 
@@ -190,8 +185,26 @@ namespace BetterStayOnline.MVVM.ViewModel
             {
                 _eventList.Clear();
                 EventReader.SaveEvents(_eventList);
+
+                _eventList = SortEvents(_eventList);
+
                 _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
             });
+        }
+
+        private ObservableCollection<Event> SortEvents(ObservableCollection<Event> eventList)
+        {
+            List<Event> sortedEventList = eventList
+                        .OrderBy(item => Array.IndexOf(TimerFactory.Days, item.Day))
+                        .ThenBy(item => Array.IndexOf(TimerFactory.Hours, item.Hour))
+                        .ThenBy(item => Array.IndexOf(TimerFactory.Minutes, item.Minute)).ToList();
+            eventList.Clear();
+            foreach (var item in sortedEventList)
+            {
+                eventList.Add(item);
+            }
+
+            return eventList;
         }
 
         private void SetupEventRunners()
