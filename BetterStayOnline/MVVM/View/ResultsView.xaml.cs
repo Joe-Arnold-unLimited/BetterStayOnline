@@ -319,13 +319,63 @@ namespace BetterStayOnline.MVVM.View
                     upSpeed = group.Average(result => result.upSpeed),
                     date = DateTimeOffset.FromUnixTimeMilliseconds((long)(group.Average(result => (result.date - new DateTime(1970, 1, 1)).TotalMilliseconds))).DateTime
                 })
+                .OrderBy(group => group.date.ToOADate())
                 .ToList();
 
-            foreach (var avg in groupedByInterval)
+
+
+            List<BandwidthTest> filledData = new List<BandwidthTest>();
+
+            int daysForAverage = Configuration.DaysForAverage();
+
+            for (int i = 0; i < groupedByInterval.Count; i++)
+            {
+                filledData.Add(groupedByInterval[i]);
+
+                if (i + 1 < groupedByInterval.Count)
+                {
+                    BandwidthTest currentPoint = groupedByInterval[i];
+                    BandwidthTest nextPoint = groupedByInterval[i + 1];
+
+                    double daysBetween = (nextPoint.date - currentPoint.date).TotalDays;
+
+                    if (daysBetween > daysForAverage)
+                    {
+                        // Insert points along the line for days where there are no recordings
+                        int numInsertions = (int)(daysBetween / daysForAverage) - 1;
+                        TimeSpan timeStep = TimeSpan.FromDays(daysBetween / (numInsertions + 1));
+
+                        for (int j = 1; j <= numInsertions; j++)
+                        {
+                            DateTime interpolatedDate = currentPoint.date + TimeSpan.FromDays(timeStep.TotalDays * j);
+
+                            filledData.Add(new BandwidthTest
+                            {
+                                downSpeed = Lerp(currentPoint.downSpeed, nextPoint.downSpeed, j / (double)(numInsertions + 1)),
+                                upSpeed = Lerp(currentPoint.upSpeed, nextPoint.upSpeed, j / (double)(numInsertions + 1)),
+                                date = interpolatedDate
+                            });
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+            foreach (var avg in filledData)
             {
                 downloadAverageScatter.Add(avg.date.ToOADate(), avg.downSpeed);
                 uploadAverageScatter.Add(avg.date.ToOADate(), avg.upSpeed);
             }
+        }
+
+        public static double Lerp(double start, double end, double ratio)
+        {
+            return start + (end - start) * ratio;
         }
 
         private void AddVerticalSpan()
