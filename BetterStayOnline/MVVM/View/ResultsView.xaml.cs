@@ -83,9 +83,26 @@ namespace BetterStayOnline.MVVM.View
             return true;
         };
 
+        // TODO: Move to settings
+        Color uploadAverageColor;
+        Color uploadLineColor;
+        Color minUploadColor;
+        Color downloadAverageColor;
+        Color downloadLineColor;
+        Color minDownloadColor;
+        Color graphBackgroundColor;
+
         public ResultsView()
         {
             InitializeComponent();
+
+            uploadAverageColor = Color.Brown;
+            uploadLineColor = Color.OrangeRed;
+            minUploadColor = Color.Orange;
+            downloadAverageColor = Color.DarkSlateBlue;
+            downloadLineColor = Color.CornflowerBlue;
+            minDownloadColor = Color.DeepSkyBlue;
+            graphBackgroundColor = Color.FromArgb(7, 38, 59);
 
             ResultsTable.RightClicked -= ResultsTable.DefaultRightClickEvent;
             ResultsTable.RightClicked += DeployMainWindowMenu;
@@ -93,7 +110,7 @@ namespace BetterStayOnline.MVVM.View
             ReadPreexistingData();
             ResultsTable.Plot.YLabel("Speed (mbps)");
             ResultsTable.Plot.Style(ScottPlot.Style.Gray2);
-            ResultsTable.Plot.Style(figureBackground: System.Drawing.Color.FromArgb(7, 38, 59));
+            ResultsTable.Plot.Style(figureBackground: graphBackgroundColor);
             ResultsTable.Plot.XAxis.DateTimeFormat(true);
             ResultsTable.Plot.SetAxisLimitsY(0, 100);
             ResultsTable.Configuration.LockVerticalAxis = true;
@@ -171,7 +188,7 @@ namespace BetterStayOnline.MVVM.View
             uploadAverageScatter.Label = "Upload Avg";
             uploadAverageScatter.MarkerSize = 0;
             uploadAverageScatter.LineWidth = 8;
-            uploadAverageScatter.Color = Color.OrangeRed;
+            uploadAverageScatter.Color = uploadAverageColor;
             uploadAverageScatter.Smooth = true;
             uploadAverageScatter.IsVisible = Configuration.ShowAverages();
 
@@ -179,20 +196,20 @@ namespace BetterStayOnline.MVVM.View
             downloadAverageScatter.Label = "Download Avg";
             downloadAverageScatter.MarkerSize = 0;
             downloadAverageScatter.LineWidth = 8;
-            downloadAverageScatter.Color = Color.DarkSlateBlue;
+            downloadAverageScatter.Color = downloadAverageColor;
             downloadAverageScatter.Smooth = true;
             downloadAverageScatter.IsVisible = Configuration.ShowAverages();
 
             uploadScatter = ResultsTable.Plot.AddScatterList();
             uploadScatter.Label = "Upload";
             uploadScatter.MarkerSize = 6;
-            uploadScatter.Color = Color.Orange;
+            uploadScatter.Color = uploadLineColor;
             uploadScatter.LineWidth = 2;
 
             downloadScatter = ResultsTable.Plot.AddScatterList();
             downloadScatter.Label = "Download";
             downloadScatter.MarkerSize = 6;
-            downloadScatter.Color = Color.CornflowerBlue;
+            downloadScatter.Color = downloadLineColor;
             downloadScatter.LineWidth = 2;
 
             bool moreThan31DaysOfResults = false;
@@ -224,22 +241,22 @@ namespace BetterStayOnline.MVVM.View
                 }
             }
 
-            if (Configuration.ShowMinDown())
-            {
-                double minDown = Configuration.MinDown();
-                var downloadHLineVector = ResultsTable.Plot.AddHorizontalLine(minDown);
-                downloadHLineVector.Label = "Min. Download";
-                downloadHLineVector.Color = Color.DeepSkyBlue;
-                downloadHLineVector.LineStyle = LineStyle.Dash;
-            }
-
             if (Configuration.ShowMinUp())
             {
                 double minUp = Configuration.MinUp();
                 var uploadHLineVector = ResultsTable.Plot.AddHorizontalLine(minUp);
                 uploadHLineVector.Label = "Min. Upload";
-                uploadHLineVector.Color = Color.Orange;
+                uploadHLineVector.Color = minUploadColor;
                 uploadHLineVector.LineStyle = LineStyle.Dash;
+            }
+
+            if (Configuration.ShowMinDown())
+            {
+                double minDown = Configuration.MinDown();
+                var downloadHLineVector = ResultsTable.Plot.AddHorizontalLine(minDown);
+                downloadHLineVector.Label = "Min. Download";
+                downloadHLineVector.Color = minDownloadColor;
+                downloadHLineVector.LineStyle = LineStyle.Dash;
             }
 
             RedrawAverages();
@@ -292,7 +309,7 @@ namespace BetterStayOnline.MVVM.View
             downloadAverageScatter.Clear();
             uploadAverageScatter.Clear();
 
-            var groupingIntervalInDays = Configuration.DaysForAverage(); // You can let users set this value
+            var groupingIntervalInDays = Configuration.DaysForAverage();
 
             var groupedByInterval = testResults
                 .GroupBy(result => result.date.Date.AddDays(-(result.date.Day % groupingIntervalInDays)))
@@ -300,7 +317,7 @@ namespace BetterStayOnline.MVVM.View
                 {
                     downSpeed = group.Average(result => result.downSpeed),
                     upSpeed = group.Average(result => result.upSpeed),
-                    date = group.Key.AddHours(12) // Set the time to midday
+                    date = DateTimeOffset.FromUnixTimeMilliseconds((long)(group.Average(result => (result.date - new DateTime(1970, 1, 1)).TotalMilliseconds))).DateTime
                 })
                 .ToList();
 
