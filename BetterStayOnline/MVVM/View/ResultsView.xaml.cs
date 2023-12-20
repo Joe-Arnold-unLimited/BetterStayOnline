@@ -322,8 +322,7 @@ namespace BetterStayOnline.MVVM.View
                 .OrderBy(group => group.date.ToOADate())
                 .ToList();
 
-
-
+            // Fill in periods of missing data to avoid trendlines gooing backwards
             List<BandwidthTest> filledData = new List<BandwidthTest>();
 
             int daysForAverage = Configuration.DaysForAverage();
@@ -359,12 +358,6 @@ namespace BetterStayOnline.MVVM.View
                     }
                 }
             }
-
-
-
-
-
-
 
             foreach (var avg in filledData)
             {
