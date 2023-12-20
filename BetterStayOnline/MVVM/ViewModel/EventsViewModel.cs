@@ -144,9 +144,11 @@ namespace BetterStayOnline.MVVM.ViewModel
                                     Selected = false
                                 };
 
-                                EventReader.AddEvent(e);
                                 if(_eventList.All(item => !item.Equals(e)))
+                                {
+                                    EventReader.AddEvent(e);
                                     _eventList.Add(e);
+                                }
                             }
                             break;
                         default:
@@ -158,9 +160,11 @@ namespace BetterStayOnline.MVVM.ViewModel
                                 Selected = false
                             };
 
-                            EventReader.AddEvent(e);
                             if (_eventList.All(item => !item.Equals(e)))
+                            {
+                                EventReader.AddEvent(e);
                                 _eventList.Add(e);
+                            }
                             break;
                     }
 
