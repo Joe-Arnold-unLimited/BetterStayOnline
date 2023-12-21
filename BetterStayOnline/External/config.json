@@ -1,4 +1,8 @@
 {
+  "ShowDownloadTrendline": true,
+  "ShowUploadTrendline": true,
+  "ShowDownloadPoints": true,
+  "ShowUploadPoints": true,
   "ShowMinDown": false,
   "ShowMinUp": false,
   "MinDown": 50,
@@ -9,11 +13,5 @@
   "ShowUploadRange": false,
   "DownloadRange": 80,
   "UploadRange": 80,
-  //"ShowAverages": false,
-  "DaysForAverage": 1,
-
-  "ShowDownloadTrendline": true,
-  "ShowUploadTrendline": true,
-  "ShowDownloadPoints": true,
-  "ShowUploadPoints": true
+  "DaysForAverage": 1
 }

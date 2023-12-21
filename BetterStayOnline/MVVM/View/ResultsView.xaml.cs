@@ -307,16 +307,20 @@ namespace BetterStayOnline.MVVM.View
             }
         }
 
+        int numberOfMonthsEitherSideToDraw = 24;
+
         private void DrawMonthLines()
         {
             ScottPlot.Alignment[] alignments = (ScottPlot.Alignment[])Enum.GetValues(typeof(ScottPlot.Alignment));
             string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
             if(testResults.Count > 1)
             {
-                var firstDate = testResults.First().date.AddMonths(-24);
-                var lastDate = DateTime.Now.AddMonths(24);
+                var firstDate = testResults.First().date;
+                var startMonthLines = firstDate.AddMonths(-numberOfMonthsEitherSideToDraw);
+                var lastDate = DateTime.Now;
+                var endMonthLines = lastDate.AddMonths(numberOfMonthsEitherSideToDraw);
 
-                for(DateTime month = new DateTime(firstDate.Year, firstDate.Month, 1); month < lastDate; month = month.AddMonths(1))
+                for (DateTime month = new DateTime(startMonthLines.Year, startMonthLines.Month, 1); month < endMonthLines; month = month.AddMonths(1))
                 {
                     var monthLine = ResultsTable.Plot.AddVerticalLine(x: month.ToOADate(), color: Color.DarkSlateGray, width: 1, style: LineStyle.Solid);
 
