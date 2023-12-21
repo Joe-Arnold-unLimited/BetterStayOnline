@@ -17,7 +17,6 @@ using ScottPlot;
 using ScottPlot.Drawing;
 using MenuItem = System.Windows.Controls.MenuItem;
 using System.Reflection;
-using SixLabors.ImageSharp.Processing.Processors.Convolution;
 using System.Windows.Media;
 using Color = System.Drawing.Color;
 using Microsoft.Office.Core;
@@ -485,6 +484,11 @@ namespace BetterStayOnline.MVVM.View
                     .Where(result => result.date > currentDate && result.date <= endOfPeriodDate)
                     .Select(result => download ? result.downSpeed : result.upSpeed).ToList();
 
+                TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
+                int hours = periodTimeSpan.Days * 24;
+
+                DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
+
                 if (speedsInRange.Count > 3)
                 {
                     int middleRangePercent = (int)(range * speedsInRange.Count);
@@ -494,14 +498,14 @@ namespace BetterStayOnline.MVVM.View
 
                     List<double> middleRangePercentValues = speedsInRange.GetRange(startIndex, middleRangePercent);
 
-                    TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
-                    int hours = periodTimeSpan.Days * 24;
-
-                    DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
-
                     candleValues.Add(
                         new OHLC(middleRangePercentValues.First(), speedsInRange.Max(),
                         speedsInRange.Min(), middleRangePercentValues.Last(), pointToShowCandle, periodTimeSpan));
+                }
+                else if(speedsInRange.Count > 0)
+                {
+                    candleValues.Add(
+                        new OHLC(speedsInRange.First(), speedsInRange.Max(), speedsInRange.Min(), speedsInRange.Last(), pointToShowCandle, periodTimeSpan));
                 }
 
                 switch (candlePeriod)

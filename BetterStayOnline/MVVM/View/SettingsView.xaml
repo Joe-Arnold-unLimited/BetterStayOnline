@@ -301,7 +301,7 @@
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                            Text="Show monthly download candles"
+                            Text="Show download candles"
                             Foreground="White"
                            FontSize="14"
                            FontFamily="Medium"
@@ -345,7 +345,7 @@
                             VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                            Text="Show monthly upload candles"
+                            Text="Show upload candles"
                             Foreground="White"
                            FontSize="14"
                            FontFamily="Medium"
@@ -378,14 +378,6 @@
                                 </ComboBox>
                             </Grid>
                         </Border>
-
-                        <TextBlock Grid.Column="5" Grid.Row="1"
-                            Text="There must be at least 3 recordings in a period to show a candle"
-                            Foreground="White"
-                           FontSize="14"
-                           FontFamily="Medium"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
 
