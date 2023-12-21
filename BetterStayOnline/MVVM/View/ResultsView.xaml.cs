@@ -76,7 +76,7 @@ namespace BetterStayOnline.MVVM.View
                 r.RedrawAverages();
 
                 r.SetYAxisLimits(r.ResultsTable.Plot, r.highestYValue);
-                r.AddVerticalSpan();
+                r.AddCandles();
 
                 r.CalculatePercentageBelowMinimums();
                 r.ResultsTable.Render();
@@ -147,7 +147,7 @@ namespace BetterStayOnline.MVVM.View
             }
             else PercentagesBelowMinimumsBlock.Visibility = Visibility.Collapsed;
 
-            AddVerticalSpan();
+            AddCandles();
             DrawMonthLines();
             SetUpTable();
             eventTimers = new List<Timer>();
@@ -266,7 +266,7 @@ namespace BetterStayOnline.MVVM.View
             DrawMonthLines();
             RedrawAverages();
             CalculatePercentageBelowMinimums();
-            AddVerticalSpan();
+            AddCandles();
             ResultsTable.Plot.Legend();
             ResultsTable.Render();
 
@@ -299,7 +299,7 @@ namespace BetterStayOnline.MVVM.View
                     RedrawAverages();
 
                     CalculatePercentageBelowMinimums();
-                    AddVerticalSpan();
+                    AddCandles();
                     ResultsTable.Render();
 
                     DownloadSpeed.Text = testResult.downSpeed.ToString();
@@ -420,49 +420,11 @@ namespace BetterStayOnline.MVVM.View
             return date;
         }
 
-        private void AddVerticalSpan()
+        private void AddCandles()
         {
-            var firstDate = testResults.First().date;
-            var lastDate = DateTime.Now;
-            int candlePeriod = Configuration.CandlePeriod() == "Monthly" ? 1 : 0;
-
             if (Configuration.ShowDownloadCandles())
             {
-                double downloadRange = (100 - (Configuration.CandleError() * 2)) / 100;
-                List<OHLC> downloadCandleValues = new List<OHLC>();
-
-                DateTime currentDate = candlePeriod == 1 ? new DateTime(firstDate.Year, firstDate.Month, 1) : new DateTime(firstDate.Year, firstDate.Month, firstDate.Day);
-
-                while(currentDate < lastDate)
-                {
-                    DateTime endOfPeriodDate = candlePeriod == 1 ? AddMonth(currentDate) : currentDate.AddDays(7);
-                    var downloadSpeedsInRange = testResults
-                        .Where(result => result.date > currentDate && result.date <= endOfPeriodDate)
-                        .Select(result => result.downSpeed).ToList();
-
-                    if (downloadSpeedsInRange.Count > 3)
-                    {
-                        int middleRangePercent = (int)(downloadRange * downloadSpeedsInRange.Count);
-
-                        // Calculate the start and end indices for the candle
-                        int startIndex = (downloadSpeedsInRange.Count - middleRangePercent) / 2;
-
-                        List<double> middleRangePercentValues = downloadSpeedsInRange.GetRange(startIndex, middleRangePercent);
-
-                        TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
-                        int hours = periodTimeSpan.Days * 24;
-
-                        DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
-
-                        downloadCandleValues.Add(
-                            new OHLC(middleRangePercentValues.First(), downloadSpeedsInRange.Max(),
-                            downloadSpeedsInRange.Min(), middleRangePercentValues.Last(), pointToShowCandle, periodTimeSpan));
-                    }
-
-                    currentDate = candlePeriod == 1 ? currentDate = AddMonth(currentDate) : currentDate.AddDays(7);
-                }
-
-                var downloadCandles = ResultsTable.Plot.AddCandlesticks(downloadCandleValues.ToArray());
+                var downloadCandles = ResultsTable.Plot.AddCandlesticks(GetCandlesticks().ToArray());
                 var candleColor = Color.FromArgb(75, Color.Aqua);
                 downloadCandles.ColorUp = candleColor;
                 downloadCandles.ColorDown = Color.FromArgb(75, Color.DodgerBlue);
@@ -471,46 +433,93 @@ namespace BetterStayOnline.MVVM.View
 
             if (Configuration.ShowUploadCandles())
             {
-                double uploadRange = (100 -(Configuration.CandleError()*2)) / 100;
-                List<OHLC> uploadCandleValues = new List<OHLC>();
-
-                DateTime currentDate = candlePeriod == 1 ? new DateTime(firstDate.Year, firstDate.Month, 1) : new DateTime(firstDate.Year, firstDate.Month, firstDate.Day);
-
-                while (currentDate < lastDate)
-                {
-                    DateTime endOfPeriodDate = candlePeriod == 1 ? AddMonth(currentDate) : currentDate.AddDays(7);
-                    var uploadSpeedsInRange = testResults
-                        .Where(result => result.date > currentDate && result.date <= endOfPeriodDate)
-                        .Select(result => result.upSpeed).ToList();
-
-                    if (uploadSpeedsInRange.Count > 3)
-                    {
-                        int middleRangePercent = (int)(uploadRange * uploadSpeedsInRange.Count);
-
-                        // Calculate the start and end indices for the candle
-                        int startIndex = (uploadSpeedsInRange.Count - middleRangePercent) / 2;
-
-                        List<double> middleRangePercentValues = uploadSpeedsInRange.GetRange(startIndex, middleRangePercent);
-
-                        TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
-                        int hours = periodTimeSpan.Days * 24;
-
-                        DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
-
-                        uploadCandleValues.Add(
-                            new OHLC(middleRangePercentValues.First(), uploadSpeedsInRange.Max(),
-                            uploadSpeedsInRange.Min(), middleRangePercentValues.Last(), pointToShowCandle, periodTimeSpan));
-                    }
-
-                    currentDate = candlePeriod == 1 ? currentDate = AddMonth(currentDate) : currentDate.AddDays(7);
-                }
-
-                var uploadCandles = ResultsTable.Plot.AddCandlesticks(uploadCandleValues.ToArray());
+                var uploadCandles = ResultsTable.Plot.AddCandlesticks(GetCandlesticks(false).ToArray());
                 var candleColor = Color.FromArgb(75, Color.Orange);
                 uploadCandles.ColorUp = candleColor;
                 uploadCandles.ColorDown = Color.FromArgb(75, Color.Red);
                 uploadCandles.WickColor = candleColor;
             }
+        }
+
+        // if upload, set  download to false
+        private List<OHLC> GetCandlesticks(bool download = true)
+        {
+            var firstDate = testResults.First().date;
+            var lastDate = DateTime.Now;
+            string candlePeriod = Configuration.CandlePeriod();
+
+            double range = (100 - (Configuration.CandleError() * 2)) / 100;
+            List<OHLC> candleValues = new List<OHLC>();
+
+            DateTime currentDate;
+            switch (candlePeriod)
+            {
+                case "Daily":
+                case "Weekly":
+                    currentDate = new DateTime(firstDate.Year, firstDate.Month, firstDate.Day);
+                    break;
+                default:
+                case "Monthly":
+                    currentDate = new DateTime(firstDate.Year, firstDate.Month, 1);
+                    break;
+            }
+
+            while (currentDate < lastDate)
+            {
+                DateTime endOfPeriodDate;
+                switch (candlePeriod)
+                {
+                    case "Daily":
+                        endOfPeriodDate = currentDate.AddDays(1);
+                        break;
+                    case "Weekly":
+                        endOfPeriodDate = currentDate.AddDays(7);
+                        break;
+                    default:
+                    case "Monthly":
+                        endOfPeriodDate = AddMonth(currentDate);
+                        break;
+                }
+
+                var speedsInRange = testResults
+                    .Where(result => result.date > currentDate && result.date <= endOfPeriodDate)
+                    .Select(result => download ? result.downSpeed : result.upSpeed).ToList();
+
+                if (speedsInRange.Count > 3)
+                {
+                    int middleRangePercent = (int)(range * speedsInRange.Count);
+
+                    // Calculate the start and end indices for the candle
+                    int startIndex = (speedsInRange.Count - middleRangePercent) / 2;
+
+                    List<double> middleRangePercentValues = speedsInRange.GetRange(startIndex, middleRangePercent);
+
+                    TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
+                    int hours = periodTimeSpan.Days * 24;
+
+                    DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
+
+                    candleValues.Add(
+                        new OHLC(middleRangePercentValues.First(), speedsInRange.Max(),
+                        speedsInRange.Min(), middleRangePercentValues.Last(), pointToShowCandle, periodTimeSpan));
+                }
+
+                switch (candlePeriod)
+                {
+                    case "Daily":
+                        currentDate = currentDate.AddDays(1);
+                        break;
+                    case "Weekly":
+                        currentDate = currentDate.AddDays(7);
+                        break;
+                    default:
+                    case "Monthly":
+                        currentDate = AddMonth(currentDate);
+                        break;
+                }
+            }
+
+            return candleValues;
         }
 
         private void CalculatePercentageBelowMinimums()

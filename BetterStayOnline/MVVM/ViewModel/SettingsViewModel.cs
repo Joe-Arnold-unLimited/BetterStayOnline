@@ -75,7 +75,7 @@ namespace BetterStayOnline.MVVM.ViewModel
         {
             get
             {
-                return new string[] { "Monthly", "Weekly" };
+                return new string[] { "Monthly", "Weekly", "Daily" };
             }
         }
 
