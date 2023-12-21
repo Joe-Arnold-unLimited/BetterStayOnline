@@ -1,8 +1,8 @@
 {
-  "ShowDownloadPoints": true,
-  "ShowUploadPoints": true,
-  "ShowDownloadTrendline": true,
-  "ShowUploadTrendline": true,
+  "ShowDownloadPoints": false,
+  "ShowUploadPoints": false,
+  "ShowDownloadTrendline": false,
+  "ShowUploadTrendline": false,
   "ShowMinDown": false,
   "ShowMinUp": false,
   "MinDown": 50,
@@ -11,7 +11,7 @@
   "ShowPercentagesBelowMinimums": false,
   "ShowDownloadCandles": false,
   "ShowUploadCandles": false,
-  "DownloadError": 20,
-  "UploadError": 20,
+  "CandleError": 20,
+  "CandlePeriod": "Monthly",
   "DaysForAverage": 1
 }

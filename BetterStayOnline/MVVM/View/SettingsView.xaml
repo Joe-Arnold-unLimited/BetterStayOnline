@@ -285,7 +285,7 @@
                     </Grid>
                 </Border>
 
-                <!--RANGES-->
+                <!--CANDLES-->
                 <Border Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="5"
                         VerticalAlignment="Center">
                     <Grid>
@@ -321,7 +321,7 @@
                             VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal">
                             <TextBlock
-                            Text="{Binding DownloadError}"
+                            Text="{Binding CandleError}"
                             IsEnabled="False"
                             HorizontalAlignment="Right"
                             Foreground="Black"
@@ -331,10 +331,18 @@
                             Background="Gray"/>
                             <StackPanel
                                 VerticalAlignment="Center">
-                                <RepeatButton Content="&#9650;" Command="{Binding DownloadErrorUpCommand}" Interval="100"/>
-                                <RepeatButton Content="&#9660;" Command="{Binding DownloadErrorDownCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9650;" Command="{Binding CandleErrorUpCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9660;" Command="{Binding CandleErrorDownCommand}" Interval="100"/>
                             </StackPanel>
                         </StackPanel>
+                        
+                        <TextBlock Grid.Column="4" Grid.Row="0"
+                            Text="Error percentages are a margin of error on either side&#x0a;If the error percentage is 20%, the main candle will be the middle 60% of values"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
                             Text="Show monthly upload candles"
@@ -348,37 +356,28 @@
                              Margin="10"
                             IsChecked="{Binding ShowUploadCandles}"
                             VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="2" Grid.Row="1"
-                            Text="Error percentage"
-                            Foreground="White"
-                           FontSize="14"
-                           FontFamily="Medium"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"/>
-                        <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
-                            <TextBlock
-                                Text="{Binding UploadError}"
-                                IsEnabled="False"
-                                HorizontalAlignment="Right"
-                                Foreground="Black"
-                                VerticalAlignment="Center"
-                                Margin="10"
-                                Width="32"
-                                Background="Gray"/>
-                            <StackPanel
-                                VerticalAlignment="Center">
-                                <RepeatButton Content="&#9650;" Command="{Binding UploadErrorUpCommand}" Interval="100"/>
-                                <RepeatButton Content="&#9660;" Command="{Binding UploadErrorDownCommand}" Interval="100"/>
-                            </StackPanel>
-                        </StackPanel>
 
-                        <TextBlock Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"
-                            Text="Error percentages are a margin of error on either side&#x0a;If the error percentage is 20%, the main candle will be the middle 60% of values"
-                            Foreground="White"
-                           FontSize="14"
-                           FontFamily="Medium"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"/>
+                        <Border Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="210"/>
+                                    <ColumnDefinition Width="120"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                    Text="Candle Period"
+                                    Foreground="White"
+                                   FontSize="14"
+                                   FontFamily="Medium"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"/>
+
+                                <ComboBox Grid.Column="1" Height="26" Width="80" Margin="8" HorizontalAlignment="Left"
+                                      ItemsSource="{Binding CandlePeriods}"
+                                      SelectedItem="{Binding CandlePeriod}">
+                                </ComboBox>
+                            </Grid>
+                        </Border>
                     </Grid>
                 </Border>
 

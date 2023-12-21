@@ -20,6 +20,7 @@ using System.Reflection;
 using SixLabors.ImageSharp.Processing.Processors.Convolution;
 using System.Windows.Media;
 using Color = System.Drawing.Color;
+using Microsoft.Office.Core;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -423,36 +424,42 @@ namespace BetterStayOnline.MVVM.View
         {
             var firstDate = testResults.First().date;
             var lastDate = DateTime.Now;
+            int candlePeriod = Configuration.CandlePeriod() == "Monthly" ? 1 : 0;
 
             if (Configuration.ShowDownloadCandles())
             {
-                double downloadRange = (100 - (Configuration.DownloadError() * 2)) / 100;
+                double downloadRange = (100 - (Configuration.CandleError() * 2)) / 100;
                 List<OHLC> downloadCandleValues = new List<OHLC>();
 
-                for (DateTime month = new DateTime(firstDate.Year, firstDate.Month, 1); month < lastDate; month = AddMonth(month))
+                DateTime currentDate = candlePeriod == 1 ? new DateTime(firstDate.Year, firstDate.Month, 1) : new DateTime(firstDate.Year, firstDate.Month, firstDate.Day);
+
+                while(currentDate < lastDate)
                 {
-                    var downloadSpeedsInRange = testResults.Where(result => result.date > month && result.date <= AddMonth(month)).Select(result => result.downSpeed).ToList();
+                    DateTime endOfPeriodDate = candlePeriod == 1 ? AddMonth(currentDate) : currentDate.AddDays(7);
+                    var downloadSpeedsInRange = testResults
+                        .Where(result => result.date > currentDate && result.date <= endOfPeriodDate)
+                        .Select(result => result.downSpeed).ToList();
 
                     if (downloadSpeedsInRange.Count > 3)
                     {
                         int middleRangePercent = (int)(downloadRange * downloadSpeedsInRange.Count);
 
-                        //// Sort the list in ascending order
-                        //downloadSpeedsInRange.Sort();
-
-                        // Calculate the start and end indices for the middle 80% range
+                        // Calculate the start and end indices for the candle
                         int startIndex = (downloadSpeedsInRange.Count - middleRangePercent) / 2;
 
-                        // Get the temperature values for the middle 80% range
                         List<double> middleRangePercentValues = downloadSpeedsInRange.GetRange(startIndex, middleRangePercent);
 
-                        TimeSpan monthTimeSpan = AddMonth(month) - month;
-                        int hours = monthTimeSpan.Days * 24;
+                        TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
+                        int hours = periodTimeSpan.Days * 24;
+
+                        DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
 
                         downloadCandleValues.Add(
                             new OHLC(middleRangePercentValues.First(), downloadSpeedsInRange.Max(),
-                            downloadSpeedsInRange.Min(), middleRangePercentValues.Last(), month.AddHours(hours / 2), AddMonth(month).AddHours(hours / 2) - month.AddHours(hours / 2)));
+                            downloadSpeedsInRange.Min(), middleRangePercentValues.Last(), pointToShowCandle, periodTimeSpan));
                     }
+
+                    currentDate = candlePeriod == 1 ? currentDate = AddMonth(currentDate) : currentDate.AddDays(7);
                 }
 
                 var downloadCandles = ResultsTable.Plot.AddCandlesticks(downloadCandleValues.ToArray());
@@ -464,33 +471,38 @@ namespace BetterStayOnline.MVVM.View
 
             if (Configuration.ShowUploadCandles())
             {
-                double uploadRange = (100 -(Configuration.UploadError()*2)) / 100;
+                double uploadRange = (100 -(Configuration.CandleError()*2)) / 100;
                 List<OHLC> uploadCandleValues = new List<OHLC>();
 
-                for (DateTime month = new DateTime(firstDate.Year, firstDate.Month, 1); month < lastDate; month = AddMonth(month))
+                DateTime currentDate = candlePeriod == 1 ? new DateTime(firstDate.Year, firstDate.Month, 1) : new DateTime(firstDate.Year, firstDate.Month, firstDate.Day);
+
+                while (currentDate < lastDate)
                 {
-                    var uploadSpeedsInRange = testResults.Where(result => result.date > month && result.date <= AddMonth(month)).Select(result => result.upSpeed).ToList();
+                    DateTime endOfPeriodDate = candlePeriod == 1 ? AddMonth(currentDate) : currentDate.AddDays(7);
+                    var uploadSpeedsInRange = testResults
+                        .Where(result => result.date > currentDate && result.date <= endOfPeriodDate)
+                        .Select(result => result.upSpeed).ToList();
 
                     if (uploadSpeedsInRange.Count > 3)
                     {
                         int middleRangePercent = (int)(uploadRange * uploadSpeedsInRange.Count);
 
-                        // Sort the list in ascending order
-                        uploadSpeedsInRange.Sort();
-
-                        // Calculate the start and end indices for the middle 80% range
+                        // Calculate the start and end indices for the candle
                         int startIndex = (uploadSpeedsInRange.Count - middleRangePercent) / 2;
 
-                        // Get the temperature values for the middle 80% range
                         List<double> middleRangePercentValues = uploadSpeedsInRange.GetRange(startIndex, middleRangePercent);
 
-                        TimeSpan monthTimeSpan = AddMonth(month) - month;
-                        int hours = monthTimeSpan.Days * 24;
+                        TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
+                        int hours = periodTimeSpan.Days * 24;
+
+                        DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
 
                         uploadCandleValues.Add(
                             new OHLC(middleRangePercentValues.First(), uploadSpeedsInRange.Max(),
-                            uploadSpeedsInRange.Min(), middleRangePercentValues.Last(), month.AddHours(hours / 2), AddMonth(month).AddHours(hours / 2) - month.AddHours(hours / 2)));
+                            uploadSpeedsInRange.Min(), middleRangePercentValues.Last(), pointToShowCandle, periodTimeSpan));
                     }
+
+                    currentDate = candlePeriod == 1 ? currentDate = AddMonth(currentDate) : currentDate.AddDays(7);
                 }
 
                 var uploadCandles = ResultsTable.Plot.AddCandlesticks(uploadCandleValues.ToArray());

@@ -5,16 +5,14 @@ namespace BetterStayOnline.MVVM.ViewModel
 {
     class SettingsViewModel : ObservableObject
     {
+        public RelayCommand DaysForAverageUpCommand { get; set; }
+        public RelayCommand DaysForAverageDownCommand { get; set; }
         public RelayCommand MinDownloadUpCommand { get; set; }
         public RelayCommand MinDownloadDownCommand { get; set; }
         public RelayCommand MinUploadUpCommand { get; set; }
         public RelayCommand MinUploadDownCommand { get; set; }
-        public RelayCommand DownloadErrorUpCommand { get; set; }
-        public RelayCommand DownloadErrorDownCommand { get; set; }
-        public RelayCommand UploadErrorUpCommand { get; set; }
-        public RelayCommand UploadErrorDownCommand { get; set; }
-        public RelayCommand DaysForAverageUpCommand { get; set; }
-        public RelayCommand DaysForAverageDownCommand { get; set; }
+        public RelayCommand CandleErrorUpCommand { get; set; }
+        public RelayCommand CandleErrorDownCommand { get; set; }
         public RelayCommand SaveSettingsCommand { get; set; }
 
 
@@ -40,8 +38,6 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
-
-
         private int _minDownload;
         public int MinDownload
         {
@@ -64,24 +60,32 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
-        private int _downloadRange;
-        public int DownloadError
+        private int _candleError;
+        public int CandleError
         {
-            get { return _downloadRange; }
+            get { return _candleError; }
             set
             {
-                _downloadRange = value;
+                _candleError = value;
                 OnPropertyChanged();
             }
         }
 
-        private int _uploadRange;
-        public int UploadError
+        public string[] CandlePeriods
         {
-            get { return _uploadRange; }
+            get
+            {
+                return new string[] { "Monthly", "Weekly" };
+            }
+        }
+
+        private string _candlePeriod;
+        public string CandlePeriod
+        {
+            get { return _candlePeriod; }
             set
             {
-                _uploadRange = value;
+                _candlePeriod = value;
                 OnPropertyChanged();
             }
         }
@@ -194,12 +198,11 @@ namespace BetterStayOnline.MVVM.ViewModel
             DaysForAverage = Configuration.DaysForAverage();
             MinDownload = Configuration.MinDown();
             MinUpload = Configuration.MinUp();
-            DownloadError = (int)(Configuration.DownloadError());
-            UploadError = (int)(Configuration.UploadError());
-            ShowMinDownload = Configuration.ShowMinDown();
             ShowMinUpload = Configuration.ShowMinUp();
             ShowDownloadCandles = Configuration.ShowDownloadCandles();
             ShowUploadCandles = Configuration.ShowUploadCandles();
+            CandleError = (int)(Configuration.CandleError());
+            CandlePeriod = Configuration.CandlePeriod();
             ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
 
@@ -209,16 +212,8 @@ namespace BetterStayOnline.MVVM.ViewModel
             MinDownloadDownCommand = new RelayCommand(o => { if (MinDownload > 0) MinDownload--; });
             MinUploadUpCommand = new RelayCommand(o => { MinUpload++; });
             MinUploadDownCommand = new RelayCommand(o => { if (MinUpload > 0) MinUpload--; });
-            //DownloadRangeUpCommand = new RelayCommand(o => { if (DownloadRange <= 95) DownloadRange += 5; });
-            //DownloadRangeDownCommand = new RelayCommand(o => { if (UploadRange > 0) DownloadRange -= 5; });
-
-            DownloadErrorUpCommand = new RelayCommand(o => { if (DownloadError <= 40) DownloadError += 5; });
-            DownloadErrorDownCommand = new RelayCommand(o => { if (DownloadError > 0) DownloadError -= 5; });
-            UploadErrorUpCommand = new RelayCommand(o => { if (UploadError <= 40) UploadError += 5; });
-            UploadErrorDownCommand = new RelayCommand(o => { if (UploadError > 0) UploadError -= 5; });
-
-            //UploadRangeUpCommand = new RelayCommand(o => { if (UploadRange <= 95) UploadRange += 5; });
-            //UploadRangeDownCommand = new RelayCommand(o => { if (UploadRange > 0) UploadRange-=5; });
+            CandleErrorUpCommand = new RelayCommand(o => { if (CandleError <= 40) CandleError += 5; });
+            CandleErrorDownCommand = new RelayCommand(o => { if (CandleError > 0) CandleError -= 5; });
 
             SaveSettingsCommand = new RelayCommand(o =>
             {
@@ -229,12 +224,12 @@ namespace BetterStayOnline.MVVM.ViewModel
                 Configuration.SetDaysForAverage(DaysForAverage);
                 Configuration.SetMinDown(MinDownload);
                 Configuration.SetMinUp(MinUpload);
-                Configuration.SetDownloadError(DownloadError);
-                Configuration.SetUploadError(UploadError);
                 Configuration.SetShowMinDown(ShowMinDownload);
                 Configuration.SetShowMinUp(ShowMinUpload);
                 Configuration.SetShowDownloadCandles(ShowDownloadCandles);
                 Configuration.SetShowUploadCandles(ShowUploadCandles);
+                Configuration.SetCandleError(CandleError);
+                Configuration.SetCandlePeriod(CandlePeriod);
                 Configuration.SetShowPercentagesBelowMinimums(ShowPercentagesBelowMinimums);
             });
         }
