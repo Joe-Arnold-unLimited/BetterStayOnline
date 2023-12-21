@@ -441,24 +441,13 @@ namespace BetterStayOnline.MVVM.View
             var lastDate = DateTime.Now;
             string candlePeriod = Configuration.CandlePeriod();
 
-            double range = (100 - (Configuration.CandleError() * 2)) / 100;
+            //double range = (100 - (Configuration.CandleError() * 2)) / 100;
             List<OHLC> candleValues = new List<OHLC>();
 
-            DateTime currentDate;
-            switch (candlePeriod)
-            {
-                case "Daily":
-                case "Weekly":
-                    currentDate = new DateTime(firstDate.Year, firstDate.Month, firstDate.Day);
-                    break;
-                default:
-                case "Monthly":
-                    currentDate = new DateTime(firstDate.Year, firstDate.Month, 1);
-                    break;
-            }
-
-            while (currentDate < lastDate)
-            {
+            for(DateTime currentDate = candlePeriod == "Monthly" ? new DateTime(firstDate.Year, firstDate.Month, 1) : new DateTime(firstDate.Year, firstDate.Month, firstDate.Day); 
+                currentDate < lastDate;
+                currentDate = candlePeriod == "Monthly" ? AddMonth(currentDate) : candlePeriod == "Weekly" ? currentDate.AddDays(7) : currentDate.AddDays(1))
+            { 
                 DateTime endOfPeriodDate;
                 switch (candlePeriod)
                 {
@@ -475,45 +464,49 @@ namespace BetterStayOnline.MVVM.View
                 }
 
                 var speedsInRange = testResults
-                    .Where(result => result.date > currentDate && result.date <= endOfPeriodDate)
+                    .Where(result => result.date > currentDate && result.date <= endOfPeriodDate).ToList()
                     .Select(result => download ? result.downSpeed : result.upSpeed).ToList();
+
+                if (speedsInRange.Count == 0) continue;
 
                 TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
                 int hours = periodTimeSpan.Days * 24;
 
                 DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
 
-                if (speedsInRange.Count > 3)
+                double validMargin = Math.Max(0.0, Math.Min(0.5, Configuration.CandleError()));
+
+                // Calculate the count of elements to keep from each end
+                int marginCount = (int)(validMargin * speedsInRange.Count);
+
+                // Calculate the start and end indices for the desired range
+                int startIndex = marginCount;
+                int endIndex = speedsInRange.Count - marginCount;
+
+                // Ensure that endIndex is not less than startIndex
+                endIndex = Math.Max(endIndex, startIndex);
+
+                List<double> trimmedList = speedsInRange.GetRange(startIndex, endIndex - startIndex);
+
+                if (trimmedList.Count > 0)
                 {
-                    int middleRangePercent = (int)(range * speedsInRange.Count);
-
-                    // Calculate the start and end indices for the candle
-                    int startIndex = (speedsInRange.Count - middleRangePercent) / 2;
-
-                    List<double> middleRangePercentValues = speedsInRange.GetRange(startIndex, middleRangePercent);
-
                     candleValues.Add(
-                        new OHLC(middleRangePercentValues.First(), speedsInRange.Max(),
-                        speedsInRange.Min(), middleRangePercentValues.Last(), pointToShowCandle, periodTimeSpan));
+                        new OHLC(
+                                    trimmedList.First(),
+                                    speedsInRange.Max(),
+                                    speedsInRange.Min(),
+                                    trimmedList.Last(),
+                        pointToShowCandle, periodTimeSpan));
                 }
-                else if(speedsInRange.Count > 0)
+                else
                 {
                     candleValues.Add(
-                        new OHLC(speedsInRange.First(), speedsInRange.Max(), speedsInRange.Min(), speedsInRange.Last(), pointToShowCandle, periodTimeSpan));
-                }
-
-                switch (candlePeriod)
-                {
-                    case "Daily":
-                        currentDate = currentDate.AddDays(1);
-                        break;
-                    case "Weekly":
-                        currentDate = currentDate.AddDays(7);
-                        break;
-                    default:
-                    case "Monthly":
-                        currentDate = AddMonth(currentDate);
-                        break;
+                        new OHLC(
+                                    speedsInRange.First(),
+                                    speedsInRange.Max(),
+                                    speedsInRange.Min(),
+                                    speedsInRange.Last(),
+                        pointToShowCandle, periodTimeSpan));
                 }
             }
 
