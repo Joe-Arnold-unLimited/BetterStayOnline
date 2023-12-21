@@ -474,10 +474,8 @@ namespace BetterStayOnline.MVVM.View
 
                 DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
 
-                double validMargin = Math.Max(0.0, Math.Min(0.5, Configuration.CandleError()));
-
                 // Calculate the count of elements to keep from each end
-                int marginCount = (int)(validMargin * speedsInRange.Count);
+                int marginCount = (int)((Configuration.CandleError() / 100) * speedsInRange.Count);
 
                 // Calculate the start and end indices for the desired range
                 int startIndex = marginCount;
