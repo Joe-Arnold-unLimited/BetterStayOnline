@@ -313,7 +313,7 @@
                             IsChecked="{Binding ShowDownloadCandles}"
                             VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2" Grid.Row="0"
-                            Text="Error percentage"
+                            Text="Error margin"
                             Foreground="White"
                            FontSize="14"
                            FontFamily="Medium"
@@ -337,7 +337,7 @@
                         </StackPanel>
                         
                         <TextBlock Grid.Column="4" Grid.Row="0"
-                            Text="Error percentages are a margin of error on either side&#x0a;If the error percentage is 20%, the main candle will be the middle 60% of values"
+                            Text="Error margins are a percentage of allowed error on either side&#x0a;If the error margin is 20%, the main candle will be the middle 60% of values"
                             Foreground="White"
                            FontSize="14"
                            FontFamily="Medium"
