@@ -41,10 +41,8 @@ namespace BetterStayOnline.MVVM.View
         private ScatterPlotList<double> uploadAverageScatter;
 
         // Keep a local copy of speeds for spans because we can't keep testResults live
-        private List<double> downloadSpeeds = new List<double>();
-        private VSpan vSpanDownload;
-        private List<double> uploadSpeeds = new List<double>();
-        private VSpan vSpanUpload;
+        private FinancePlot downloadCandles = null;
+        private FinancePlot uploadCandles = null;
 
         private int minimumDownload;
         private int minimumUpload;
@@ -73,9 +71,9 @@ namespace BetterStayOnline.MVVM.View
                 }
 
                 r.RedrawAverages();
+                r.AddCandles();
 
                 r.SetYAxisLimits(r.ResultsTable.Plot, r.highestYValue);
-                r.AddCandles();
 
                 r.CalculatePercentageBelowMinimums();
                 r.ResultsTable.Render();
@@ -91,6 +89,8 @@ namespace BetterStayOnline.MVVM.View
         Color downloadLineColor;
         Color minDownloadColor;
         Color graphBackgroundColor;
+        Color downloadCandleColor;
+        Color uploadCandleColor;
 
         public ResultsView()
         {
@@ -103,6 +103,8 @@ namespace BetterStayOnline.MVVM.View
             downloadLineColor = Color.CornflowerBlue;
             minDownloadColor = Color.DeepSkyBlue;
             graphBackgroundColor = Color.FromArgb(7, 38, 59);
+            downloadCandleColor = Color.FromArgb(75, Color.Aqua);
+            uploadCandleColor = Color.FromArgb(75, Color.Orange);
 
             ResultsTable.RightClicked -= ResultsTable.DefaultRightClickEvent;
             ResultsTable.RightClicked += DeployMainWindowMenu;
@@ -146,8 +148,6 @@ namespace BetterStayOnline.MVVM.View
             }
             else PercentagesBelowMinimumsBlock.Visibility = Visibility.Collapsed;
 
-            AddCandles();
-            DrawMonthLines();
             SetUpTable();
             eventTimers = new List<Timer>();
             eventTimers = TimerFactory.CreateTimers(eventTimers, EventReader.GetEvents(), redraw, this).ToList();
@@ -264,8 +264,8 @@ namespace BetterStayOnline.MVVM.View
 
             DrawMonthLines();
             RedrawAverages();
-            CalculatePercentageBelowMinimums();
             AddCandles();
+            CalculatePercentageBelowMinimums();
             ResultsTable.Plot.Legend();
             ResultsTable.Render();
 
@@ -281,12 +281,6 @@ namespace BetterStayOnline.MVVM.View
             downloadScatter.Add(testResult.date.ToOADate(), testResult.downSpeed);
             uploadScatter.Add(testResult.date.ToOADate(), testResult.upSpeed);
 
-            if(testResult.date >= DateTime.Now.AddDays(-30))
-            {
-                downloadSpeeds.Add(testResult.downSpeed);
-                uploadSpeeds.Add(testResult.upSpeed);
-            }
-
             if (testResult.downSpeed < minimumDownload) countBelowMinDownload++;
             if (testResult.upSpeed < minimumUpload) countBelowMinUpload++;
 
@@ -296,9 +290,9 @@ namespace BetterStayOnline.MVVM.View
                 {
                     DrawMonthLines();
                     RedrawAverages();
+                    AddCandles();
 
                     CalculatePercentageBelowMinimums();
-                    AddCandles();
                     ResultsTable.Render();
 
                     DownloadSpeed.Text = testResult.downSpeed.ToString();
@@ -423,20 +417,20 @@ namespace BetterStayOnline.MVVM.View
         {
             if (Configuration.ShowDownloadCandles())
             {
-                var downloadCandles = ResultsTable.Plot.AddCandlesticks(GetCandlesticks().ToArray());
-                var candleColor = Color.FromArgb(75, Color.Aqua);
-                downloadCandles.ColorUp = candleColor;
+                if(downloadCandles != null) downloadCandles.Clear();
+                downloadCandles = ResultsTable.Plot.AddCandlesticks(GetCandlesticks().ToArray());
+                downloadCandles.ColorUp = downloadCandleColor;
                 downloadCandles.ColorDown = Color.FromArgb(75, Color.DodgerBlue);
-                downloadCandles.WickColor = candleColor;
+                downloadCandles.WickColor = downloadCandleColor;
             }
 
             if (Configuration.ShowUploadCandles())
             {
-                var uploadCandles = ResultsTable.Plot.AddCandlesticks(GetCandlesticks(false).ToArray());
-                var candleColor = Color.FromArgb(75, Color.Orange);
-                uploadCandles.ColorUp = candleColor;
+                if (uploadCandles != null) uploadCandles.Clear();
+                uploadCandles = ResultsTable.Plot.AddCandlesticks(GetCandlesticks(false).ToArray());
+                uploadCandles.ColorUp = uploadCandleColor;
                 uploadCandles.ColorDown = Color.FromArgb(75, Color.Red);
-                uploadCandles.WickColor = candleColor;
+                uploadCandles.WickColor = uploadCandleColor;
             }
         }
 
