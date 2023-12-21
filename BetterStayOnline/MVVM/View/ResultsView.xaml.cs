@@ -58,8 +58,6 @@ namespace BetterStayOnline.MVVM.View
             {
                 r.ReadPreexistingData();
                 r.testResults = r.testResults.OrderBy(x => x.date).ToList();
-                //r.downloadSpeeds = r.testResults.Where(tr => tr.date >= DateTime.Now.AddMinutes(-1)).Select(tr => tr.downSpeed).ToList();
-                //r.uploadSpeeds = r.testResults.Where(tr => tr.date >= DateTime.Now.AddDays(-1)).Select(tr => tr.upSpeed).ToList();
 
                 r.downloadScatter.Clear();
                 r.uploadScatter.Clear();
@@ -191,7 +189,7 @@ namespace BetterStayOnline.MVVM.View
             uploadAverageScatter.LineWidth = 8;
             uploadAverageScatter.Color = uploadAverageColor;
             uploadAverageScatter.Smooth = true;
-            uploadAverageScatter.IsVisible = Configuration.ShowAverages();
+            uploadAverageScatter.IsVisible = Configuration.ShowUploadTrendline();
 
             downloadAverageScatter = ResultsTable.Plot.AddScatterList();
             downloadAverageScatter.Label = "Download Avg";
@@ -199,19 +197,21 @@ namespace BetterStayOnline.MVVM.View
             downloadAverageScatter.LineWidth = 8;
             downloadAverageScatter.Color = downloadAverageColor;
             downloadAverageScatter.Smooth = true;
-            downloadAverageScatter.IsVisible = Configuration.ShowAverages();
+            downloadAverageScatter.IsVisible = Configuration.ShowDownloadTrendline();
 
             uploadScatter = ResultsTable.Plot.AddScatterList();
             uploadScatter.Label = "Upload";
             uploadScatter.MarkerSize = 6;
             uploadScatter.Color = uploadLineColor;
             uploadScatter.LineWidth = 2;
+            uploadScatter.IsVisible = Configuration.ShowUploadPoints();
 
             downloadScatter = ResultsTable.Plot.AddScatterList();
             downloadScatter.Label = "Download";
             downloadScatter.MarkerSize = 6;
             downloadScatter.Color = downloadLineColor;
             downloadScatter.LineWidth = 2;
+            downloadScatter.IsVisible = Configuration.ShowDownloadPoints();
 
             bool moreThan31DaysOfResults = false;
             highestYValue = testResults.Select(result => result.downSpeed > result.upSpeed ? result.downSpeed : result.upSpeed).Max();

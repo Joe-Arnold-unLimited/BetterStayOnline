@@ -9,6 +9,11 @@
   "ShowUploadRange": false,
   "DownloadRange": 80,
   "UploadRange": 80,
-  "ShowAverages": false,
-  "DaysForAverage": 1
+  //"ShowAverages": false,
+  "DaysForAverage": 1,
+
+  "ShowDownloadTrendline": true,
+  "ShowUploadTrendline": true,
+  "ShowDownloadPoints": true,
+  "ShowUploadPoints": true
 }

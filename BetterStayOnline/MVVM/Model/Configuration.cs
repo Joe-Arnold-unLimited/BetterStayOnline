@@ -66,6 +66,9 @@ namespace BetterStayOnline.MVVM.Model
         }
 
         // Getters
+        public static bool ShowDownloadPoints() { return Get("ShowDownloadPoints").ToLower() == "true"; }
+        public static bool ShowUploadPoints() { return Get("ShowUploadPoints").ToLower() == "true"; }
+
         public static bool ShowMinDown() { return Get("ShowMinDown").ToLower() == "true"; }
         public static bool ShowMinUp() { return Get("ShowMinUp").ToLower() == "true"; }
         public static int MinDown() { return int.Parse(Get("MinDown")); }
@@ -74,12 +77,18 @@ namespace BetterStayOnline.MVVM.Model
         public static bool ShowUploadRange() { return Get("ShowUploadRange").ToLower() == "true"; }
         public static double DownloadRange() { return double.Parse(Get("DownloadRange")) / 100; }
         public static double UploadRange() { return double.Parse(Get("UploadRange")) / 100; }
-        public static bool ShowAverages() { return Get("ShowAverages").ToLower() == "true"; }
         public static int DaysForAverage() { return int.Parse(Get("DaysForAverage")); }
         public static bool ShowPercentagesBelowMinimums() { return Get("ShowPercentagesBelowMinimums").ToLower() == "true"; }
         public static bool RunTestOnStartup() { return Get("RunTestOnStartup").ToLower() == "true"; }
+        public static bool ShowDownloadTrendline() { return Get("ShowDownloadTrendline").ToLower() == "true"; }
+        public static bool ShowUploadTrendline() { return Get("ShowUploadTrendline").ToLower() == "true"; }
+
+
 
         // Setters
+        public static void SetShowDownloadPoints(bool value) { Set("ShowDownloadPoints", value); }
+        public static void SetShowUploadPoints(bool value) { Set("ShowUploadPoints", value); }
+
         public static void SetShowMinDown(bool value) { Set("ShowMinDown", value); }
         public static void SetShowMinUp(bool value) { Set("ShowMinUp", value); }
         public static void SetMinDown(int value) { Set("MinDown", value); }
@@ -88,9 +97,12 @@ namespace BetterStayOnline.MVVM.Model
         public static void SetShowUploadRange(bool value) { Set("ShowUploadRange", value); }
         public static void SetDownloadRange(double value) { Set("DownloadRange", value); }
         public static void SetUploadRange(double value) { Set("UploadRange", value); }
-        public static void SetShowAverages(bool value) { Set("ShowAverages", value); }
         public static void SetDaysForAverage(int value) { Set("DaysForAverage", value); }
         public static void SetShowPercentagesBelowMinimums(bool value) { Set("ShowPercentagesBelowMinimums", value); }
         public static void SetRunTestOnStartup(bool value) { Set("RunTestOnStartup", value); }
+        public static void SetShowDownloadTrendline(bool value) { Set("ShowDownloadTrendline", value); }
+        public static void SetShowUploadTrendline(bool value) { Set("ShowUploadTrendline", value); }
+        public static void SetDownloadPoints(bool value) { Set("ShowDownloadPoints", value); }
+        public static void SetUploadPoints(bool value) { Set("ShowUploadPoints", value); }
     }
 }

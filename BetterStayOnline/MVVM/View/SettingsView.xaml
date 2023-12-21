@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BetterStayOnline.MVVM.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1580"
+             d:DesignHeight="900" d:DesignWidth="1580"
              Background="#07263b">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -27,272 +27,397 @@
                     <ColumnDefinition Width="500"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="90"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="90"/>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="180"/>
+                    <RowDefinition Height="120"/>
                     <RowDefinition Height="120"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0"
-                        Text="Show minimum download"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="0"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowMinDownload}"
-                        VerticalAlignment="Center"/>
-
-                <TextBlock Grid.Column="2" Grid.Row="0"
-                        Text="Minimum download"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-
-                <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal">
-                    <TextBlock
-                        Text="{Binding MinDownload}"
-                        HorizontalAlignment="Right"
-                        IsEnabled="False"
-                        Foreground="Black"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        VerticalAlignment="Center"
-                        Margin="10"
-                        Width="32"
-                        Background="Gray"/>
-                    <StackPanel
+                <!--BASIC LINES-->
+                <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5"
                         VerticalAlignment="Center">
-                        <RepeatButton Content="&#9650;" Command="{Binding MinDownloadUpCommand}" Interval="100"/>
-                        <RepeatButton Content="&#9660;" Command="{Binding MinDownloadDownCommand}" Interval="100"/>
-                    </StackPanel>
-                </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="210"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="500"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
 
+                        <TextBlock Grid.Column="0" Grid.Row="0"
+                            Text="Show download"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="0"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding ShowDownloadPoints}"
+                            VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Column="0" Grid.Row="1"
-                        Text="Show minimum upload"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="1"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowMinUpload}"
-                        VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="2" Grid.Row="1"
-                        Text="Minimum upload"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1"
+                            Text="Show upload"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="1"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding ShowUploadPoints}"
+                            VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
 
-                <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
-                    <TextBlock
-                        Text="{Binding MinUpload}"
-                        IsEnabled="False"
-                        HorizontalAlignment="Right"
-                        Foreground="Black"
-                        VerticalAlignment="Center"
-                        Margin="10"
-                        Width="32"
-                        Background="Gray"/>
-                    <StackPanel
+                <!--TRENDLINES-->
+                <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5"
                         VerticalAlignment="Center">
-                        <RepeatButton Content="&#9650;" Command="{Binding MinUploadUpCommand}" Interval="100"/>
-                        <RepeatButton Content="&#9660;" Command="{Binding MinUploadDownCommand}" Interval="100"/>
-                    </StackPanel>
-                </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="210"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="500"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="2"
-                        Text="Show percent below minimums"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="2"
-                        HorizontalAlignment="Center"
-                        Margin="10"
-                        IsEnabled="True"
-                        IsChecked="{Binding ShowPercentagesBelowMinimums}"
+                        <TextBlock Grid.Column="0" Grid.Row="0"
+                            Text="Show download trendline"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="0"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding ShowDownloadTrendline}"
+                            VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="0" Grid.Row="1"
+                            Text="Show upload trendline"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="1"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding ShowUploadTrendline}"
+                            VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                            Text="Number of days to group by"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"
+                            Text="Calculated using grouped averages"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal">
+                            <TextBlock
+                                Text="{Binding DaysForAverage}"
+                                IsEnabled="False"
+                                HorizontalAlignment="Right"
+                                Foreground="Black"
+                                VerticalAlignment="Center"
+                                Margin="10"
+                                Width="32"
+                                Background="Gray"/>
+                            <StackPanel
+                                VerticalAlignment="Center">
+                                <RepeatButton Content="&#9650;" Command="{Binding DaysForAverageUpCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9660;" Command="{Binding DaysForAverageDownCommand}" Interval="100"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!--MINIMUM VALUES-->
+                <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="5"
                         VerticalAlignment="Center">
-                    <CheckBox.Style>
-                        <Style TargetType="CheckBox">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=ShowMinDownload}" Value="True">
-                                    <Setter Property="IsEnabled" Value="True" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Path=ShowMinUpload}" Value="True">
-                                    <Setter Property="IsEnabled" Value="True" />
-                                </DataTrigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Path=ShowMinDownload}" Value="False" />
-                                        <Condition Binding="{Binding Path=ShowMinUpload}" Value="False" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="IsEnabled" Value="False" />
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </CheckBox.Style>
-                </CheckBox>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="210"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="500"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="3"
-                        Text="Show download speed range&#x0a;(past 30 days)"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="3"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowDownloadRange}"
-                        VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="2" Grid.Row="3"
-                        Text="Middle range"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <StackPanel Grid.Column="3" Grid.Row="3" Orientation="Horizontal">
-                    <TextBlock
-                        Text="{Binding DownloadRange}"
-                        IsEnabled="False"
-                        HorizontalAlignment="Right"
-                        Foreground="Black"
-                        VerticalAlignment="Center"
-                        Margin="10"
-                        Width="32"
-                        Background="Gray"/>
-                    <StackPanel
+                        <TextBlock Grid.Column="0" Grid.Row="0"
+                            Text="Show minimum download"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="0"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding ShowMinDownload}"
+                            VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="2" Grid.Row="0"
+                            Text="Minimum download"
+                            Foreground="White"
+                            FontSize="14"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+
+                        <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal">
+                            <TextBlock
+                                Text="{Binding MinDownload}"
+                                HorizontalAlignment="Right"
+                                IsEnabled="False"
+                                Foreground="Black"
+                               FontSize="14"
+                               FontFamily="Medium"
+                                VerticalAlignment="Center"
+                                Margin="10"
+                                Width="32"
+                                Background="Gray"/>
+                            <StackPanel
+                                VerticalAlignment="Center">
+                                <RepeatButton Content="&#9650;" Command="{Binding MinDownloadUpCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9660;" Command="{Binding MinDownloadDownCommand}" Interval="100"/>
+                            </StackPanel>
+                        </StackPanel>
+
+
+                        <TextBlock Grid.Column="0" Grid.Row="1"
+                            Text="Show minimum upload"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="1"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding ShowMinUpload}"
+                            VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Grid.Row="1"
+                            Text="Minimum upload"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+
+                        <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
+                            <TextBlock
+                                Text="{Binding MinUpload}"
+                                IsEnabled="False"
+                                HorizontalAlignment="Right"
+                                Foreground="Black"
+                                VerticalAlignment="Center"
+                                Margin="10"
+                                Width="32"
+                                Background="Gray"/>
+                            <StackPanel
+                                VerticalAlignment="Center">
+                                <RepeatButton Content="&#9650;" Command="{Binding MinUploadUpCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9660;" Command="{Binding MinUploadDownCommand}" Interval="100"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Grid.Column="0" Grid.Row="2"
+                            Text="Show percent below minimums"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="2"
+                            HorizontalAlignment="Center"
+                            Margin="10"
+                            IsEnabled="True"
+                            IsChecked="{Binding ShowPercentagesBelowMinimums}"
+                            VerticalAlignment="Center">
+                            <CheckBox.Style>
+                                <Style TargetType="CheckBox">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=ShowMinDownload}" Value="True">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=ShowMinUpload}" Value="True">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Path=ShowMinDownload}" Value="False" />
+                                                <Condition Binding="{Binding Path=ShowMinUpload}" Value="False" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </CheckBox.Style>
+                        </CheckBox>
+                    </Grid>
+                </Border>
+
+                <!--RANGES-->
+                <Border Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="5"
                         VerticalAlignment="Center">
-                        <RepeatButton Content="&#9650;" Command="{Binding DownloadRangeUpCommand}" Interval="100"/>
-                        <RepeatButton Content="&#9660;" Command="{Binding DownloadRangeDownCommand}" Interval="100"/>
-                    </StackPanel>
-                </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="210"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="500"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0"
+                            Text="Show download speed range&#x0a;(past 30 days)"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="0"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding ShowDownloadRange}"
+                            VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Grid.Row="0"
+                            Text="Middle range"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal">
+                            <TextBlock
+                            Text="{Binding DownloadRange}"
+                            IsEnabled="False"
+                            HorizontalAlignment="Right"
+                            Foreground="Black"
+                            VerticalAlignment="Center"
+                            Margin="10"
+                            Width="32"
+                            Background="Gray"/>
+                            <StackPanel
+                                VerticalAlignment="Center">
+                                <RepeatButton Content="&#9650;" Command="{Binding DownloadRangeUpCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9660;" Command="{Binding DownloadRangeDownCommand}" Interval="100"/>
+                            </StackPanel>
+                        </StackPanel>
 
-                <TextBlock Grid.Column="0" Grid.Row="4"
-                        Text="Show upload speed range&#x0a;(past 30 days)"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="4"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowUploadRange}"
-                        VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="2" Grid.Row="4"
-                        Text="Middle range"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <StackPanel Grid.Column="3" Grid.Row="4" Orientation="Horizontal">
-                    <TextBlock
-                        Text="{Binding UploadRange}"
-                        IsEnabled="False"
-                        HorizontalAlignment="Right"
-                        Foreground="Black"
-                        VerticalAlignment="Center"
-                        Margin="10"
-                        Width="32"
-                        Background="Gray"/>
-                    <StackPanel
-                        VerticalAlignment="Center">
-                        <RepeatButton Content="&#9650;" Command="{Binding UploadRangeUpCommand}" Interval="100"/>
-                        <RepeatButton Content="&#9660;" Command="{Binding UploadRangeDownCommand}" Interval="100"/>
-                    </StackPanel>
-                </StackPanel>
+                        <TextBlock Grid.Column="0" Grid.Row="1"
+                            Text="Show upload speed range&#x0a;(past 30 days)"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="1"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding ShowUploadRange}"
+                            VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Grid.Row="1"
+                            Text="Middle range"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
+                            <TextBlock
+                                Text="{Binding UploadRange}"
+                                IsEnabled="False"
+                                HorizontalAlignment="Right"
+                                Foreground="Black"
+                                VerticalAlignment="Center"
+                                Margin="10"
+                                Width="32"
+                                Background="Gray"/>
+                            <StackPanel
+                                VerticalAlignment="Center">
+                                <RepeatButton Content="&#9650;" Command="{Binding UploadRangeUpCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9660;" Command="{Binding UploadRangeDownCommand}" Interval="100"/>
+                            </StackPanel>
+                        </StackPanel>
 
-                <TextBlock Grid.Column="4" Grid.Row="3"
+                        <TextBlock Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"
                         Text="These are based on all values recorded in that time, not grouped averages"
                         Foreground="White"
                        FontSize="14"
                        FontFamily="Medium"
                         HorizontalAlignment="Left"
-                           Grid.RowSpan="2"
                         VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
 
-
-
-                <TextBlock Grid.Column="0" Grid.Row="5"
-                        Text="Show download/upload trendlines&#x0a;calculated using grouped averages"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="5"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowAverages}"
-                        VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="2" Grid.Row="5"
-                        Text="Number of days to group by"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <StackPanel Grid.Column="3" Grid.Row="5" Orientation="Horizontal">
-                    <TextBlock
-                        Text="{Binding DaysForAverage}"
-                        IsEnabled="False"
-                        HorizontalAlignment="Right"
-                        Foreground="Black"
-                        VerticalAlignment="Center"
-                        Margin="10"
-                        Width="32"
-                        Background="Gray"/>
-                    <StackPanel
+                <!--RUN TEST ON STARTUP-->
+                <Border Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="5"
                         VerticalAlignment="Center">
-                        <RepeatButton Content="&#9650;" Command="{Binding DaysForAverageUpCommand}" Interval="100"/>
-                        <RepeatButton Content="&#9660;" Command="{Binding DaysForAverageDownCommand}" Interval="100"/>
-                    </StackPanel>
-                </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="210"/>
+                            <ColumnDefinition Width="120"/>
+                        </Grid.ColumnDefinitions>
 
+                        <TextBlock Grid.Column="0" Grid.Row="0"
+                            Text="Run speedtest on startup"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="6"
+                            HorizontalAlignment="Center"
+                             Margin="10"
+                            IsChecked="{Binding RunSpeedtestOnStartup}"
+                            VerticalAlignment="Center">
+                        </CheckBox>
+                        <TextBlock Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="2"
+                            Text="Turning this off will mean speedtests will not be run on app startup&#x0a;&#x0a;Turn this off if you just want to run tests manually or with events only"
+                               TextWrapping="Wrap"
+                            Foreground="White"
+                           FontSize="13"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                               Margin="10,0,0,0"/>
+                    </Grid>
+                </Border>
 
-
-
-
-                <TextBlock Grid.Column="0" Grid.Row="6"
-                        Text="Run speedtest on startup"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="6"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding RunSpeedtestOnStartup}"
-                        VerticalAlignment="Center">
-                </CheckBox>
-                <TextBlock Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="2"
-                        Text="Turning this off will mean speedtests will not be run on app startup&#x0a;&#x0a;Turn this off if you just want to run tests manually or with events only"
-                           TextWrapping="Wrap"
-                        Foreground="White"
-                       FontSize="13"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                           Margin="10,0,0,0"/>
             </Grid>
         </StackPanel>
 

@@ -23,6 +23,30 @@ namespace BetterStayOnline.MVVM.ViewModel
         public RelayCommand SaveSettingsCommand { get; set; }
 
 
+        private bool _showDownloadPoints;
+        public bool ShowDownloadPoints
+        {
+            get { return _showDownloadPoints; }
+            set
+            {
+                _showDownloadPoints = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _showUploadPoints;
+        public bool ShowUploadPoints
+        {
+            get { return _showUploadPoints; }
+            set
+            {
+                _showUploadPoints = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
         private int _minDownload;
         public int MinDownload
         {
@@ -133,13 +157,24 @@ namespace BetterStayOnline.MVVM.ViewModel
             }
         }
 
-        private bool _showAverages;
-        public bool ShowAverages
+        private bool _showDownloadTrendline;
+        public bool ShowDownloadTrendline
         {
-            get { return _showAverages; }
+            get { return _showDownloadTrendline; }
             set
             {
-                _showAverages = value;
+                _showDownloadTrendline = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _showUploadTrendline;
+        public bool ShowUploadTrendline
+        {
+            get { return _showUploadTrendline; }
+            set
+            {
+                _showUploadTrendline = value;
                 OnPropertyChanged();
             }
         }
@@ -165,7 +200,17 @@ namespace BetterStayOnline.MVVM.ViewModel
             ShowMinUpload = Configuration.ShowMinUp();
             ShowDownloadRange = Configuration.ShowDownloadRange();
             ShowUploadRange = Configuration.ShowUploadRange();
-            ShowAverages = Configuration.ShowAverages();
+
+            //ShowAverages = Configuration.ShowDownloadTrendline();
+            ShowDownloadPoints = Configuration.ShowDownloadPoints();
+            ShowUploadPoints = Configuration.ShowUploadPoints();
+            ShowDownloadTrendline = Configuration.ShowDownloadTrendline();
+            ShowUploadTrendline = Configuration.ShowUploadTrendline();
+
+
+
+
+
             DaysForAverage = Configuration.DaysForAverage();
             ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
@@ -183,6 +228,9 @@ namespace BetterStayOnline.MVVM.ViewModel
 
             SaveSettingsCommand = new RelayCommand(o =>
             {
+                Configuration.SetShowDownloadPoints(ShowDownloadPoints);
+                Configuration.SetShowUploadPoints(ShowUploadPoints);
+
                 Configuration.SetMinDown(MinDownload);
                 Configuration.SetMinUp(MinUpload);
                 Configuration.SetDownloadRange(DownloadRange);
@@ -191,7 +239,11 @@ namespace BetterStayOnline.MVVM.ViewModel
                 Configuration.SetShowMinUp(ShowMinUpload);
                 Configuration.SetShowDownloadRange(ShowDownloadRange);
                 Configuration.SetShowUploadRange(ShowUploadRange);
-                Configuration.SetShowAverages(ShowAverages);
+                //Configuration.SetShowAverages(ShowAverages);
+
+                Configuration.SetShowDownloadTrendline(ShowDownloadTrendline);
+                Configuration.SetShowUploadTrendline(ShowUploadTrendline);
+
                 Configuration.SetDaysForAverage(DaysForAverage);
                 Configuration.SetShowPercentagesBelowMinimums(ShowPercentagesBelowMinimums);
             });
