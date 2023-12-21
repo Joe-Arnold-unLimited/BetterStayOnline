@@ -486,7 +486,7 @@ namespace BetterStayOnline.MVVM.View
                 // Ensure that endIndex is not less than startIndex
                 endIndex = Math.Max(endIndex, startIndex);
 
-                List<double> trimmedList = speedsInRange.GetRange(startIndex, endIndex - startIndex);
+                List<double> trimmedList = speedsInRange.GetRange(startIndex, endIndex);
 
                 if (trimmedList.Count > 0)
                 {
