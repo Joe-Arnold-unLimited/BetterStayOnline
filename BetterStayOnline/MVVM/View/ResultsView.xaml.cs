@@ -18,6 +18,8 @@ using ScottPlot.Drawing;
 using MenuItem = System.Windows.Controls.MenuItem;
 using System.Reflection;
 using SixLabors.ImageSharp.Processing.Processors.Convolution;
+using System.Windows.Media;
+using Color = System.Drawing.Color;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -315,10 +317,8 @@ namespace BetterStayOnline.MVVM.View
             string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
             if(testResults.Count > 1)
             {
-                var firstDate = testResults.First().date;
-                var startMonthLines = firstDate.AddMonths(-numberOfMonthsEitherSideToDraw);
-                var lastDate = DateTime.Now;
-                var endMonthLines = lastDate.AddMonths(numberOfMonthsEitherSideToDraw);
+                var startMonthLines = testResults.First().date.AddMonths(-numberOfMonthsEitherSideToDraw);
+                var endMonthLines = DateTime.Now.AddMonths(numberOfMonthsEitherSideToDraw);
 
                 for (DateTime month = new DateTime(startMonthLines.Year, startMonthLines.Month, 1); month < endMonthLines; month = month.AddMonths(1))
                 {
@@ -399,66 +399,105 @@ namespace BetterStayOnline.MVVM.View
             return start + (end - start) * ratio;
         }
 
-        private void AddVerticalSpan()
+        private DateTime AddMonth(DateTime date)
         {
-            if (Configuration.ShowDownloadRange())
+            if(date.Month == 12)
             {
-                double downloadRange = Configuration.DownloadRange();
-
-                if (downloadSpeeds.Count > 3)
-                {
-                    int middle80Percent = (int)(downloadRange * downloadSpeeds.Count);
-
-                    // Sort the list in ascending order
-                    downloadSpeeds.Sort();
-
-                    // Calculate the start and end indices for the middle 80% range
-                    int startIndex = (downloadSpeeds.Count - middle80Percent) / 2;
-
-                    // Get the temperature values for the middle 80% range
-                    List<double> middle80PercentValues = downloadSpeeds.GetRange(startIndex, middle80Percent);
-
-                    if (middle80PercentValues.Count > 1)
-                    {
-                        ResultsTable.Plot.Remove(vSpanDownload);
-                        vSpanDownload = ResultsTable.Plot.AddVerticalSpan(middle80PercentValues.First(), middle80PercentValues.Last());
-                        vSpanDownload.BorderColor = Color.Teal;
-                        vSpanDownload.BorderLineStyle = LineStyle.None;
-                        vSpanDownload.BorderLineWidth = 2;
-                        vSpanDownload.Color = Color.FromArgb(75, Color.Aqua);
-                        vSpanDownload.IsVisible = true;
-                    }
-                }
+                return new DateTime(date.Year + 1, 1, date.Day, date.Hour, date.Minute, date.Second);
             }
 
-            if (Configuration.ShowUploadRange())
+            return new DateTime(date.Year, date.Month + 1, date.Day, date.Hour, date.Minute, date.Second);
+        }
+
+        private DateTime AddMonths(DateTime date, int months)
+        {
+            for(int i =  0; i < months; i++)
             {
-                double uploadRange = Configuration.UploadRange();
+                date = AddMonth(date);
+            }
 
-                if (uploadSpeeds.Count > 3)
+            return date;
+        }
+
+        private void AddVerticalSpan()
+        {
+            var firstDate = testResults.First().date;
+            var lastDate = DateTime.Now;
+
+            if (Configuration.ShowDownloadCandles())
+            {
+                double downloadRange = (100 - (Configuration.DownloadError() * 2)) / 100;
+                List<OHLC> downloadCandleValues = new List<OHLC>();
+
+                for (DateTime month = new DateTime(firstDate.Year, firstDate.Month, 1); month < lastDate; month = AddMonth(month))
                 {
-                    int middle80Percent = (int)(uploadRange * uploadSpeeds.Count);
+                    var downloadSpeedsInRange = testResults.Where(result => result.date > month && result.date <= AddMonth(month)).Select(result => result.downSpeed).ToList();
 
-                    // Sort the list in ascending order
-                    uploadSpeeds.Sort();
-
-                    // Calculate the start and end indices for the middle 80% range
-                    int startIndex = (uploadSpeeds.Count - middle80Percent) / 2;
-
-                    // Get the temperature values for the middle 80% range
-                    List<double> middle80PercentValues = uploadSpeeds.GetRange(startIndex, middle80Percent);
-
-                    if (middle80PercentValues.Count > 1)
+                    if (downloadSpeedsInRange.Count > 3)
                     {
-                        ResultsTable.Plot.Remove(vSpanUpload);
-                        vSpanUpload = ResultsTable.Plot.AddVerticalSpan(middle80PercentValues.First(), middle80PercentValues.Last());
-                        vSpanUpload.BorderColor = Color.Red;
-                        vSpanUpload.BorderLineStyle = LineStyle.None;
-                        vSpanUpload.BorderLineWidth = 2;
-                        vSpanUpload.Color = Color.FromArgb(75, Color.Red);
-                        vSpanUpload.IsVisible = true;
+                        int middleRangePercent = (int)(downloadRange * downloadSpeedsInRange.Count);
+
+                        //// Sort the list in ascending order
+                        //downloadSpeedsInRange.Sort();
+
+                        // Calculate the start and end indices for the middle 80% range
+                        int startIndex = (downloadSpeedsInRange.Count - middleRangePercent) / 2;
+
+                        // Get the temperature values for the middle 80% range
+                        List<double> middleRangePercentValues = downloadSpeedsInRange.GetRange(startIndex, middleRangePercent);
+
+                        TimeSpan monthTimeSpan = AddMonth(month) - month;
+                        int hours = monthTimeSpan.Days * 24;
+
+                        downloadCandleValues.Add(
+                            new OHLC(middleRangePercentValues.First(), downloadSpeedsInRange.Max(),
+                            downloadSpeedsInRange.Min(), middleRangePercentValues.Last(), month.AddHours(hours / 2), AddMonth(month).AddHours(hours / 2) - month.AddHours(hours / 2)));
                     }
                 }
+
+                var downloadCandles = ResultsTable.Plot.AddCandlesticks(downloadCandleValues.ToArray());
+                var candleColor = Color.FromArgb(75, Color.Aqua);
+                downloadCandles.ColorUp = candleColor;
+                downloadCandles.ColorDown = Color.FromArgb(75, Color.DodgerBlue);
+                downloadCandles.WickColor = candleColor;
+            }
+
+            if (Configuration.ShowUploadCandles())
+            {
+                double uploadRange = (100 -(Configuration.UploadError()*2)) / 100;
+                List<OHLC> uploadCandleValues = new List<OHLC>();
+
+                for (DateTime month = new DateTime(firstDate.Year, firstDate.Month, 1); month < lastDate; month = AddMonth(month))
+                {
+                    var uploadSpeedsInRange = testResults.Where(result => result.date > month && result.date <= AddMonth(month)).Select(result => result.upSpeed).ToList();
+
+                    if (uploadSpeedsInRange.Count > 3)
+                    {
+                        int middleRangePercent = (int)(uploadRange * uploadSpeedsInRange.Count);
+
+                        // Sort the list in ascending order
+                        uploadSpeedsInRange.Sort();
+
+                        // Calculate the start and end indices for the middle 80% range
+                        int startIndex = (uploadSpeedsInRange.Count - middleRangePercent) / 2;
+
+                        // Get the temperature values for the middle 80% range
+                        List<double> middleRangePercentValues = uploadSpeedsInRange.GetRange(startIndex, middleRangePercent);
+
+                        TimeSpan monthTimeSpan = AddMonth(month) - month;
+                        int hours = monthTimeSpan.Days * 24;
+
+                        uploadCandleValues.Add(
+                            new OHLC(middleRangePercentValues.First(), uploadSpeedsInRange.Max(),
+                            uploadSpeedsInRange.Min(), middleRangePercentValues.Last(), month.AddHours(hours / 2), AddMonth(month).AddHours(hours / 2) - month.AddHours(hours / 2)));
+                    }
+                }
+
+                var uploadCandles = ResultsTable.Plot.AddCandlesticks(uploadCandleValues.ToArray());
+                var candleColor = Color.FromArgb(75, Color.Orange);
+                uploadCandles.ColorUp = candleColor;
+                uploadCandles.ColorDown = Color.FromArgb(75, Color.Red);
+                uploadCandles.WickColor = candleColor;
             }
         }
 

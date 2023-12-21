@@ -301,7 +301,7 @@
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                            Text="Show download speed range&#x0a;(past 30 days)"
+                            Text="Show monthly download candles"
                             Foreground="White"
                            FontSize="14"
                            FontFamily="Medium"
@@ -310,10 +310,10 @@
                         <CheckBox Grid.Column="1" Grid.Row="0"
                             HorizontalAlignment="Center"
                              Margin="10"
-                            IsChecked="{Binding ShowDownloadRange}"
+                            IsChecked="{Binding ShowDownloadCandles}"
                             VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2" Grid.Row="0"
-                            Text="Middle range"
+                            Text="Error percentage"
                             Foreground="White"
                            FontSize="14"
                            FontFamily="Medium"
@@ -321,7 +321,7 @@
                             VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal">
                             <TextBlock
-                            Text="{Binding DownloadRange}"
+                            Text="{Binding DownloadError}"
                             IsEnabled="False"
                             HorizontalAlignment="Right"
                             Foreground="Black"
@@ -331,13 +331,13 @@
                             Background="Gray"/>
                             <StackPanel
                                 VerticalAlignment="Center">
-                                <RepeatButton Content="&#9650;" Command="{Binding DownloadRangeUpCommand}" Interval="100"/>
-                                <RepeatButton Content="&#9660;" Command="{Binding DownloadRangeDownCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9650;" Command="{Binding DownloadErrorUpCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9660;" Command="{Binding DownloadErrorDownCommand}" Interval="100"/>
                             </StackPanel>
                         </StackPanel>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                            Text="Show upload speed range&#x0a;(past 30 days)"
+                            Text="Show monthly upload candles"
                             Foreground="White"
                            FontSize="14"
                            FontFamily="Medium"
@@ -346,10 +346,10 @@
                         <CheckBox Grid.Column="1" Grid.Row="1"
                             HorizontalAlignment="Center"
                              Margin="10"
-                            IsChecked="{Binding ShowUploadRange}"
+                            IsChecked="{Binding ShowUploadCandles}"
                             VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2" Grid.Row="1"
-                            Text="Middle range"
+                            Text="Error percentage"
                             Foreground="White"
                            FontSize="14"
                            FontFamily="Medium"
@@ -357,7 +357,7 @@
                             VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
                             <TextBlock
-                                Text="{Binding UploadRange}"
+                                Text="{Binding UploadError}"
                                 IsEnabled="False"
                                 HorizontalAlignment="Right"
                                 Foreground="Black"
@@ -367,18 +367,18 @@
                                 Background="Gray"/>
                             <StackPanel
                                 VerticalAlignment="Center">
-                                <RepeatButton Content="&#9650;" Command="{Binding UploadRangeUpCommand}" Interval="100"/>
-                                <RepeatButton Content="&#9660;" Command="{Binding UploadRangeDownCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9650;" Command="{Binding UploadErrorUpCommand}" Interval="100"/>
+                                <RepeatButton Content="&#9660;" Command="{Binding UploadErrorDownCommand}" Interval="100"/>
                             </StackPanel>
                         </StackPanel>
 
                         <TextBlock Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"
-                        Text="These are based on all values recorded in that time, not grouped averages"
-                        Foreground="White"
-                       FontSize="14"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"/>
+                            Text="Error percentages are a margin of error on either side&#x0a;If the error percentage is 20%, the main candle will be the middle 60% of values"
+                            Foreground="White"
+                           FontSize="14"
+                           FontFamily="Medium"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
 

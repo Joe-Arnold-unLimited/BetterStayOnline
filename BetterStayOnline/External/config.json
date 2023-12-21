@@ -1,17 +1,17 @@
 {
-  "ShowDownloadTrendline": true,
-  "ShowUploadTrendline": true,
   "ShowDownloadPoints": true,
   "ShowUploadPoints": true,
+  "ShowDownloadTrendline": true,
+  "ShowUploadTrendline": true,
   "ShowMinDown": false,
   "ShowMinUp": false,
   "MinDown": 50,
   "MinUp": 10,
   "RunTestOnStartup": true,
   "ShowPercentagesBelowMinimums": false,
-  "ShowDownloadRange": false,
-  "ShowUploadRange": false,
-  "DownloadRange": 80,
-  "UploadRange": 80,
+  "ShowDownloadCandles": false,
+  "ShowUploadCandles": false,
+  "DownloadError": 20,
+  "UploadError": 20,
   "DaysForAverage": 1
 }
