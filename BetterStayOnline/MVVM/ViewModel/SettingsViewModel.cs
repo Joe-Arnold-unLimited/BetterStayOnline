@@ -196,6 +196,7 @@ namespace BetterStayOnline.MVVM.ViewModel
             ShowUploadPoints = Configuration.ShowUploadPoints();
             ShowDownloadTrendline = Configuration.ShowDownloadTrendline();
             ShowUploadTrendline = Configuration.ShowUploadTrendline();
+            DaysForAverage = Configuration.DaysForAverage();
             MinDownload = Configuration.MinDown();
             MinUpload = Configuration.MinUp();
             DownloadRange = (int)(Configuration.DownloadRange() * 100);
@@ -204,7 +205,6 @@ namespace BetterStayOnline.MVVM.ViewModel
             ShowMinUpload = Configuration.ShowMinUp();
             ShowDownloadRange = Configuration.ShowDownloadRange();
             ShowUploadRange = Configuration.ShowUploadRange();
-            DaysForAverage = Configuration.DaysForAverage();
             ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
 
