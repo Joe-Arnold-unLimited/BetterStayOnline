@@ -128,10 +128,12 @@ namespace BetterStayOnline.SpeedTest
                             JArray jsonTestResults = (JArray)obj.GetValue("TestResults");
 
                             // Add new test data
-                            JObject newTest = new JObject();
-                            newTest.Add("DateTime", bandwidthTest.date.ToString("dd/MM/yyyy hh:mm tt"));
-                            newTest.Add("Download", bandwidthTest.downSpeed);
-                            newTest.Add("Upload", bandwidthTest.upSpeed);
+                            JObject newTest = new JObject
+                            {
+                                { "DateTime", bandwidthTest.date.ToString("dd/MM/yyyy hh:mm tt") },
+                                { "Download", bandwidthTest.downSpeed },
+                                { "Upload", bandwidthTest.upSpeed }
+                            };
 
                             jsonTestResults.Add(newTest);
                             obj["TestResults"] = jsonTestResults;
