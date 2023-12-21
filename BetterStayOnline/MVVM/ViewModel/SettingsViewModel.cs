@@ -207,13 +207,13 @@ namespace BetterStayOnline.MVVM.ViewModel
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
 
             DaysForAverageUpCommand = new RelayCommand(o => { if (DaysForAverage < 14) DaysForAverage++; });
-            DaysForAverageDownCommand = new RelayCommand(o => { if (DaysForAverage > 0) DaysForAverage--; });
+            DaysForAverageDownCommand = new RelayCommand(o => { if (DaysForAverage > 1) DaysForAverage--; });
             MinDownloadUpCommand = new RelayCommand(o => { MinDownload++; });
-            MinDownloadDownCommand = new RelayCommand(o => { if (MinDownload > 0) MinDownload--; });
+            MinDownloadDownCommand = new RelayCommand(o => { if (MinDownload > 1) MinDownload--; });
             MinUploadUpCommand = new RelayCommand(o => { MinUpload++; });
-            MinUploadDownCommand = new RelayCommand(o => { if (MinUpload > 0) MinUpload--; });
+            MinUploadDownCommand = new RelayCommand(o => { if (MinUpload > 1) MinUpload--; });
             CandleErrorUpCommand = new RelayCommand(o => { if (CandleError <= 40) CandleError += 5; });
-            CandleErrorDownCommand = new RelayCommand(o => { if (CandleError > 0) CandleError -= 5; });
+            CandleErrorDownCommand = new RelayCommand(o => { if (CandleError > 5) CandleError -= 5; });
 
             SaveSettingsCommand = new RelayCommand(o =>
             {
