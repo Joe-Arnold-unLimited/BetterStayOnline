@@ -569,6 +569,7 @@ namespace BetterStayOnline.MVVM.View
                 BandwidthTest? test = Speedtester.RunSpeedTest();
                 if (test != null)
                 {
+                    testResults.Add((BandwidthTest)test);
                     AddResult((BandwidthTest)test, true);
                     System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
                     {
