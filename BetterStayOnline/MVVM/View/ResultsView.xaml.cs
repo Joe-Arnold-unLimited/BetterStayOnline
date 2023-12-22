@@ -468,10 +468,10 @@ namespace BetterStayOnline.MVVM.View
             var lastDate = DateTime.Now;
             string candlePeriod = Configuration.CandlePeriod();
 
-            Color downloadUpLineColor = Color.FromArgb(255, downloadUpCandleColor.R, downloadUpCandleColor.G, downloadUpCandleColor.B);
-            Color uploadUpLineColor = Color.FromArgb(255, uploadUpCandleColor.R, uploadUpCandleColor.G, uploadUpCandleColor.B);
-            Color downloadDownLineColor = Color.FromArgb(255, downloadDownCandleColor.R, downloadDownCandleColor.G, downloadDownCandleColor.B);
-            Color uploadDownLineColor = Color.FromArgb(255, uploadDownCandleColor.R, uploadDownCandleColor.G, uploadDownCandleColor.B);
+            Color downloadUpLineColor = Color.FromArgb(255, (int)(0.80 * downloadUpCandleColor.R), (int)(0.80 * downloadUpCandleColor.G), (int)(0.80 * downloadUpCandleColor.B));
+            Color uploadUpLineColor = Color.FromArgb(255, (int)(0.80 * uploadUpCandleColor.R), (int)(0.80 * uploadUpCandleColor.G), (int)(0.80 * uploadUpCandleColor.B));
+            Color downloadDownLineColor = Color.FromArgb(255, (int)(0.80 * downloadDownCandleColor.R), (int)(0.80 * downloadDownCandleColor.G), (int)(0.80 * downloadDownCandleColor.B));
+            Color uploadDownLineColor = Color.FromArgb(255, (int)(0.80 * uploadDownCandleColor.R), (int)(0.80 * uploadDownCandleColor.G), (int)(0.80 * uploadDownCandleColor.B));
 
             int lineWidth = 1;
 
