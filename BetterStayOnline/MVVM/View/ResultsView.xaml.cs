@@ -20,6 +20,8 @@ using System.Reflection;
 using System.Windows.Media;
 using Color = System.Drawing.Color;
 using Microsoft.Office.Core;
+using System.Drawing.Imaging;
+using System.Net;
 
 namespace BetterStayOnline.MVVM.View
 {
@@ -40,9 +42,14 @@ namespace BetterStayOnline.MVVM.View
         private ScatterPlotList<double> downloadAverageScatter;
         private ScatterPlotList<double> uploadAverageScatter;
 
-        // Keep a local copy of speeds for spans because we can't keep testResults live
-        private FinancePlot downloadCandles = null;
-        private FinancePlot uploadCandles = null;
+        Polygons downloadUpperPolygons;
+        Polygons downloadLowerPolygons;
+        List<ScatterPlot> downloadUpperLines;
+        List<ScatterPlot> downloadLowerLines;
+        Polygons uploadUpperPolygons;
+        Polygons uploadLowerPolygons;
+        List<ScatterPlot> uploadUpperLines;
+        List<ScatterPlot> uploadLowerLines;
 
         private int minimumDownload;
         private int minimumUpload;
@@ -61,6 +68,8 @@ namespace BetterStayOnline.MVVM.View
 
                 r.downloadScatter.Clear();
                 r.uploadScatter.Clear();
+
+                r.AddCandles();
 
                 r.highestYValue = 0;
                 foreach (var testResult in r.testResults)
@@ -89,8 +98,10 @@ namespace BetterStayOnline.MVVM.View
         Color downloadLineColor;
         Color minDownloadColor;
         Color graphBackgroundColor;
-        Color downloadCandleColor;
-        Color uploadCandleColor;
+        Color downloadUpCandleColor;
+        Color uploadUpCandleColor;
+        Color downloadDownCandleColor;
+        Color uploadDownCandleColor;
 
         public ResultsView()
         {
@@ -103,8 +114,10 @@ namespace BetterStayOnline.MVVM.View
             downloadLineColor = Color.CornflowerBlue;
             minDownloadColor = Color.DeepSkyBlue;
             graphBackgroundColor = Color.FromArgb(7, 38, 59);
-            downloadCandleColor = Color.FromArgb(75, Color.Aqua);
-            uploadCandleColor = Color.FromArgb(75, Color.Orange);
+            downloadUpCandleColor = Color.FromArgb(75, Color.Aqua);
+            uploadUpCandleColor = Color.FromArgb(75, Color.Orange);
+            downloadDownCandleColor = Color.FromArgb(75, Color.DodgerBlue);
+            uploadDownCandleColor = Color.FromArgb(75, Color.Red);
 
             ResultsTable.RightClicked -= ResultsTable.DefaultRightClickEvent;
             ResultsTable.RightClicked += DeployMainWindowMenu;
@@ -417,34 +430,58 @@ namespace BetterStayOnline.MVVM.View
         {
             if (Configuration.ShowDownloadCandles())
             {
-                if(downloadCandles != null) downloadCandles.Clear();
-                downloadCandles = ResultsTable.Plot.AddCandlesticks(GetCandlesticks().ToArray());
-                downloadCandles.ColorUp = downloadCandleColor;
-                downloadCandles.ColorDown = Color.FromArgb(75, Color.DodgerBlue);
-                downloadCandles.WickColor = downloadCandleColor;
+                if (downloadUpperPolygons != null)
+                    ResultsTable.Plot.Remove(downloadUpperPolygons);
+                if (downloadLowerPolygons != null)
+                    ResultsTable.Plot.Remove(downloadLowerPolygons);
+
+                if (downloadUpperLines != null)
+                    foreach (var line in downloadUpperLines)
+                        ResultsTable.Plot.Remove(line);
+                if (downloadLowerLines != null)
+                    foreach (var line in downloadLowerLines)
+                        ResultsTable.Plot.Remove(line);
+                GetCandlesticks(out downloadUpperPolygons, out downloadLowerPolygons, out downloadUpperLines, out downloadLowerLines);
             }
 
             if (Configuration.ShowUploadCandles())
             {
-                if (uploadCandles != null) uploadCandles.Clear();
-                uploadCandles = ResultsTable.Plot.AddCandlesticks(GetCandlesticks(false).ToArray());
-                uploadCandles.ColorUp = uploadCandleColor;
-                uploadCandles.ColorDown = Color.FromArgb(75, Color.Red);
-                uploadCandles.WickColor = uploadCandleColor;
+                if (uploadUpperPolygons != null)
+                    ResultsTable.Plot.Remove(uploadUpperPolygons);
+                if (uploadLowerPolygons != null)
+                    ResultsTable.Plot.Remove(uploadLowerPolygons);
+
+                if (uploadUpperLines != null)
+                    foreach (var line in uploadUpperLines)
+                        ResultsTable.Plot.Remove(line);
+                if (uploadLowerLines != null)
+                    foreach (var line in uploadLowerLines)
+                        ResultsTable.Plot.Remove(line);
+                GetCandlesticks(out uploadUpperPolygons, out uploadLowerPolygons, out uploadUpperLines, out uploadLowerLines, false);
             }
         }
 
         // if upload, set  download to false
-        private List<OHLC> GetCandlesticks(bool download = true)
+        private void GetCandlesticks(out Polygons upperPolygons, out Polygons lowerPolygons, out List<ScatterPlot> upperLines, out List<ScatterPlot> lowerLines, bool download = true)
         {
             var firstDate = testResults.First().date;
             var lastDate = DateTime.Now;
             string candlePeriod = Configuration.CandlePeriod();
 
-            //double range = (100 - (Configuration.CandleError() * 2)) / 100;
-            List<OHLC> candleValues = new List<OHLC>();
+            Color downloadUpLineColor = Color.FromArgb(255, downloadUpCandleColor.R, downloadUpCandleColor.G, downloadUpCandleColor.B);
+            Color uploadUpLineColor = Color.FromArgb(255, uploadUpCandleColor.R, uploadUpCandleColor.G, uploadUpCandleColor.B);
+            Color downloadDownLineColor = Color.FromArgb(255, downloadDownCandleColor.R, downloadDownCandleColor.G, downloadDownCandleColor.B);
+            Color uploadDownLineColor = Color.FromArgb(255, uploadDownCandleColor.R, uploadDownCandleColor.G, uploadDownCandleColor.B);
 
-            for(DateTime currentDate = candlePeriod == "Monthly" ? new DateTime(firstDate.Year, firstDate.Month, 1) : new DateTime(firstDate.Year, firstDate.Month, firstDate.Day); 
+            int lineWidth = 1;
+
+            upperLines = new List<ScatterPlot>();
+            lowerLines = new List<ScatterPlot>();
+
+            List<List<(double x, double y)>> upperBoxPolygons = new List<List<(double x, double y)>>();
+            List<List<(double x, double y)>> lowerBoxPolygons = new List<List<(double x, double y)>>();
+
+            for (DateTime currentDate = candlePeriod == "Monthly" ? new DateTime(firstDate.Year, firstDate.Month, 1) : new DateTime(firstDate.Year, firstDate.Month, firstDate.Day); 
                 currentDate < lastDate;
                 currentDate = candlePeriod == "Monthly" ? AddMonth(currentDate) : candlePeriod == "Weekly" ? currentDate.AddDays(7) : currentDate.AddDays(1))
             { 
@@ -465,52 +502,97 @@ namespace BetterStayOnline.MVVM.View
 
                 var speedsInRange = testResults
                     .Where(result => result.date > currentDate && result.date <= endOfPeriodDate).ToList()
-                    .Select(result => download ? result.downSpeed : result.upSpeed).ToList();
-
-                if (speedsInRange.Count == 0) continue;
-
-                speedsInRange.Sort();
+                    .Select(result => download ? result.downSpeed : result.upSpeed)
+                    .ToList();
 
                 TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
-                int hours = periodTimeSpan.Days * 24;
+                int hoursInPeriod = periodTimeSpan.Days * 24;
+                int halfHours = hoursInPeriod / 2;
+                double marginHours = halfHours * 0.15;
 
-                DateTime pointToShowCandle = currentDate.AddHours(hours / 2);
+                DateTime startPoint = currentDate.AddHours(marginHours);
+                DateTime endPoint = currentDate.AddHours(hoursInPeriod).AddHours(-marginHours);
+                DateTime midPoint = currentDate.AddHours(halfHours);
 
-                // Calculate the count of elements to keep from each end
-                int marginCount = (int)((Configuration.CandleError() / 100) * speedsInRange.Count);
-
-                // Calculate the start and end indices for the desired range
-                int startIndex = marginCount;
-                int endIndex = speedsInRange.Count - startIndex - marginCount;
-
-                // Ensure that endIndex is not less than startIndex
-                endIndex = Math.Max(endIndex, startIndex);
-
-                List<double> trimmedList = speedsInRange.GetRange(startIndex, endIndex);
-
-                if (trimmedList.Count > 0)
+                if (speedsInRange.Count > 2)
                 {
-                    candleValues.Add(
-                        new OHLC(
-                                    trimmedList.Min(),
-                                    speedsInRange.Max(),
-                                    speedsInRange.Min(),
-                                    trimmedList.Max(),
-                        pointToShowCandle, periodTimeSpan));
+                    // Calculate mean and standard deviation
+                    CalculateMeanAndStdDev(speedsInRange.ToArray(), out double mean, out double leftStdDev, out double rightStdDev);
+
+                    var upperDev = mean + leftStdDev;
+                    var lowerDev = mean - rightStdDev;
+
+                    // Calculate candlestick coordinates
+                    double[] xs = { startPoint.ToOADate(), endPoint.ToOADate(), endPoint.ToOADate(), startPoint.ToOADate() };
+                    double[] upperBoxYs = { mean + leftStdDev, mean + leftStdDev, mean, mean };
+                    double[] lowerBoxYs = { mean - rightStdDev, mean - rightStdDev, mean, mean };
+
+                    // Add upper and lower box polygons to the plot
+                    List<(double x, double y)> upperBoxPolygon = xs.Zip(upperBoxYs, (xp, yp) => (xp, yp)).ToList();
+                    List<(double x, double y)> lowerBoxPolygon = xs.Zip(lowerBoxYs, (xp, yp) => (xp, yp)).ToList();
+                    upperBoxPolygons.Add(upperBoxPolygon);
+                    lowerBoxPolygons.Add(lowerBoxPolygon);
+
+                    ScatterPlot upLine = ResultsTable.Plot.AddLine(midPoint.ToOADate(), mean + leftStdDev, midPoint.ToOADate(), speedsInRange.Max(), download ? downloadUpLineColor : uploadUpLineColor);
+                    ScatterPlot lowerLine = ResultsTable.Plot.AddLine(midPoint.ToOADate(), mean - rightStdDev, midPoint.ToOADate(), speedsInRange.Min(), download ? downloadDownLineColor : uploadDownLineColor);
+                    
+                    upLine.LineWidth = lineWidth;
+                    lowerLine.LineWidth = lineWidth;
+
+                    upperLines.Add(upLine);
+                    lowerLines.Add(lowerLine);
                 }
-                else
+                else if (speedsInRange.Count == 2)
                 {
-                    candleValues.Add(
-                        new OHLC(
-                                    speedsInRange.First(),
-                                    speedsInRange.Max(),
-                                    speedsInRange.Min(),
-                                    speedsInRange.Last(),
-                        pointToShowCandle, periodTimeSpan));
+                    double[] xs = { startPoint.ToOADate(), endPoint.ToOADate(), endPoint.ToOADate(), startPoint.ToOADate() };
+                    double[] ys = { speedsInRange.Max(), speedsInRange.Max(), speedsInRange.Min(), speedsInRange.Min() };
+
+                    List<(double x, double y)> polygon = xs.Zip(ys, (xp, yp) => (xp, yp)).ToList();
+                    upperBoxPolygons.Add(polygon);
+                }
+                else if (speedsInRange.Count == 1)
+                {
+                    ScatterPlot line = ResultsTable.Plot.AddLine(startPoint.ToOADate(), speedsInRange.Min(), endPoint.ToOADate(), speedsInRange.Max(), download ? downloadUpLineColor : uploadUpLineColor);
+                    line.LineWidth = lineWidth;
+                    upperLines.Add(line);
                 }
             }
 
-            return candleValues;
+            upperPolygons = ResultsTable.Plot.AddPolygons(upperBoxPolygons, fillColor: download ? downloadUpCandleColor : uploadUpCandleColor, lineColor: download ? downloadUpLineColor : uploadUpLineColor, lineWidth: lineWidth);
+            lowerPolygons = ResultsTable.Plot.AddPolygons(lowerBoxPolygons, fillColor: download ? downloadDownCandleColor : uploadDownCandleColor, lineColor: download ? downloadDownLineColor : uploadDownLineColor, lineWidth: lineWidth);
+        }
+
+        static void CalculateMeanAndStdDev(double[] array, out double mean, out double leftStdDev, out double rightStdDev)
+        {
+            array = array.OrderByDescending(val => val).ToArray();
+
+            int index = array.Length / 2;
+
+            mean = CalculateMean(array);
+
+            double[] leftArray = new double[index];
+            Array.Copy(array, 0, leftArray, 0, index);
+            leftStdDev = CalculateStdDev(leftArray);
+
+            double[] rightArray = new double[array.Length - index - 1];
+            Array.Copy(array, index + 1, rightArray, 0, array.Length - index - 1);
+            rightStdDev = CalculateStdDev(rightArray);
+        }
+
+        static double CalculateMean(double[] array)
+        {
+            return array.Sum() / array.Length;
+        }
+
+        static double CalculateStdDev(double[] array)
+        {
+            double mean = CalculateMean(array);
+            double sumSquaredDiff = 0.0;
+            foreach (var number in array)
+            {
+                sumSquaredDiff += Math.Pow(number - mean, 2);
+            }
+            return Math.Sqrt(sumSquaredDiff / array.Length);
         }
 
         private void CalculatePercentageBelowMinimums()
