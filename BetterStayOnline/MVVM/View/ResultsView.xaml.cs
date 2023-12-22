@@ -469,6 +469,8 @@ namespace BetterStayOnline.MVVM.View
 
                 if (speedsInRange.Count == 0) continue;
 
+                speedsInRange.Sort();
+
                 TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
                 int hours = periodTimeSpan.Days * 24;
 
@@ -479,7 +481,7 @@ namespace BetterStayOnline.MVVM.View
 
                 // Calculate the start and end indices for the desired range
                 int startIndex = marginCount;
-                int endIndex = speedsInRange.Count - marginCount;
+                int endIndex = speedsInRange.Count - startIndex - marginCount;
 
                 // Ensure that endIndex is not less than startIndex
                 endIndex = Math.Max(endIndex, startIndex);
@@ -490,10 +492,10 @@ namespace BetterStayOnline.MVVM.View
                 {
                     candleValues.Add(
                         new OHLC(
-                                    trimmedList.First(),
+                                    trimmedList.Min(),
                                     speedsInRange.Max(),
                                     speedsInRange.Min(),
-                                    trimmedList.Last(),
+                                    trimmedList.Max(),
                         pointToShowCandle, periodTimeSpan));
                 }
                 else
