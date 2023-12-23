@@ -268,7 +268,7 @@ namespace BetterStayOnline.MVVM.View
                 Configuration.MinDown(), Configuration.MinUp());
 
             PlotManager.SecondWindow.viewer = new WpfPlotViewer(resultsTableCopy, 1200, 660);
-            PlotManager.SecondWindow.DrawViewer(true, plotManager);
+            PlotManager.SecondWindow.DrawViewer(plotManager);
 
             PlotManager.SecondWindow.viewer.wpfPlot1.Configuration.AllowDroppedFramesWhileDragging = true;
             PlotManager.SecondWindow.viewer.wpfPlot1.Configuration.LockVerticalAxis = true;

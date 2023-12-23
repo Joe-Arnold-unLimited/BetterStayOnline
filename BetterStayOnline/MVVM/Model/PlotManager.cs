@@ -53,6 +53,20 @@ namespace BetterStayOnline.Model
         public int minimumDownload;
         public int minimumUpload;
 
+        private bool _firstTime = true;
+        public bool firstTime
+        {
+            get
+            {
+                if (_firstTime)
+                {
+                    _firstTime = false;
+                    return true;
+                }
+                return _firstTime;
+            }
+        }
+
         public PlotManager(Plot plot, bool showDownload, bool showUpload, bool showDownloadTrendline, bool showUploadTrendline, bool showMinDownload, bool showMinUpload, bool showDownloadCandles, bool showUploadCandles, int minimumDownload, int minimumUpload, WpfPlot wpfPlot  = null) : this(wpfPlot)
         {
             this.plot = plot;
@@ -173,8 +187,7 @@ namespace BetterStayOnline.Model
 
         public void UpdatePlot()
         {
-            DrawViewer(firstUpdate, null);
-            firstUpdate = false;
+            DrawViewer(null);
 
             if (viewer != null)
                 viewer.Dispatcher.Invoke(() =>
@@ -301,53 +314,6 @@ namespace BetterStayOnline.Model
                 uploadLowerBoxPolygons = lowerBoxPolygons;
                 uploadUpperPolygons = upperPolygons;
                 uploadLowerPolygons = lowerPolygons;
-            }
-        }
-
-        private void AddCandles()
-        {
-            if (showDownloadCandles)
-            {
-                if (downloadUpperPolygons != null)
-                {
-                    downloadUpperPolygons.Polys.Clear();
-                    plot.Remove(downloadUpperPolygons);
-                }
-                if (downloadLowerPolygons != null)
-                {
-                    downloadLowerPolygons.Polys.Clear();
-                    plot.Remove(downloadLowerPolygons);
-                }
-
-                if (downloadUpperLines != null)
-                    foreach (var line in downloadUpperLines)
-                        plot.Remove(line);
-                if (downloadLowerLines != null)
-                    foreach (var line in downloadLowerLines)
-                        plot.Remove(line);
-                GetCandlesticks(true);
-            }
-
-            if (showUploadCandles)
-            {
-                if (uploadUpperPolygons != null)
-                {
-                    uploadUpperPolygons.Polys.Clear();
-                    plot.Remove(uploadUpperPolygons);
-                }
-                if (uploadLowerPolygons != null)
-                {
-                    uploadLowerPolygons.Polys.Clear();
-                    plot.Remove(uploadLowerPolygons);
-                }
-
-                if (uploadUpperLines != null)
-                    foreach (var line in uploadUpperLines)
-                        plot.Remove(line);
-                if (uploadLowerLines != null)
-                    foreach (var line in uploadLowerLines)
-                        plot.Remove(line);
-                GetCandlesticks(false);
             }
         }
 
@@ -483,9 +449,11 @@ namespace BetterStayOnline.Model
             plot.XAxis.DateTimeFormat(true);
         }
 
-        public void DrawViewer(bool firstTime, PlotManager plotManager)
+        public void DrawViewer(PlotManager plotManager)
         {
             if (wpfPlot == null && viewer == null) return;
+
+            var firstTime = this.firstTime;
 
             AxisLimits axisLimits = plot.GetAxisLimits();
             if(plotManager != null)
@@ -499,9 +467,51 @@ namespace BetterStayOnline.Model
             var xMin = axisLimits.XMin;
             var xMax = axisLimits.XMax;
 
+            plot.Clear();
+
             DrawMonthLines(plot, testResults, numberOfMonthsEitherSideToDraw);
 
-            AddCandles();
+            if (showDownloadCandles)
+            {
+                if (downloadUpperPolygons != null)
+                {
+                    downloadUpperPolygons.Polys.Clear();
+                    plot.Remove(downloadUpperPolygons);
+                }
+                if (downloadLowerPolygons != null)
+                {
+                    downloadLowerPolygons.Polys.Clear();
+                    plot.Remove(downloadLowerPolygons);
+                }
+                if (downloadUpperLines != null)
+                    foreach (var line in downloadUpperLines)
+                        plot.Remove(line);
+                if (downloadLowerLines != null)
+                    foreach (var line in downloadLowerLines)
+                        plot.Remove(line);
+                GetCandlesticks(true);
+            }
+
+            if (showUploadCandles)
+            {
+                if (uploadUpperPolygons != null)
+                {
+                    uploadUpperPolygons.Polys.Clear();
+                    plot.Remove(uploadUpperPolygons);
+                }
+                if (uploadLowerPolygons != null)
+                {
+                    uploadLowerPolygons.Polys.Clear();
+                    plot.Remove(uploadLowerPolygons);
+                }
+                if (uploadUpperLines != null)
+                    foreach (var line in uploadUpperLines)
+                        plot.Remove(line);
+                if (uploadLowerLines != null)
+                    foreach (var line in uploadLowerLines)
+                        plot.Remove(line);
+                GetCandlesticks(false);
+            }
 
             if (uploadTrendlineScatter != null) uploadTrendlineScatter.Clear();
             else uploadTrendlineScatter = plot.AddScatterList();
@@ -553,37 +563,37 @@ namespace BetterStayOnline.Model
 
             RedrawAverages();
 
-            if (showDownloadCandles)
-            {
-                if (downloadUpperPolygons != null)
-                    plot.Remove(downloadUpperPolygons);
-                if (downloadLowerPolygons != null)
-                    plot.Remove(downloadLowerPolygons);
+            //if (showDownloadCandles)
+            //{
+            //    if (downloadUpperPolygons != null)
+            //        plot.Remove(downloadUpperPolygons);
+            //    if (downloadLowerPolygons != null)
+            //        plot.Remove(downloadLowerPolygons);
 
-                if (downloadUpperLines != null)
-                    foreach (var line in downloadUpperLines)
-                        plot.Remove(line);
-                if (downloadLowerLines != null)
-                    foreach (var line in downloadLowerLines)
-                        plot.Remove(line);
-                GetCandlesticks(true);
-            }
+            //    if (downloadUpperLines != null)
+            //        foreach (var line in downloadUpperLines)
+            //            plot.Remove(line);
+            //    if (downloadLowerLines != null)
+            //        foreach (var line in downloadLowerLines)
+            //            plot.Remove(line);
+            //    GetCandlesticks(true);
+            //}
 
-            if (showUploadCandles)
-            {
-                if (uploadUpperPolygons != null)
-                    plot.Remove(uploadUpperPolygons);
-                if (uploadLowerPolygons != null)
-                    plot.Remove(uploadLowerPolygons);
+            //if (showUploadCandles)
+            //{
+            //    if (uploadUpperPolygons != null)
+            //        plot.Remove(uploadUpperPolygons);
+            //    if (uploadLowerPolygons != null)
+            //        plot.Remove(uploadLowerPolygons);
 
-                if (uploadUpperLines != null)
-                    foreach (var line in uploadUpperLines)
-                        plot.Remove(line);
-                if (uploadLowerLines != null)
-                    foreach (var line in uploadLowerLines)
-                        plot.Remove(line);
-                GetCandlesticks(false);
-            }
+            //    if (uploadUpperLines != null)
+            //        foreach (var line in uploadUpperLines)
+            //            plot.Remove(line);
+            //    if (uploadLowerLines != null)
+            //        foreach (var line in uploadLowerLines)
+            //            plot.Remove(line);
+            //    GetCandlesticks(false);
+            //}
 
             foreach (var testResult in testResults)
             {
