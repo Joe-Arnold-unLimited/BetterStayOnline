@@ -1,6 +1,7 @@
 ﻿using BetterStayOnline.Core;
 using BetterStayOnline.MVVM.Model;
 using BetterStayOnline.SpeedTest;
+using ScottPlot;
 using System;
 using System.ComponentModel;
 using System.Threading;
@@ -10,6 +11,9 @@ namespace BetterStayOnline.MVVM.ViewModel
 {
     class MainViewModel : ObservableObject
     {
+        public Plot plot;
+        public WpfPlotViewer viewer;
+
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand RunTestViewCommand { get; set; }
         public RelayCommand ResultsViewCommand { get; set; }

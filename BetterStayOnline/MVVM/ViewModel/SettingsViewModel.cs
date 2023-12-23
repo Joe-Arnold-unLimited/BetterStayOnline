@@ -11,8 +11,6 @@ namespace BetterStayOnline.MVVM.ViewModel
         public RelayCommand MinDownloadDownCommand { get; set; }
         public RelayCommand MinUploadUpCommand { get; set; }
         public RelayCommand MinUploadDownCommand { get; set; }
-        public RelayCommand CandleErrorUpCommand { get; set; }
-        public RelayCommand CandleErrorDownCommand { get; set; }
         public RelayCommand SaveSettingsCommand { get; set; }
 
 
@@ -56,17 +54,6 @@ namespace BetterStayOnline.MVVM.ViewModel
             set
             {
                 _minUpload = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private int _candleError;
-        public int CandleError
-        {
-            get { return _candleError; }
-            set
-            {
-                _candleError = value;
                 OnPropertyChanged();
             }
         }
@@ -201,7 +188,6 @@ namespace BetterStayOnline.MVVM.ViewModel
             ShowMinUpload = Configuration.ShowMinUp();
             ShowDownloadCandles = Configuration.ShowDownloadCandles();
             ShowUploadCandles = Configuration.ShowUploadCandles();
-            CandleError = (int)(Configuration.CandleError());
             CandlePeriod = Configuration.CandlePeriod();
             ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
@@ -212,8 +198,6 @@ namespace BetterStayOnline.MVVM.ViewModel
             MinDownloadDownCommand = new RelayCommand(o => { if (MinDownload > 1) MinDownload--; });
             MinUploadUpCommand = new RelayCommand(o => { MinUpload++; });
             MinUploadDownCommand = new RelayCommand(o => { if (MinUpload > 1) MinUpload--; });
-            CandleErrorUpCommand = new RelayCommand(o => { if (CandleError <= 40) CandleError += 5; });
-            CandleErrorDownCommand = new RelayCommand(o => { if (CandleError > 5) CandleError -= 5; });
 
             SaveSettingsCommand = new RelayCommand(o =>
             {
@@ -228,7 +212,6 @@ namespace BetterStayOnline.MVVM.ViewModel
                 Configuration.SetShowMinUp(ShowMinUpload);
                 Configuration.SetShowDownloadCandles(ShowDownloadCandles);
                 Configuration.SetShowUploadCandles(ShowUploadCandles);
-                Configuration.SetCandleError(CandleError);
                 Configuration.SetCandlePeriod(CandlePeriod);
                 Configuration.SetShowPercentagesBelowMinimums(ShowPercentagesBelowMinimums);
             });

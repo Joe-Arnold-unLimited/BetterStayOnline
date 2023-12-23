@@ -11,7 +11,6 @@
   "ShowPercentagesBelowMinimums": false,
   "ShowDownloadCandles": false,
   "ShowUploadCandles": false,
-  "CandleError": 20,
   "CandlePeriod": "Monthly",
   "DaysForAverage": 1
 }
