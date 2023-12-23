@@ -200,6 +200,8 @@ namespace BetterStayOnline.Model
                 {
                     wpfPlot.Render();
                 });
+            if (plot != null)
+                plot.Legend();
 
             // Notify subscribers that the plot has been updated
             OnPlotUpdate?.Invoke(plot, wpfPlot, testResults.Count() > 0 ? testResults.Last() : new BandwidthTest());
@@ -471,6 +473,24 @@ namespace BetterStayOnline.Model
 
             DrawMonthLines(plot, testResults, numberOfMonthsEitherSideToDraw);
 
+            if (uploadTrendlineScatter != null) uploadTrendlineScatter.Clear();
+            else uploadTrendlineScatter = plot.AddScatterList();
+            uploadTrendlineScatter.Label = "Upload Trend";
+            uploadTrendlineScatter.MarkerSize = 0;
+            uploadTrendlineScatter.LineWidth = 8;
+            uploadTrendlineScatter.Color = uploadTrendlineColor;
+            uploadTrendlineScatter.Smooth = true;
+            uploadTrendlineScatter.IsVisible = showUploadTrendline;
+
+            if (downloadTrendlineScatter != null) downloadTrendlineScatter.Clear();
+            else downloadTrendlineScatter = plot.AddScatterList();
+            downloadTrendlineScatter.Label = "Download Trend";
+            downloadTrendlineScatter.MarkerSize = 0;
+            downloadTrendlineScatter.LineWidth = 8;
+            downloadTrendlineScatter.Color = downloadTrendlineColor;
+            downloadTrendlineScatter.Smooth = true;
+            downloadTrendlineScatter.IsVisible = showDownloadTrendline;
+
             if (showDownloadCandles)
             {
                 if (downloadUpperPolygons != null)
@@ -513,24 +533,6 @@ namespace BetterStayOnline.Model
                 GetCandlesticks(false);
             }
 
-            if (uploadTrendlineScatter != null) uploadTrendlineScatter.Clear();
-            else uploadTrendlineScatter = plot.AddScatterList();
-            uploadTrendlineScatter.Label = "Upload Trend";
-            uploadTrendlineScatter.MarkerSize = 0;
-            uploadTrendlineScatter.LineWidth = 8;
-            uploadTrendlineScatter.Color = uploadTrendlineColor;
-            uploadTrendlineScatter.Smooth = true;
-            uploadTrendlineScatter.IsVisible = showUploadTrendline;
-
-            if (downloadTrendlineScatter != null) downloadTrendlineScatter.Clear();
-            else downloadTrendlineScatter = plot.AddScatterList();
-            downloadTrendlineScatter.Label = "Download Trend";
-            downloadTrendlineScatter.MarkerSize = 0;
-            downloadTrendlineScatter.LineWidth = 8;
-            downloadTrendlineScatter.Color = downloadTrendlineColor;
-            downloadTrendlineScatter.Smooth = true;
-            downloadTrendlineScatter.IsVisible = showDownloadTrendline;
-
             if (uploadScatter != null) uploadScatter.Clear();
             else uploadScatter = plot.AddScatterList();
             uploadScatter.Label = "Upload";
@@ -562,38 +564,6 @@ namespace BetterStayOnline.Model
             downloadHLineVector.IsVisible = showMinDownload;
 
             RedrawAverages();
-
-            //if (showDownloadCandles)
-            //{
-            //    if (downloadUpperPolygons != null)
-            //        plot.Remove(downloadUpperPolygons);
-            //    if (downloadLowerPolygons != null)
-            //        plot.Remove(downloadLowerPolygons);
-
-            //    if (downloadUpperLines != null)
-            //        foreach (var line in downloadUpperLines)
-            //            plot.Remove(line);
-            //    if (downloadLowerLines != null)
-            //        foreach (var line in downloadLowerLines)
-            //            plot.Remove(line);
-            //    GetCandlesticks(true);
-            //}
-
-            //if (showUploadCandles)
-            //{
-            //    if (uploadUpperPolygons != null)
-            //        plot.Remove(uploadUpperPolygons);
-            //    if (uploadLowerPolygons != null)
-            //        plot.Remove(uploadLowerPolygons);
-
-            //    if (uploadUpperLines != null)
-            //        foreach (var line in uploadUpperLines)
-            //            plot.Remove(line);
-            //    if (uploadLowerLines != null)
-            //        foreach (var line in uploadLowerLines)
-            //            plot.Remove(line);
-            //    GetCandlesticks(false);
-            //}
 
             foreach (var testResult in testResults)
             {
