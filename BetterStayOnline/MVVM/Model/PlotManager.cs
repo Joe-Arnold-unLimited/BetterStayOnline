@@ -207,7 +207,7 @@ namespace BetterStayOnline.Model
             OnPlotUpdate?.Invoke(plot, wpfPlot, testResults.Count() > 0 ? testResults.Last() : new BandwidthTest());
         }
 
-        private void GetCandlesticks(bool download)
+        private void DrawCandles(bool download)
         {
             var firstDate = testResults.First().date;
             var lastDate = DateTime.Now;
@@ -246,7 +246,7 @@ namespace BetterStayOnline.Model
                 TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
                 int hoursInPeriod = periodTimeSpan.Days * 24;
                 int halfHours = hoursInPeriod / 2;
-                double marginHours = halfHours * 0.15;
+                double marginHours = halfHours * 0.2;
 
                 DateTime startPoint = currentDate.AddHours(marginHours);
                 DateTime endPoint = currentDate.AddHours(hoursInPeriod).AddHours(-marginHours);
@@ -282,15 +282,19 @@ namespace BetterStayOnline.Model
                 }
                 else if (speedsInRange.Count == 2)
                 {
-                    double[] xs = { startPoint.ToOADate(), endPoint.ToOADate(), endPoint.ToOADate(), startPoint.ToOADate() };
-                    double[] ys = { speedsInRange.Max(), speedsInRange.Max(), speedsInRange.Min(), speedsInRange.Min() };
+                    var mean = CalculateMean(speedsInRange.ToArray());
 
-                    List<(double x, double y)> polygon = xs.Zip(ys, (xp, yp) => (xp, yp)).ToList();
-                    upperBoxPolygons.Add(polygon);
+                    ScatterPlot topVertLine = plot.AddLine(midPoint.ToOADate(), speedsInRange.Max(), midPoint.ToOADate(), mean, download ? downloadUpLineColor : uploadUpLineColor);
+                    ScatterPlot midLine = plot.AddLine(startPoint.ToOADate(), mean, endPoint.ToOADate(), mean, download ? downloadDownLineColor : uploadDownLineColor);
+                    ScatterPlot bottomVertLine = plot.AddLine(midPoint.ToOADate(), mean, midPoint.ToOADate(), speedsInRange.Min(), download ? downloadDownLineColor : uploadDownLineColor);
+
+                    topVertLine.LineWidth = candleLineWidth;
+                    midLine.LineWidth = candleLineWidth;
+                    bottomVertLine.LineWidth = candleLineWidth;
                 }
                 else if (speedsInRange.Count == 1)
                 {
-                    ScatterPlot line = plot.AddLine(startPoint.ToOADate(), speedsInRange.Min(), endPoint.ToOADate(), speedsInRange.Max(), download ? downloadUpLineColor : uploadUpLineColor);
+                    ScatterPlot line = plot.AddLine(startPoint.ToOADate(), speedsInRange[0], endPoint.ToOADate(), speedsInRange[0], download ? downloadDownLineColor : uploadDownLineColor);
                     line.LineWidth = candleLineWidth;
                     upperLines.Add(line);
                 }
@@ -509,7 +513,7 @@ namespace BetterStayOnline.Model
                 if (downloadLowerLines != null)
                     foreach (var line in downloadLowerLines)
                         plot.Remove(line);
-                GetCandlesticks(true);
+                DrawCandles(true);
             }
 
             if (showUploadCandles)
@@ -530,7 +534,7 @@ namespace BetterStayOnline.Model
                 if (uploadLowerLines != null)
                     foreach (var line in uploadLowerLines)
                         plot.Remove(line);
-                GetCandlesticks(false);
+                DrawCandles(false);
             }
 
             if (uploadScatter != null) uploadScatter.Clear();
