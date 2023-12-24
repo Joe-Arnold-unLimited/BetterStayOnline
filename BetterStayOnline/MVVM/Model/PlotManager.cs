@@ -106,6 +106,7 @@ namespace BetterStayOnline.Model
         // Styling
         // TODO: Move to settings
         Color graphBackgroundColor;
+        Color legendBackgroundColor;
 
         Color downloadTrendlineColor;
         Color downloadLineColor;
@@ -129,6 +130,7 @@ namespace BetterStayOnline.Model
         private PlotManager(WpfPlot wpfPlot = null)
         {
             graphBackgroundColor = Color.FromArgb(7, 38, 59);
+            legendBackgroundColor = Color.FromArgb(15, 50, 70);
 
             downloadTrendlineColor = Color.DarkSlateBlue;
             downloadLineColor = Color.CornflowerBlue;
@@ -201,7 +203,20 @@ namespace BetterStayOnline.Model
                     wpfPlot.Render();
                 });
             if (plot != null)
-                plot.Legend();
+            {
+                var legend = plot.Legend();
+                legend.FillColor = legendBackgroundColor;
+                legend.FontColor = Color.White;
+
+                //var legendItems = legend.GetItems();
+                //foreach (var legendItem in legendItems)
+                //{
+                //    if (legendItem.label.Contains("error"))
+                //    {
+                //        legendItem.markerShape = (MarkerShape)11;
+                //    }
+                //}
+            }
 
             // Notify subscribers that the plot has been updated
             OnPlotUpdate?.Invoke(plot, wpfPlot, testResults.Count() > 0 ? testResults.Last() : new BandwidthTest());
@@ -478,7 +493,7 @@ namespace BetterStayOnline.Model
             DrawMonthLines(plot, testResults, numberOfMonthsEitherSideToDraw);
 
             if (uploadTrendlineScatter != null) uploadTrendlineScatter.Clear();
-            else uploadTrendlineScatter = plot.AddScatterList();
+            uploadTrendlineScatter = plot.AddScatterList();
             uploadTrendlineScatter.Label = "Upload Trend";
             uploadTrendlineScatter.MarkerSize = 0;
             uploadTrendlineScatter.LineWidth = 8;
@@ -487,7 +502,7 @@ namespace BetterStayOnline.Model
             uploadTrendlineScatter.IsVisible = showUploadTrendline;
 
             if (downloadTrendlineScatter != null) downloadTrendlineScatter.Clear();
-            else downloadTrendlineScatter = plot.AddScatterList();
+            downloadTrendlineScatter = plot.AddScatterList();
             downloadTrendlineScatter.Label = "Download Trend";
             downloadTrendlineScatter.MarkerSize = 0;
             downloadTrendlineScatter.LineWidth = 8;
@@ -538,7 +553,7 @@ namespace BetterStayOnline.Model
             }
 
             if (uploadScatter != null) uploadScatter.Clear();
-            else uploadScatter = plot.AddScatterList();
+            uploadScatter = plot.AddScatterList();
             uploadScatter.Label = "Upload";
             uploadScatter.MarkerSize = 6;
             uploadScatter.Color = uploadLineColor;
@@ -546,7 +561,7 @@ namespace BetterStayOnline.Model
             uploadScatter.IsVisible = showUpload;
 
             if (downloadScatter != null) downloadScatter.Clear();
-            else downloadScatter = plot.AddScatterList();
+            downloadScatter = plot.AddScatterList();
             downloadScatter.Label = "Download";
             downloadScatter.MarkerSize = 6;
             downloadScatter.Color = downloadLineColor;

@@ -154,8 +154,8 @@ namespace BetterStayOnline.MVVM.View
                 if (test != null)
                 {
                     PlotManager.testResults.Add((BandwidthTest)test);
-                    plotManager.AddResult((BandwidthTest)test);
-                    PlotManager.SecondWindow.AddResult((BandwidthTest)test);
+                    //plotManager.AddResult((BandwidthTest)test);
+                    //PlotManager.SecondWindow.AddResult((BandwidthTest)test);
                     System.Windows.Application.Current.Dispatcher.Invoke((System.Action)(() =>
                     {
                         StartTest.IsEnabled = true;
