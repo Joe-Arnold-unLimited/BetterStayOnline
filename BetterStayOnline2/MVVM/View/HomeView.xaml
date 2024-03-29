@@ -12,14 +12,20 @@
     <UserControl.DataContext>
         <viewModel:HomeViewModel/>
     </UserControl.DataContext>
-    
+
     <Grid>
-        <TextBlock Text="This is the home page"
-                   Foreground="White"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
 
         <lvc:CartesianChart
+            Grid.Row="0"
             Series="{Binding Series}"
-            XAxes="{Binding XAxes}">
+            XAxes="{Binding ScrollableAxes}"
+            DrawMargin="{Binding Margin}"
+            ZoomMode="X"
+            UpdateStartedCommand="{Binding ChartUpdatedCommand}">
         </lvc:CartesianChart>
 
     </Grid>
