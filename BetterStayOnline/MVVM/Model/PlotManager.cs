@@ -224,6 +224,8 @@ namespace BetterStayOnline.Model
 
         private void DrawCandles(bool download)
         {
+            if (testResults.Count == 0) return;
+
             var firstDate = testResults.First().date;
             var lastDate = DateTime.Now;
             string candlePeriod = Configuration.CandlePeriod();
@@ -589,8 +591,15 @@ namespace BetterStayOnline.Model
                 AddResult(testResult);
             }
 
-            var highestYValue = testResults.Select(result => result.downSpeed > result.upSpeed ? result.downSpeed : result.upSpeed).Max();
-            plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
+            if (testResults.Count > 0)
+            {
+                var highestYValue = testResults.Select(result => result.downSpeed > result.upSpeed ? result.downSpeed : result.upSpeed).Max();
+                plot.SetAxisLimitsY(0, highestYValue + 10 - (highestYValue % 10));
+            }
+            else
+            {
+                plot.SetAxisLimitsY(0, 100);
+            }
 
             AssignPlotStyle(plot);
 
@@ -603,7 +612,7 @@ namespace BetterStayOnline.Model
                 // Work out starting XAxis span
                 bool moreThan31DaysOfResults = false;
 
-                if (testResults.Select(result => result.date).Min() < DateTime.Now.AddDays(-31)) moreThan31DaysOfResults = true;
+                if (testResults.Count > 0 && testResults.Select(result => result.date).Min() < DateTime.Now.AddDays(-31)) moreThan31DaysOfResults = true;
 
                 if (testResults.Count == 0)
                     plot.SetAxisLimitsX(DateTime.Now.AddDays(-1).ToOADate(), DateTime.Now.AddDays(1).ToOADate());
