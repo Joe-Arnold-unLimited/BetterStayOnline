@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:BetterStayOnline2"
         xmlns:viewModel="clr-namespace:BetterStayOnline2.MVVM.ViewModel"
         mc:Ignorable="d"
-        Height="1200" Width="1800">
+        Height="1000" Width="1800">
 
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
 
-    <Border Background="#272537">
+    <Border Background="#1a1a1a">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BetterStayOnline2.MVVM.View"
              xmlns:viewModel="clr-namespace:BetterStayOnline2.MVVM.ViewModel"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -19,14 +19,6 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <lvc:CartesianChart
-            Grid.Row="0"
-            Series="{Binding Series}"
-            XAxes="{Binding ScrollableAxes}"
-            DrawMargin="{Binding Margin}"
-            ZoomMode="X"
-            UpdateStartedCommand="{Binding ChartUpdatedCommand}">
-        </lvc:CartesianChart>
-
+        <ScottPlot:WpfPlot Name="ResultsTable"/>
     </Grid>
 </UserControl>
