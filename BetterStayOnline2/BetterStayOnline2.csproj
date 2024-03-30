@@ -148,7 +148,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Core\PlotManager.cs" />
+    <Compile Include="MVVM\Model\PlotManager.cs" />
+    <Compile Include="MVVM\Model\Configuration.cs" />
     <Compile Include="MVVM\ViewModel\EventsViewModel.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
     <Compile Include="Core\ObservableObject.cs" />
@@ -232,7 +233,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Charts\" />
-    <Folder Include="MVVM\Model\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\homeicon.jpg" />

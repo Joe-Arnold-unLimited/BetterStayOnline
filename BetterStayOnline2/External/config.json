@@ -2,15 +2,15 @@
   "ShowDownloadPoints": false,
   "ShowUploadPoints": false,
   "ShowDownloadTrendline": false,
-  "ShowUploadTrendline": false,
+  "ShowUploadTrendline": true,
   "ShowMinDown": false,
   "ShowMinUp": false,
   "MinDown": 50,
   "MinUp": 10,
   "RunTestOnStartup": true,
   "ShowPercentagesBelowMinimums": false,
-  "ShowDownloadCandles": false,
+  "ShowDownloadCandles": true,
   "ShowUploadCandles": false,
-  "CandlePeriod": "Monthly",
-  "DaysForAverage": 1
+  "CandlePeriod": "Daily",
+  "DaysForAverage": 7
 }

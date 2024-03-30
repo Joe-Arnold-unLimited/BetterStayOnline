@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:BetterStayOnline2"
         xmlns:viewModel="clr-namespace:BetterStayOnline2.MVVM.ViewModel"
         mc:Ignorable="d"
-        Height="1000" Width="1800">
+        Height="1000" Width="1800"
+        MinHeight="800"
+        MinWidth="1100">
 
     <Window.DataContext>
         <viewModel:MainViewModel/>

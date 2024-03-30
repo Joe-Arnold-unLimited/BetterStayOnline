@@ -6,6 +6,7 @@ using ScottPlot.Colormaps;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 using ScottPlot.TickGenerators;
+using ScottPlot.TickGenerators.TimeUnits;
 using ScottPlot.WPF;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using static ScottPlot.Colors;
 using static SkiaSharp.HarfBuzz.SKShaper;
 using Color = ScottPlot.Color;
+using Configuration = BetterStayOnline2.MVVM.Model.Configuration;
+using Fonts = ScottPlot.Fonts;
 
 namespace BetterStayOnline2.Core
 {
@@ -60,14 +65,18 @@ namespace BetterStayOnline2.Core
         public static void UpdatePlot(WpfPlot table)
         {
             // TODO: Get from settings
-            bool drawDownloadScatter = false;
-            bool drawUploadScatter = false;
-            bool drawDownloadTrendline = false;
-            bool drawUploadTrendline = true;
-            int trendByDays = 7;
-            bool drawDownloadCandles = true;
-            bool drawUploadCandles = false;
-            string candleDays = "Daily";
+            bool drawDownloadScatter = Configuration.ShowDownloadPoints();
+            bool drawUploadScatter = Configuration.ShowUploadPoints();
+            bool drawDownloadTrendline = Configuration.ShowDownloadTrendline();
+            bool drawUploadTrendline = Configuration.ShowUploadTrendline();
+            int trendByDays = Configuration.DaysForAverage();
+            bool drawDownloadCandles = Configuration.ShowDownloadCandles();
+            bool drawUploadCandles = Configuration.ShowUploadCandles();
+            string candleDays = Configuration.CandlePeriod();
+            bool drawMinDownload = Configuration.ShowMinDown();
+            bool drawMinUpload = Configuration.ShowMinUp();
+            double minDownloadValue = Configuration.MinDown();
+            double minUploadValue = Configuration.MinUp();
 
             table.Plot.Clear();
 
@@ -110,6 +119,19 @@ namespace BetterStayOnline2.Core
             {
                 DrawCandles(table, candleDays, uploadSpeeds, false);
             }
+            if (drawMinDownload)
+            {
+                DrawMinLine(table, minDownloadValue);
+            }
+            if (drawMinUpload)
+            {
+                DrawMinLine(table, minUploadValue, false);
+            }
+            
+            if(drawMinDownload || drawMinUpload)
+            {
+                DrawAmountAboveAverageAxisLabel(table, minDownloadValue, minUploadValue, datetimes, downloadSpeeds, uploadSpeeds, drawMinDownload, drawMinUpload);
+            }
 
             SetXAxisStartingView(table);
 
@@ -139,7 +161,6 @@ namespace BetterStayOnline2.Core
         // Month lines are created using Vertical Lines which are plots
         private static void DrawMonthLines(WpfPlot table, int numberOfMonthsEitherSideToDraw)
         {
-            Alignment[] alignments = (Alignment[])Enum.GetValues(typeof(ScottPlot.Alignment));
             string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
             if (datetimes.Length > 1)
             {
@@ -163,12 +184,6 @@ namespace BetterStayOnline2.Core
                     monthLine.Label.ForeColor = axisColor;
                 }
             }
-        }
-
-        struct MovingAverage
-        {
-            DateTime date;
-            double speed;
         }
 
         private static void DrawTrendlines(WpfPlot table, int trendByDays, bool download = true)
@@ -215,6 +230,123 @@ namespace BetterStayOnline2.Core
             averageScatter.Smooth = true;
             averageScatter.SmoothTension = 0;
             averageScatter.MarkerStyle = MarkerStyle.None;
+        }
+
+        private static List<int> GetIndexesInDateRange(double[] dates, DateTime startDate, DateTime endDate)
+        {
+            List<int> indexesInRange = new List<int>();
+            bool foundOne = false;
+            for (int i = 0; i < datetimes.Length; i++)
+            {
+                DateTime date = DateTime.FromOADate(datetimes[i]);
+                if (date > startDate && date <= endDate)
+                {
+                    indexesInRange.Add(i);
+                    foundOne = true;
+                }
+                else
+                {
+                    if (foundOne) break;
+                }
+            }
+
+            return indexesInRange;
+        }
+
+        private static void DrawAmountAboveAverageAxisLabel(WpfPlot table, double minDown, double minUp, double[] datetimes, double[] downloadSpeeds, double[] uploadSpeeds, bool showDown, bool showUp)
+        {
+            if (datetimes.Length > 1)
+            {
+                var startMonthLines = DateTime.FromOADate(datetimes[0]);
+                var endMonthLines = DateTime.Now;
+
+                List<DateTime> months = new List<DateTime>();
+
+                for (DateTime month = new DateTime(startMonthLines.Year, startMonthLines.Month, 1); month < endMonthLines; month = AddMonth(month))
+                {
+                    DateTime nextMonth = AddMonth(month);
+
+                    DateTime middleOfMonth = month.AddDays(((nextMonth - month).TotalDays / 2));
+
+                    months.Add(middleOfMonth);
+                }
+
+                foreach (var month in months)
+                {
+                    DateTime startDate = new DateTime(month.Year, month.Month, 1);
+                    DateTime nextMonth = AddMonth(startDate);
+
+                    // Create an invisible line in the middle of the month with a label at the top axis
+                    var invisibleDownloadLine = table.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
+                    var invisibleUploadLine = table.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
+
+                    List<int> indexesInRange = GetIndexesInDateRange(datetimes, startDate, nextMonth);
+
+                    if (indexesInRange.Count == 0) continue;
+
+                    string label = "";
+
+                    if (showDown)
+                    {
+                        double[] downloadSpeedsInRange = downloadSpeeds.Skip(indexesInRange.Min()).Take(indexesInRange.Count).ToArray();
+
+                        int countAboveMinimum = downloadSpeedsInRange.Where(speed => speed > (minDown)).Count();
+
+                        label = "Down: ";
+                        if (countAboveMinimum > 0)
+                        {
+                            double perc = (double)countAboveMinimum / downloadSpeedsInRange.Length * 100;
+                            label += perc.ToString("0.00") + "%";
+                        }
+                        else
+                            label += "0%";
+
+                        invisibleDownloadLine.Text = label;
+                        invisibleDownloadLine.Label.LineSpacing = 2;
+                        invisibleDownloadLine.LabelOppositeAxis = true;
+                        invisibleDownloadLine.Label.BackColor = new Color(0, 0, 0, 0);
+                        invisibleDownloadLine.Label.Bold = false;
+                        invisibleDownloadLine.Label.FontSize = 12;
+                        invisibleDownloadLine.Label.ForeColor = axisColor;
+                        invisibleDownloadLine.Label.Alignment = Alignment.UpperCenter;
+
+                        if (showDown && showUp)
+                        {
+                            invisibleDownloadLine.Label.OffsetY = -4;
+                        }
+                    }
+
+                    if (showUp)
+                    {
+                        double[] uploadSpeedsInRange = uploadSpeeds.Skip(indexesInRange.Min()).Take(indexesInRange.Count).ToArray();
+
+                        int countAboveMinimum = uploadSpeedsInRange.Where(speed => speed > (minUp)).Count();
+
+                        label = "Up: ";
+                        if (countAboveMinimum > 0)
+                        {
+                            double perc = (double)countAboveMinimum / uploadSpeedsInRange.Length * 100;
+                            label += perc.ToString("0.00") + "%";
+                        }
+                        else
+                            label += "0%";
+
+                        invisibleUploadLine.Text = label;
+                        invisibleUploadLine.Label.LineSpacing = 2;
+                        invisibleUploadLine.LabelOppositeAxis = true;
+                        invisibleUploadLine.Label.BackColor = new Color(0, 0, 0, 0);
+                        invisibleUploadLine.Label.Bold = false;
+                        invisibleUploadLine.Label.FontSize = 12;
+                        invisibleUploadLine.Label.ForeColor = axisColor;
+                        invisibleUploadLine.Label.Alignment = Alignment.UpperCenter;
+
+                        if (showDown && showUp)
+                        {
+                            invisibleUploadLine.Label.OffsetY = 12;
+                        }
+                    }
+                }
+            }
         }
 
         private static void DrawCandles(WpfPlot table, string candlePeriod, double[] speeds, bool download = true)
@@ -353,6 +485,14 @@ namespace BetterStayOnline2.Core
                 poly.LineStyle.Width = 0;
                 poly.MarkerStyle.Outline.Color = new Color(0, 0, 0, 0);
             }
+        }
+
+        private static void DrawMinLine(WpfPlot table, double yVal, bool download = true)
+        {
+            var line = table.Plot.Add.HorizontalLine(yVal);
+            line.LineStyle.Color = download ? minDownloadColor : minUploadColor;
+            line.LinePattern = LinePattern.Dashed;
+            line.LineStyle.Width = 2;
         }
 
         #endregion
