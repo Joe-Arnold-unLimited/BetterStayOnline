@@ -57,11 +57,18 @@ namespace BetterStayOnline2.Core
         }
 
         // Update table with new data
-        public static void UpdatePlot(WpfPlot table,
-            bool drawDownloadScatter = false, bool drawUploadScatter = false,
-            bool drawDownloadTrendline = false, bool drawUploadTrendline = false, int trendByDays = 7,
-            bool drawDownloadCandles = true, bool drawUploadCandles = true, int candleDays = 7)
+        public static void UpdatePlot(WpfPlot table)
         {
+            // TODO: Get from settings
+            bool drawDownloadScatter = false;
+            bool drawUploadScatter = false;
+            bool drawDownloadTrendline = false;
+            bool drawUploadTrendline = true;
+            int trendByDays = 7;
+            bool drawDownloadCandles = true;
+            bool drawUploadCandles = false;
+            string candleDays = "Daily";
+
             table.Plot.Clear();
 
             // Redraw monthlines as they've just been cleared
@@ -70,6 +77,16 @@ namespace BetterStayOnline2.Core
 
             // Draw data
             // We draw upload first usually as download should be in front of upload
+            // Draw upload trendline
+            if (drawDownloadTrendline)
+            {
+                DrawTrendlines(table, trendByDays);
+            }
+            // Draw download trendline
+            if (drawUploadTrendline)
+            {
+                DrawTrendlines(table, trendByDays, false);
+            }
             // Draw upload scatter
             if (drawUploadScatter)
             {
@@ -82,26 +99,16 @@ namespace BetterStayOnline2.Core
                 var downloadScatter = table.Plot.Add.Scatter(datetimes, downloadSpeeds, downloadLineColor);
                 downloadScatter.MarkerStyle.Outline.Color = downloadLineColor;
             }
-            // Draw upload trendline
-            if (drawDownloadTrendline)
-            {
-
-            }
-            // Draw download trendline
-            if (drawUploadTrendline)
-            {
-
-            }
             // Show Upload Candles on top of Download candles because upload usually has smaller vertical range and will cover less
             // Draw Download Candles
             if (drawDownloadCandles)
             {
-                DrawCandles(table, "Daily", downloadSpeeds);
+                DrawCandles(table, candleDays, downloadSpeeds);
             }
             // Draw Upload Candles
             if (drawUploadCandles)
             {
-                DrawCandles(table, "Daily", uploadSpeeds, false);
+                DrawCandles(table, candleDays, uploadSpeeds, false);
             }
 
             SetXAxisStartingView(table);
@@ -158,6 +165,58 @@ namespace BetterStayOnline2.Core
             }
         }
 
+        struct MovingAverage
+        {
+            DateTime date;
+            double speed;
+        }
+
+        private static void DrawTrendlines(WpfPlot table, int trendByDays, bool download = true)
+        {
+            if (datetimes.Length == 0) return;
+
+            var firstDate = DateTime.FromOADate(datetimes[0]);
+            var lastDate = DateTime.Now;
+
+            var speeds = download ? downloadSpeeds : uploadSpeeds;
+
+            List<double> dates = new List<double>();
+            List<double> averages = new List<double>();
+
+            for (DateTime currentDate = firstDate; currentDate <= lastDate; currentDate = currentDate.AddDays(trendByDays))
+            {
+                List<int> indexesInRange = new List<int>();
+                bool foundOne = false;
+                for (int i = 0; i < datetimes.Length; i++)
+                {
+                    DateTime date = DateTime.FromOADate(datetimes[i]);
+                    if (date > currentDate && date <= currentDate.AddDays(trendByDays))
+                    {
+                        indexesInRange.Add(i);
+                        foundOne = true;
+                    }
+                    else
+                    {
+                        if (foundOne) break;
+                    }
+                }
+
+                if (indexesInRange.Count == 0) continue;
+
+                double[] speedsInRange = speeds.Skip(indexesInRange.Min()).Take(indexesInRange.Count).ToArray();
+
+                dates.Add(currentDate.AddHours(trendByDays * 12).ToOADate());
+                averages.Add(speedsInRange.Average());
+            }
+
+            var averageScatter = table.Plot.Add.Scatter(dates.ToArray(), averages.ToArray(), download ? downloadTrendlineColor : uploadTrendlineColor);
+            averageScatter.Label = (download ? "Download" : "Upload") + " Trend";
+            averageScatter.LineWidth = 8;
+            averageScatter.Smooth = true;
+            averageScatter.SmoothTension = 0;
+            averageScatter.MarkerStyle = MarkerStyle.None;
+        }
+
         private static void DrawCandles(WpfPlot table, string candlePeriod, double[] speeds, bool download = true)
         {
             if (datetimes.Length == 0) return;
@@ -188,12 +247,18 @@ namespace BetterStayOnline2.Core
                 }
 
                 List<int> indexesInRange = new List<int>();
+                bool foundOne = false;
                 for (int i = 0; i < datetimes.Length; i++)
                 {
                     DateTime date = DateTime.FromOADate(datetimes[i]);
                     if (date > currentDate && date <= endOfPeriodDate)
                     {
                         indexesInRange.Add(i);
+                        foundOne = true;
+                    }
+                    else
+                    {
+                        if (foundOne) break;
                     }
                 }
 
@@ -210,74 +275,66 @@ namespace BetterStayOnline2.Core
                 DateTime endPoint = currentDate.AddHours(hoursInPeriod).AddHours(-marginHours);
                 DateTime midPoint = currentDate.AddHours(halfHours);
 
-                try
+                if (speedsInRange.Length > 2)
                 {
-                    if (speedsInRange.Length > 2)
+                    // Calculate mean and standard deviation
+                    CalculateMeanAndStdDev(speedsInRange.ToArray(), out double mean, out double leftStdDev, out double rightStdDev);
+
+                    var upperDev = mean + leftStdDev;
+                    var lowerDev = mean - rightStdDev;
+
+                    // Add upper and lower box polygons to the plot
+                    Coordinates[] upperPoly = new Coordinates[]
                     {
-                        // Calculate mean and standard deviation
-                        CalculateMeanAndStdDev(speedsInRange.ToArray(), out double mean, out double leftStdDev, out double rightStdDev);
-
-                        var upperDev = mean + leftStdDev;
-                        var lowerDev = mean - rightStdDev;
-
-                        // Add upper and lower box polygons to the plot
-                        Coordinates[] upperPoly = new Coordinates[]
-                        {
                         new Coordinates(startPoint.ToOADate(), mean),
                         new Coordinates(startPoint.ToOADate(), upperDev),
                         new Coordinates(endPoint.ToOADate(), upperDev),
                         new Coordinates(endPoint.ToOADate(), mean)
-                        };
-                        Coordinates[] lowerPoly = new Coordinates[]
-                        {
+                    };
+                    Coordinates[] lowerPoly = new Coordinates[]
+                    {
                         new Coordinates(startPoint.ToOADate(), mean),
                         new Coordinates(startPoint.ToOADate(), lowerDev),
                         new Coordinates(endPoint.ToOADate(), lowerDev),
                         new Coordinates(endPoint.ToOADate(), mean)
-                        };
+                    };
 
-                        upperBoxPolygons.Add(upperPoly);
-                        lowerBoxPolygons.Add(lowerPoly);
+                    upperBoxPolygons.Add(upperPoly);
+                    lowerBoxPolygons.Add(lowerPoly);
 
-                        LinePlot upLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean + leftStdDev), new Coordinates(midPoint.ToOADate(), speedsInRange.Max()));
-                        upLine.Color = download ? downloadUpLineColor : uploadUpLineColor;
+                    LinePlot upLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean + leftStdDev), new Coordinates(midPoint.ToOADate(), speedsInRange.Max()));
+                    upLine.Color = download ? downloadUpLineColor : uploadUpLineColor;
 
-                        LinePlot lowerLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean - rightStdDev), new Coordinates(midPoint.ToOADate(), speedsInRange.Min()));
-                        lowerLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
+                    LinePlot lowerLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean - rightStdDev), new Coordinates(midPoint.ToOADate(), speedsInRange.Min()));
+                    lowerLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
 
-                        upLine.LineWidth = candleLineWidth;
-                        lowerLine.LineWidth = candleLineWidth;
-                    }
-                    else if (speedsInRange.Length == 2)
-                    {
-                        var mean = CalculateMean(speedsInRange.ToArray());
-
-                        LinePlot topVertLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), speedsInRange.Max()), new Coordinates(midPoint.ToOADate(), mean));
-                        topVertLine.Color = download ? downloadUpLineColor : uploadUpLineColor;
-
-                        LinePlot midLine = table.Plot.Add.Line(new Coordinates(startPoint.ToOADate(), mean), new Coordinates(endPoint.ToOADate(), mean));
-                        midLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
-
-                        LinePlot bottomVertLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean), new Coordinates(midPoint.ToOADate(), speedsInRange.Min()));
-                        bottomVertLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
-
-                        topVertLine.LineWidth = candleLineWidth;
-                        midLine.LineWidth = candleLineWidth;
-                        bottomVertLine.LineWidth = candleLineWidth;
-                    }
-                    else if (speedsInRange.Length == 1)
-                    {
-                        LinePlot line = table.Plot.Add.Line(new Coordinates(startPoint.ToOADate(), speedsInRange[0]), new Coordinates(endPoint.ToOADate(), speedsInRange[0]));
-                        line.Color = download ? downloadDownLineColor : uploadDownLineColor;
-
-                        line.LineWidth = candleLineWidth;
-                    }
+                    upLine.LineWidth = candleLineWidth;
+                    lowerLine.LineWidth = candleLineWidth;
                 }
-                catch(Exception e)
+                else if (speedsInRange.Length == 2)
                 {
-                    int x = 0;
-                }
+                    var mean = CalculateMean(speedsInRange.ToArray());
 
+                    LinePlot topVertLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), speedsInRange.Max()), new Coordinates(midPoint.ToOADate(), mean));
+                    topVertLine.Color = download ? downloadUpLineColor : uploadUpLineColor;
+
+                    LinePlot midLine = table.Plot.Add.Line(new Coordinates(startPoint.ToOADate(), mean), new Coordinates(endPoint.ToOADate(), mean));
+                    midLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
+
+                    LinePlot bottomVertLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean), new Coordinates(midPoint.ToOADate(), speedsInRange.Min()));
+                    bottomVertLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
+
+                    topVertLine.LineWidth = candleLineWidth;
+                    midLine.LineWidth = candleLineWidth;
+                    bottomVertLine.LineWidth = candleLineWidth;
+                }
+                else if (speedsInRange.Length == 1)
+                {
+                    LinePlot line = table.Plot.Add.Line(new Coordinates(startPoint.ToOADate(), speedsInRange[0]), new Coordinates(endPoint.ToOADate(), speedsInRange[0]));
+                    line.Color = download ? downloadDownLineColor : uploadDownLineColor;
+
+                    line.LineWidth = candleLineWidth;
+                }
             }
 
             foreach (var polygon in upperBoxPolygons)
