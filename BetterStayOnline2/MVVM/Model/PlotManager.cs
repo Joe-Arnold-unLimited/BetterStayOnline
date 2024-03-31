@@ -37,6 +37,8 @@ namespace BetterStayOnline2.Core
         static PlotManager()
         {
             AddTestResults(ReadPreexistingData());
+
+            AssignVividDarkTheme();
         }
 
         public async static void AddDatapoint(double down, double up, double time)
@@ -179,7 +181,7 @@ namespace BetterStayOnline2.Core
                     monthLine.Text = monthText;
                     monthLine.Label.LineSpacing = 2;
                     monthLine.LabelOppositeAxis = true;
-                    monthLine.Label.BackColor = new Color(0, 0, 0, 0);
+                    monthLine.Label.BackColor = transparent;
                     monthLine.Label.Bold = false;
                     monthLine.Label.ForeColor = axisColor;
                 }
@@ -228,7 +230,6 @@ namespace BetterStayOnline2.Core
             averageScatter.Label = (download ? "Download" : "Upload") + " Trend";
             averageScatter.LineWidth = 8;
             averageScatter.Smooth = true;
-            averageScatter.SmoothTension = 0;
             averageScatter.MarkerStyle = MarkerStyle.None;
         }
 
@@ -304,7 +305,7 @@ namespace BetterStayOnline2.Core
                         invisibleDownloadLine.Text = label;
                         invisibleDownloadLine.Label.LineSpacing = 2;
                         invisibleDownloadLine.LabelOppositeAxis = true;
-                        invisibleDownloadLine.Label.BackColor = new Color(0, 0, 0, 0);
+                        invisibleDownloadLine.Label.BackColor = transparent;
                         invisibleDownloadLine.Label.Bold = false;
                         invisibleDownloadLine.Label.FontSize = 12;
                         invisibleDownloadLine.Label.ForeColor = axisColor;
@@ -334,7 +335,7 @@ namespace BetterStayOnline2.Core
                         invisibleUploadLine.Text = label;
                         invisibleUploadLine.Label.LineSpacing = 2;
                         invisibleUploadLine.LabelOppositeAxis = true;
-                        invisibleUploadLine.Label.BackColor = new Color(0, 0, 0, 0);
+                        invisibleUploadLine.Label.BackColor = transparent;
                         invisibleUploadLine.Label.Bold = false;
                         invisibleUploadLine.Label.FontSize = 12;
                         invisibleUploadLine.Label.ForeColor = axisColor;
@@ -475,7 +476,7 @@ namespace BetterStayOnline2.Core
                 poly.FillStyle.Color = download ? downloadUpCandleColor : uploadUpCandleColor;
                 poly.LineStyle.Color = download ? downloadUpLineColor : uploadUpLineColor;
                 poly.LineStyle.Width = 0;
-                poly.MarkerStyle.Outline.Color = new Color(0, 0, 0, 0);
+                poly.MarkerStyle.Outline.Color = transparent;
             }
             foreach (var polygon in lowerBoxPolygons)
             {
@@ -483,7 +484,7 @@ namespace BetterStayOnline2.Core
                 poly.FillStyle.Color = download ? downloadDownCandleColor : uploadDownCandleColor;
                 poly.LineStyle.Color = download ? downloadDownLineColor : uploadDownLineColor;
                 poly.LineStyle.Width = 0;
-                poly.MarkerStyle.Outline.Color = new Color(0, 0, 0, 0);
+                poly.MarkerStyle.Outline.Color = transparent;
             }
         }
 
@@ -644,34 +645,88 @@ namespace BetterStayOnline2.Core
 
         #endregion
 
+        #region Themes
+
+        #region Vivid Dark Theme
+
+        private static Color transparent = new Color(0, 0, 0, 0);
+        private static Color darkCharcoal = new Color(25, 24, 24);
+        private static Color grey = new Color(153, 170, 181);
+        private static Color darkGrey = new Color(38, 39, 41);
+        private static Color lightGrey = new Color(51, 50, 50);
+        private static Color electricBlue = new Color(100, 149, 237);
+        private static Color fireRed = new Color(255, 69, 0);
+        private static Color deepSkyBlue = new Color(0, 191, 255);
+        private static Color orange = new Color(255, 165, 0);
+        private static Color darkSlateBlue = new Color(72, 61, 139);
+        private static Color brown = new Color(165, 42, 42);
+        private static Color vividAgave = new Color(18, 153, 113);
+        private static Color darkWindowsBlue = new Color(29, 99, 168);
+        private static Color mustard = new Color(243, 182, 5);
+        private static Color darkPastelRed = new Color(200, 72, 72);
+
+        private static void AssignVividDarkTheme()
+        {
+            outerGraphColor = transparent;
+            graphBackgroundColor = darkCharcoal;
+            axisColor = grey;
+            majorLineColor = darkGrey;
+            monthLineColor = lightGrey;
+
+            downloadLineColor = electricBlue;
+            uploadLineColor = fireRed;
+
+            minDownloadColor = deepSkyBlue;
+            minUploadColor = orange;
+
+            downloadTrendlineColor = darkSlateBlue;
+            uploadTrendlineColor = brown;
+
+            downloadUpCandleColor = vividAgave;
+            downloadUpLineColor = downloadUpCandleColor;
+
+            downloadDownCandleColor = darkWindowsBlue;
+            downloadDownLineColor = downloadDownCandleColor;
+
+            uploadUpCandleColor = mustard;
+            uploadUpLineColor = uploadUpCandleColor;
+
+            uploadDownCandleColor = darkPastelRed;
+            uploadDownLineColor = uploadDownCandleColor;
+        }
+
+        #endregion
+
+        #endregion
+
         #region Styles
 
-        private static Color outerGraphColor = new Color(0, 0, 0, 0);
-        private static Color graphBackgroundColor = new Color(25, 24, 24);
-        private static Color axisColor = new Color(153, 170, 181);
-        private static Color majorLineColor = new Color(38, 39, 41);
-        private static Color monthLineColor = new Color(51, 50, 50);
+        private static Color outerGraphColor;
+        private static Color graphBackgroundColor;
+        private static Color axisColor;
+        private static Color majorLineColor;
+        private static Color monthLineColor;
 
-        private static Color downloadLineColor = new Color(100, 149, 237);
-        private static Color uploadLineColor = new Color(255, 69, 0);
+        private static Color downloadLineColor;
+        private static Color uploadLineColor;
 
-        private static Color minDownloadColor = new Color(0, 191, 255);
-        private static Color minUploadColor = new Color(255, 165, 0);
+        private static Color minDownloadColor;
+        private static Color minUploadColor;
 
-        private static Color downloadTrendlineColor = new Color(72, 61, 139);
-        private static Color uploadTrendlineColor = new Color(165, 42, 42);
+        private static Color downloadTrendlineColor;
+        private static Color uploadTrendlineColor;
 
-        private static Color downloadUpCandleColor = new Color(18, 153, 113);
-        private static Color downloadUpLineColor = new Color(18, 153, 113);
+        private static Color downloadUpCandleColor;
+        private static Color downloadUpLineColor;
 
-        private static Color downloadDownCandleColor = new Color(29, 99, 168);
-        private static Color downloadDownLineColor = new Color(29, 99, 168);
+        private static Color downloadDownCandleColor;
+        private static Color downloadDownLineColor;
 
-        private static Color uploadUpCandleColor = new Color(217, 127, 43);
-        private static Color uploadUpLineColor = new Color(217, 127, 43);
+        private static Color uploadUpCandleColor;
+        private static Color uploadUpLineColor;
 
-        private static Color uploadDownCandleColor = new Color(176, 56, 64);
-        private static Color uploadDownLineColor = new Color(176, 56, 64);
+        private static Color uploadDownCandleColor;
+        private static Color uploadDownLineColor;
 
         private static int candleLineWidth = 2;
 
@@ -689,7 +744,7 @@ namespace BetterStayOnline2.Core
             table.Plot.Font.Set(Fonts.Default);
             table.Plot.Axes.Bottom.TickLabelStyle.FontSize = 13;
 
-            table.Plot.Axes.FrameColor(new Color(0, 0, 0, 0));
+            table.Plot.Axes.FrameColor(transparent);
         }
 
         #endregion
