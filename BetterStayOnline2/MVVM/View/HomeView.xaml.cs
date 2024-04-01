@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,7 +16,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BetterStayOnline2.Charts;
 using BetterStayOnline2.Core;
+using BetterStayOnline2.MVVM.ViewModel;
 using Newtonsoft.Json.Linq;
 using ScottPlot;
 using ScottPlot.Control;
@@ -34,14 +37,21 @@ namespace BetterStayOnline2.MVVM.View
         {
             InitializeComponent();
 
+            PlotManager.ResultsTable = ResultsTable;
+
             CreateTable();
         }
 
-        private async Task CreateTable()
+        private void CreateTable()
         {
-            PlotManager.DrawTable(ResultsTable);
+            PlotManager.DrawTable();
 
-            PlotManager.UpdatePlot(ResultsTable);
+            PlotManager.UpdatePlot();
+        }
+
+        private void StartTest_Click(object sender, RoutedEventArgs e)
+        {
+            PlotManager.RunSpeedtest();
         }
     }
 }

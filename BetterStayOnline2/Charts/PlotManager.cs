@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using BetterStayOnline2.MVVM.ViewModel;
+using Newtonsoft.Json.Linq;
 using OpenTK;
 using ScottPlot;
 using ScottPlot.AxisRules;
@@ -14,21 +15,23 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using static ScottPlot.Colors;
 using static SkiaSharp.HarfBuzz.SKShaper;
 using Color = ScottPlot.Color;
-using Configuration = BetterStayOnline2.MVVM.Model.Configuration;
+using Configuration = BetterStayOnline2.Charts.Configuration;
 using Fonts = ScottPlot.Fonts;
 
-namespace BetterStayOnline2.Core
+namespace BetterStayOnline2.Charts
 {
     public static class PlotManager
     {
-        public static WpfPlot ResultsTable { get; set; } = new WpfPlot();
+        public static WpfPlot ResultsTable = null;
 
         static double[] downloadSpeeds = { };
         static double[] uploadSpeeds = { };
@@ -41,7 +44,7 @@ namespace BetterStayOnline2.Core
             AssignVividDarkTheme();
         }
 
-        public async static void AddDatapoint(double down, double up, double time)
+        public static void AddDatapoint(double down, double up, double time)
         {
             double[] newDownloadSpeeds = new double[downloadSpeeds.Length + 1];
             double[] newUploadSpeeds = new double[uploadSpeeds.Length + 1];
@@ -63,8 +66,10 @@ namespace BetterStayOnline2.Core
             datetimes = newDatetimes;
         }
 
-        // Update table with new data
-        public static void UpdatePlot(WpfPlot table)
+        private static bool tableHasBeenRefreshedSinceCreation = true;
+
+        // Update ResultsTable with new data
+        public static void UpdatePlot()
         {
             // TODO: Get from settings
             bool drawDownloadScatter = Configuration.ShowDownloadPoints();
@@ -80,88 +85,125 @@ namespace BetterStayOnline2.Core
             double minDownloadValue = Configuration.MinDown();
             double minUploadValue = Configuration.MinUp();
 
-            table.Plot.Clear();
+            ResultsTable.Plot.Clear();
 
             // Redraw monthlines as they've just been cleared
             int numberOfMonthsEitherSideToDraw = 24;
-            DrawMonthLines(table, numberOfMonthsEitherSideToDraw);
+            DrawMonthLines(numberOfMonthsEitherSideToDraw);
 
             // Draw data
             // We draw upload first usually as download should be in front of upload
             // Draw upload trendline
             if (drawDownloadTrendline)
             {
-                DrawTrendlines(table, trendByDays);
+                DrawTrendlines(trendByDays);
             }
             // Draw download trendline
             if (drawUploadTrendline)
             {
-                DrawTrendlines(table, trendByDays, false);
+                DrawTrendlines(trendByDays, false);
             }
             // Draw upload scatter
             if (drawUploadScatter)
             {
-                var uploadScatter = table.Plot.Add.Scatter(datetimes, uploadSpeeds, uploadLineColor);
+                var uploadScatter = ResultsTable.Plot.Add.Scatter(datetimes, uploadSpeeds, uploadLineColor);
                 uploadScatter.MarkerStyle.Outline.Color = uploadLineColor;
             }
             // Draw download scatter
             if (drawDownloadScatter)
             {
-                var downloadScatter = table.Plot.Add.Scatter(datetimes, downloadSpeeds, downloadLineColor);
+                var downloadScatter = ResultsTable.Plot.Add.Scatter(datetimes, downloadSpeeds, downloadLineColor);
                 downloadScatter.MarkerStyle.Outline.Color = downloadLineColor;
             }
             // Show Upload Candles on top of Download candles because upload usually has smaller vertical range and will cover less
             // Draw Download Candles
             if (drawDownloadCandles)
             {
-                DrawCandles(table, candleDays, downloadSpeeds);
+                DrawCandles(candleDays, downloadSpeeds);
             }
             // Draw Upload Candles
             if (drawUploadCandles)
             {
-                DrawCandles(table, candleDays, uploadSpeeds, false);
+                DrawCandles(candleDays, uploadSpeeds, false);
             }
             if (drawMinDownload)
             {
-                DrawMinLine(table, minDownloadValue);
+                DrawMinLine(minDownloadValue);
             }
             if (drawMinUpload)
             {
-                DrawMinLine(table, minUploadValue, false);
+                DrawMinLine(minUploadValue, false);
             }
             
             if(drawMinDownload || drawMinUpload)
             {
-                DrawAmountAboveAverageAxisLabel(table, minDownloadValue, minUploadValue, datetimes, downloadSpeeds, uploadSpeeds, drawMinDownload, drawMinUpload);
+                DrawAmountAboveAverageAxisLabel(minDownloadValue, minUploadValue, datetimes, downloadSpeeds, uploadSpeeds, drawMinDownload, drawMinUpload);
             }
 
-            SetXAxisStartingView(table);
+            if (tableHasBeenRefreshedSinceCreation)
+            {
+                CopyXAxisView();
+                SetYAxisView();
+            }
+            else
+            {
+                SetXAxisStartingView();
+            }
 
-            table.Refresh();
+            ResultsTable.Refresh();
+
+            tableHasBeenRefreshedSinceCreation = true;
         }
 
-        // Create table
-        // Should only be called in one place, on table construction
+        // Create ResultsTable
+        // Should only be called in one place, on ResultsTable construction
         // Nowhere in here should we be drawing any plots, as they will be cleared immediately after
-        public static void DrawTable(WpfPlot table)
+        public static void DrawTable()
         {
-            SetXAxisStartingView(table);
+            SetXAxisStartingView();
 
-            double yAxisTopLimit = SetYAxisStartingView(table);
+            SetYAxisView();
 
-            CreateYAxisTicks(table, yAxisTopLimit);
+            LockVerticalZoom();
 
-            LockVerticalZoom(table);
+            AssignXAxisDateFormat();
 
-            AssignXAxisDateFormat(table);
+            AssignPlotStyle();
 
-            AssignPlotStyle(table);
+            tableHasBeenRefreshedSinceCreation = false;
         }
 
-        #region Plottables
+        #region Tasks
+
+        private static bool canStartTest = true;
+
+        public static void RunSpeedtest()
+        {
+            Thread thread = null;
+            canStartTest = false;
+
+            thread = new Thread(new ThreadStart(() =>
+            {
+                BandwidthTest? test = Speedtester.RunSpeedTest();
+                if (test != null)
+                {
+                    BandwidthTest Test = (BandwidthTest)test;
+                    AddDatapoint(Test.downSpeed, Test.upSpeed, Test.date.ToOADate());
+                    canStartTest = true;
+
+                    if(CurrentContext.currentView == "HomeViewModel")
+                        UpdatePlot();
+                }
+            }));
+            thread.Start();
+        }
+
+        #endregion
+
+        #region PlotResultsTables
 
         // Month lines are created using Vertical Lines which are plots
-        private static void DrawMonthLines(WpfPlot table, int numberOfMonthsEitherSideToDraw)
+        private static void DrawMonthLines(int numberOfMonthsEitherSideToDraw)
         {
             string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
             if (datetimes.Length > 1)
@@ -173,7 +215,7 @@ namespace BetterStayOnline2.Core
 
                 for (DateTime month = new DateTime(startMonthLines.Year, startMonthLines.Month, 1); month < endMonthLines; month = month.AddMonths(1))
                 {
-                    var monthLine = table.Plot.Add.VerticalLine(x: month.ToOADate(), color: monthLineColor, width: 2);
+                    var monthLine = ResultsTable.Plot.Add.VerticalLine(x: month.ToOADate(), color: monthLineColor, width: 2);
 
                     string monthText = months[month.Month - 1].Substring(0, 3);
                     if (month.Year != DateTime.Now.Year) monthText = monthText + " " + month.Year.ToString().Substring(2);
@@ -188,7 +230,7 @@ namespace BetterStayOnline2.Core
             }
         }
 
-        private static void DrawTrendlines(WpfPlot table, int trendByDays, bool download = true)
+        private static void DrawTrendlines(int trendByDays, bool download = true)
         {
             if (datetimes.Length == 0) return;
 
@@ -226,7 +268,7 @@ namespace BetterStayOnline2.Core
                 averages.Add(speedsInRange.Average());
             }
 
-            var averageScatter = table.Plot.Add.Scatter(dates.ToArray(), averages.ToArray(), download ? downloadTrendlineColor : uploadTrendlineColor);
+            var averageScatter = ResultsTable.Plot.Add.Scatter(dates.ToArray(), averages.ToArray(), download ? downloadTrendlineColor : uploadTrendlineColor);
             averageScatter.Label = (download ? "Download" : "Upload") + " Trend";
             averageScatter.LineWidth = 8;
             averageScatter.Smooth = true;
@@ -254,7 +296,7 @@ namespace BetterStayOnline2.Core
             return indexesInRange;
         }
 
-        private static void DrawAmountAboveAverageAxisLabel(WpfPlot table, double minDown, double minUp, double[] datetimes, double[] downloadSpeeds, double[] uploadSpeeds, bool showDown, bool showUp)
+        private static void DrawAmountAboveAverageAxisLabel(double minDown, double minUp, double[] datetimes, double[] downloadSpeeds, double[] uploadSpeeds, bool showDown, bool showUp)
         {
             if (datetimes.Length > 1)
             {
@@ -278,8 +320,8 @@ namespace BetterStayOnline2.Core
                     DateTime nextMonth = AddMonth(startDate);
 
                     // Create an invisible line in the middle of the month with a label at the top axis
-                    var invisibleDownloadLine = table.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
-                    var invisibleUploadLine = table.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
+                    var invisibleDownloadLine = ResultsTable.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
+                    var invisibleUploadLine = ResultsTable.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
 
                     List<int> indexesInRange = GetIndexesInDateRange(datetimes, startDate, nextMonth);
 
@@ -350,7 +392,7 @@ namespace BetterStayOnline2.Core
             }
         }
 
-        private static void DrawCandles(WpfPlot table, string candlePeriod, double[] speeds, bool download = true)
+        private static void DrawCandles(string candlePeriod, double[] speeds, bool download = true)
         {
             if (datetimes.Length == 0) return;
 
@@ -435,10 +477,10 @@ namespace BetterStayOnline2.Core
                     upperBoxPolygons.Add(upperPoly);
                     lowerBoxPolygons.Add(lowerPoly);
 
-                    LinePlot upLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean + leftStdDev), new Coordinates(midPoint.ToOADate(), speedsInRange.Max()));
+                    LinePlot upLine = ResultsTable.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean + leftStdDev), new Coordinates(midPoint.ToOADate(), speedsInRange.Max()));
                     upLine.Color = download ? downloadUpLineColor : uploadUpLineColor;
 
-                    LinePlot lowerLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean - rightStdDev), new Coordinates(midPoint.ToOADate(), speedsInRange.Min()));
+                    LinePlot lowerLine = ResultsTable.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean - rightStdDev), new Coordinates(midPoint.ToOADate(), speedsInRange.Min()));
                     lowerLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
 
                     upLine.LineWidth = candleLineWidth;
@@ -448,13 +490,13 @@ namespace BetterStayOnline2.Core
                 {
                     var mean = CalculateMean(speedsInRange.ToArray());
 
-                    LinePlot topVertLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), speedsInRange.Max()), new Coordinates(midPoint.ToOADate(), mean));
+                    LinePlot topVertLine = ResultsTable.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), speedsInRange.Max()), new Coordinates(midPoint.ToOADate(), mean));
                     topVertLine.Color = download ? downloadUpLineColor : uploadUpLineColor;
 
-                    LinePlot midLine = table.Plot.Add.Line(new Coordinates(startPoint.ToOADate(), mean), new Coordinates(endPoint.ToOADate(), mean));
+                    LinePlot midLine = ResultsTable.Plot.Add.Line(new Coordinates(startPoint.ToOADate(), mean), new Coordinates(endPoint.ToOADate(), mean));
                     midLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
 
-                    LinePlot bottomVertLine = table.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean), new Coordinates(midPoint.ToOADate(), speedsInRange.Min()));
+                    LinePlot bottomVertLine = ResultsTable.Plot.Add.Line(new Coordinates(midPoint.ToOADate(), mean), new Coordinates(midPoint.ToOADate(), speedsInRange.Min()));
                     bottomVertLine.Color = download ? downloadDownLineColor : uploadDownLineColor;
 
                     topVertLine.LineWidth = candleLineWidth;
@@ -463,7 +505,7 @@ namespace BetterStayOnline2.Core
                 }
                 else if (speedsInRange.Length == 1)
                 {
-                    LinePlot line = table.Plot.Add.Line(new Coordinates(startPoint.ToOADate(), speedsInRange[0]), new Coordinates(endPoint.ToOADate(), speedsInRange[0]));
+                    LinePlot line = ResultsTable.Plot.Add.Line(new Coordinates(startPoint.ToOADate(), speedsInRange[0]), new Coordinates(endPoint.ToOADate(), speedsInRange[0]));
                     line.Color = download ? downloadDownLineColor : uploadDownLineColor;
 
                     line.LineWidth = candleLineWidth;
@@ -472,7 +514,7 @@ namespace BetterStayOnline2.Core
 
             foreach (var polygon in upperBoxPolygons)
             {
-                Polygon poly = table.Plot.Add.Polygon(polygon);
+                Polygon poly = ResultsTable.Plot.Add.Polygon(polygon);
                 poly.FillStyle.Color = download ? downloadUpCandleColor : uploadUpCandleColor;
                 poly.LineStyle.Color = download ? downloadUpLineColor : uploadUpLineColor;
                 poly.LineStyle.Width = 0;
@@ -480,7 +522,7 @@ namespace BetterStayOnline2.Core
             }
             foreach (var polygon in lowerBoxPolygons)
             {
-                Polygon poly = table.Plot.Add.Polygon(polygon);
+                Polygon poly = ResultsTable.Plot.Add.Polygon(polygon);
                 poly.FillStyle.Color = download ? downloadDownCandleColor : uploadDownCandleColor;
                 poly.LineStyle.Color = download ? downloadDownLineColor : uploadDownLineColor;
                 poly.LineStyle.Width = 0;
@@ -488,9 +530,9 @@ namespace BetterStayOnline2.Core
             }
         }
 
-        private static void DrawMinLine(WpfPlot table, double yVal, bool download = true)
+        private static void DrawMinLine(double yVal, bool download = true)
         {
-            var line = table.Plot.Add.HorizontalLine(yVal);
+            var line = ResultsTable.Plot.Add.HorizontalLine(yVal);
             line.LineStyle.Color = download ? minDownloadColor : minUploadColor;
             line.LinePattern = LinePattern.Dashed;
             line.LineStyle.Width = 2;
@@ -556,33 +598,40 @@ namespace BetterStayOnline2.Core
 
         #region Table Drawing
 
-        private static void SetXAxisStartingView(WpfPlot table)
+        private static void SetXAxisStartingView()
         {
             bool moreThan31DaysOfResults = false;
 
             if (datetimes.Length > 0 && DateTime.FromOADate(datetimes.Min()) < DateTime.Now.AddDays(-31)) moreThan31DaysOfResults = true;
 
             if (datetimes.Length == 0)
-                table.Plot.Axes.SetLimitsX(DateTime.Now.AddDays(-1).ToOADate(), DateTime.Now.AddDays(1).ToOADate());
+                ResultsTable.Plot.Axes.SetLimitsX(DateTime.Now.AddDays(-1).ToOADate(), DateTime.Now.AddDays(1).ToOADate());
             else if (moreThan31DaysOfResults || datetimes.Length == 1)
-                table.Plot.Axes.SetLimitsX(DateTime.Now.AddDays(-34).ToOADate(), DateTime.FromOADate(datetimes.Max()).AddDays(3).ToOADate());
+                ResultsTable.Plot.Axes.SetLimitsX(DateTime.Now.AddDays(-34).ToOADate(), DateTime.FromOADate(datetimes.Max()).AddDays(3).ToOADate());
             else
             {
                 double lengthOfTests = (DateTime.FromOADate(datetimes.Max()) - DateTime.FromOADate(datetimes.Min())).TotalMinutes;
                 if (lengthOfTests < TimeSpan.FromHours(2).TotalMinutes)
                 {
-                    table.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddHours(-1).ToOADate(),
+                    ResultsTable.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddHours(-1).ToOADate(),
                         DateTime.FromOADate(datetimes.Max()).AddHours(1).ToOADate());
                 }
                 else
                 {
-                    table.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddMinutes(-(lengthOfTests / 5)).ToOADate(),
+                    ResultsTable.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddMinutes(-(lengthOfTests / 5)).ToOADate(),
                         DateTime.FromOADate(datetimes.Max()).AddMinutes(lengthOfTests / 5).ToOADate());
                 }
             }
         }
 
-        private static double SetYAxisStartingView(WpfPlot table)
+        private static void CopyXAxisView()
+        {
+            AxisLimits axisLimits = ResultsTable.Plot.Axes.GetLimits();
+
+            ResultsTable.Plot.Axes.SetLimitsX(axisLimits.Left, axisLimits.Right);
+        }
+
+        private static void SetYAxisView()
         {
             double yAxisTopLimit = 100;
 
@@ -591,12 +640,12 @@ namespace BetterStayOnline2.Core
                 var highestYValue = downloadSpeeds.Concat(uploadSpeeds).Max();
                 yAxisTopLimit = highestYValue + 10 - (highestYValue % 10);
             }
-            table.Plot.Axes.SetLimitsY(0, yAxisTopLimit);
+            ResultsTable.Plot.Axes.SetLimitsY(0, yAxisTopLimit);
 
-            return yAxisTopLimit;
+            CreateYAxisTicks(yAxisTopLimit);
         }
 
-        private static void CreateYAxisTicks(WpfPlot table, double yAxisTopLimit)
+        private static void CreateYAxisTicks(double yAxisTopLimit)
         {
             NumericManual ticks = new NumericManual();
 
@@ -627,20 +676,20 @@ namespace BetterStayOnline2.Core
                 ticks.AddMinor(i);
             }
 
-            table.Plot.Axes.Left.TickGenerator = ticks;
+            ResultsTable.Plot.Axes.Left.TickGenerator = ticks;
         }
 
-        private static void LockVerticalZoom(WpfPlot table)
+        private static void LockVerticalZoom()
         {
-            LockedVertical lockedVerticalRule = new LockedVertical(table.Plot.Axes.Left);
+            LockedVertical lockedVerticalRule = new LockedVertical(ResultsTable.Plot.Axes.Left);
 
-            table.Plot.Axes.Rules.Clear();
-            table.Plot.Axes.Rules.Add(lockedVerticalRule);
+            ResultsTable.Plot.Axes.Rules.Clear();
+            ResultsTable.Plot.Axes.Rules.Add(lockedVerticalRule);
         }
 
-        private static void AssignXAxisDateFormat(WpfPlot table)
+        private static void AssignXAxisDateFormat()
         {
-            table.Plot.Axes.DateTimeTicksBottom();
+            ResultsTable.Plot.Axes.DateTimeTicksBottom();
         }
 
         #endregion
@@ -730,21 +779,21 @@ namespace BetterStayOnline2.Core
 
         private static int candleLineWidth = 2;
 
-        private static void AssignPlotStyle(WpfPlot table)
+        private static void AssignPlotStyle()
         {
-            table.Plot.FigureBackground.Color = outerGraphColor;
-            table.Plot.DataBackground.Color = graphBackgroundColor;
-            table.Plot.Axes.Color(axisColor);
-            table.Plot.Grid.MajorLineColor = majorLineColor;
+            ResultsTable.Plot.FigureBackground.Color = outerGraphColor;
+            ResultsTable.Plot.DataBackground.Color = graphBackgroundColor;
+            ResultsTable.Plot.Axes.Color(axisColor);
+            ResultsTable.Plot.Grid.MajorLineColor = majorLineColor;
 
             Fonts.Default = "Aptos";
 
-            table.Plot.Axes.Bottom.TickLabelStyle.FontName = Fonts.Default;
+            ResultsTable.Plot.Axes.Bottom.TickLabelStyle.FontName = Fonts.Default;
 
-            table.Plot.Font.Set(Fonts.Default);
-            table.Plot.Axes.Bottom.TickLabelStyle.FontSize = 13;
+            ResultsTable.Plot.Font.Set(Fonts.Default);
+            ResultsTable.Plot.Axes.Bottom.TickLabelStyle.FontSize = 13;
 
-            table.Plot.Axes.FrameColor(transparent);
+            ResultsTable.Plot.Axes.FrameColor(transparent);
         }
 
         #endregion

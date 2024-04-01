@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace BetterStayOnline2.MVVM.ViewModel
 {
+    public static class CurrentContext {
+        public static string currentView = "";
+    }
+
     internal class MainViewModel : ObservableObject
     {
         public RelayCommand homeViewCommand { get; set; }
@@ -25,11 +29,12 @@ namespace BetterStayOnline2.MVVM.ViewModel
             set
             {
                 _currentView = value;
+                CurrentContext.currentView = _currentView.GetType().Name;
                 OnPropertyChanged();
             }
         }
 
-        public MainViewModel() 
+        public MainViewModel()
         { 
             homeVM = new HomeViewModel();
             settingsVM = new SettingsViewModel();

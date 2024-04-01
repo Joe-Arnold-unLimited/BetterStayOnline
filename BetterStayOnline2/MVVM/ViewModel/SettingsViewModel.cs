@@ -1,5 +1,5 @@
-﻿using BetterStayOnline2.Core;
-using BetterStayOnline2.MVVM.Model;
+﻿using BetterStayOnline2.Charts;
+using BetterStayOnline2.Core;
 
 namespace BetterStayOnline2.MVVM.ViewModel
 {

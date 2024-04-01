@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace BetterStayOnline2.MVVM.Model
+namespace BetterStayOnline2.Charts
 {
     class Configuration
     {

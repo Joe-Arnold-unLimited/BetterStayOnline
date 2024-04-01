@@ -7,6 +7,229 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="500"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.ColumnSpan="2" Background="#07263b">
+            <Grid Grid.ColumnSpan="2" Width="1000">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="4"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="14"
+                   FontFamily="Medium"
+                   Text="Here you can create events to run tests at your chosen time, provided the app is running"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                    <TextBlock Foreground="White"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    FontFamily="Medium"
+                    Text="Day"
+                    Margin="20"
+                    Width="95"/>
+                    <ComboBox Width="90" Height="30"
+                      HorizontalAlignment="Right"
+                      ItemsSource="{Binding Days}"
+                      SelectedValue="{Binding SelectedDay}">
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                    <TextBlock Foreground="White"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    FontFamily="Medium"
+                    Text="Hour"
+                    Margin="20"
+                    Width="95"/>
+                    <ComboBox Width="90" Height="30"
+                      HorizontalAlignment="Right"
+                      ItemsSource="{Binding Hours}"
+                      SelectedValue="{Binding SelectedHour}">
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
+                    <TextBlock Foreground="White"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    FontFamily="Medium"
+                    Text="Minute"
+                    Margin="20"
+                    Width="95"/>
+                    <ComboBox Width="90" Height="30"
+                      HorizontalAlignment="Right"
+                      ItemsSource="{Binding Minutes}"
+                      SelectedValue="{Binding SelectedMinute}">
+                    </ComboBox>
+                </StackPanel>
+
+                <Button Grid.Row="1" Grid.Column="3"
+                    Content="Add Event"
+                    Foreground="White"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Margin="0,0,0,12"
+                Command="{Binding CreateEventCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#fe6584"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#1b911b"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="150" Height="50"
+                                CornerRadius="10"
+                                Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Border>
+
+
+
+        <Border Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="500"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+                <DataGrid ItemsSource="{Binding EventList}" 
+                  AutoGenerateColumns="False" CanUserAddRows="false"
+                  Foreground="Black" Background="#030f17"
+                  Margin="20,20,0,20">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Day" Binding="{Binding Day}" Width="80" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Hour" Binding="{Binding Hour}" Width="80" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Minute" Binding="{Binding Minute}" Width="80" IsReadOnly="True"/>
+                        <DataGridCheckBoxColumn Header="Select" Binding="{Binding Selected}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="PreviewMouseDown" Handler="DataGridRow_PreviewMouseDown"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+
+                <Border Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="90"/>
+                            <RowDefinition Height="90"/>
+                            <RowDefinition Height="90"/>
+                            <RowDefinition Height="90"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1"
+                    Content="Remove"
+                    Foreground="White"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Command="{Binding RemoveEventCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#fe6584"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1b911b"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Width="150" Height="50"
+                                CornerRadius="10"
+                                Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <Button Grid.Row="2"
+                    Content="Remove All"
+                    Foreground="White"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Command="{Binding RemoveAllEventsCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#fe6584"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1b911b"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Width="150" Height="50"
+                                CornerRadius="10"
+                                Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!--<StackPanel Grid.Row="2" Grid.ColumnSpan="2">
+        <TextBlock Foreground="White" 
+                FontSize="14"
+                FontFamily="Medium"
+                Text="You can set a maximum of 50 events of your choosing"
+                HorizontalAlignment="Center"
+                Margin="0,30,0,0"/>
+        <TextBlock Foreground="White" 
+                FontSize="14"
+                FontFamily="Medium"
+                Text="You can run multiple tests at the same time but they could compromise each other's results"
+                HorizontalAlignment="Center"
+                Margin="0,20,0,0"/>
+    </StackPanel>-->
     </Grid>
 </UserControl>

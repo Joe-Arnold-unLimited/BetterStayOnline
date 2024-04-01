@@ -1,7 +1,11 @@
-﻿using System;
+﻿using BetterStayOnline2.Charts;
+using BetterStayOnline2.Core;
+using BetterStayOnline2.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +27,20 @@ namespace BetterStayOnline2.MVVM.View
         public EventsView()
         {
             InitializeComponent();
+        }
+
+        // When row is clicked, select the checkbox
+        private void DataGridRow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.OriginalSource is CheckBox)
+                return; // Let the CheckBox handle the click
+
+            if (sender is DataGridRow row)
+            {
+                e.Handled = true;
+                Event rowData = (Event)row.Item; // Replace Event with the actual type of your data items
+                rowData.Selected = !rowData.Selected; // Toggle Selected property
+            }
         }
     }
 }
