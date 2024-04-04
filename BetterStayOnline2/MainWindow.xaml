@@ -14,17 +14,17 @@
         <viewModel:MainViewModel/>
     </Window.DataContext>
 
-    <Border Background="#1a1a1a">
+    <Border Background="{Binding appColor}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="70"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <StackPanel>
 
                 <RadioButton Content="Home"
-                             Height="50"
+                             Height="70"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
@@ -32,14 +32,14 @@
                              Command="{Binding homeViewCommand}"/>
 
                 <RadioButton Content="Settings"
-                             Height="50"
+                             Height="70"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding settingsViewCommand}"/>
 
                 <RadioButton Content="Events"
-                             Height="50"
+                             Height="70"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"

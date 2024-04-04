@@ -699,6 +699,7 @@ namespace BetterStayOnline2.Charts
         #region Vivid Dark Theme
 
         private static Color transparent = new Color(0, 0, 0, 0);
+        private static Color charcoal = new Color(31, 31, 31);
         private static Color darkCharcoal = new Color(25, 24, 24);
         private static Color grey = new Color(153, 170, 181);
         private static Color darkGrey = new Color(38, 39, 41);
@@ -716,6 +717,8 @@ namespace BetterStayOnline2.Charts
 
         private static void AssignVividDarkTheme()
         {
+            appColor = charcoal;
+
             outerGraphColor = transparent;
             graphBackgroundColor = darkCharcoal;
             axisColor = grey;
@@ -749,6 +752,8 @@ namespace BetterStayOnline2.Charts
         #endregion
 
         #region Styles
+
+        public static Color appColor;
 
         private static Color outerGraphColor;
         private static Color graphBackgroundColor;

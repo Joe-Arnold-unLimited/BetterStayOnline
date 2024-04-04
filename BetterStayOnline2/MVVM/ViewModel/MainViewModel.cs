@@ -1,6 +1,9 @@
-﻿using BetterStayOnline2.Core;
+﻿using BetterStayOnline2.Charts;
+using BetterStayOnline2.Core;
+using LiveChartsCore.Defaults;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +25,20 @@ namespace BetterStayOnline2.MVVM.ViewModel
         public EventsViewModel eventsVM { get; set; }
 
 
+        private Color _appColor = Color.FromArgb(0, PlotManager.appColor.R, PlotManager.appColor.G, PlotManager.appColor.B);
+        public string appColor
+        {
+            get
+            {
+                return "#" + _appColor.R.ToString("X2") + _appColor.G.ToString("X2") + _appColor.B.ToString("X2");
+            }
+            set
+            {
+                _appColor = ColorTranslator.FromHtml(value);
+                OnPropertyChanged();
+            }
+        }
+
         private object _currentView;
         public object currentView 
         { 
@@ -35,7 +52,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
         }
 
         public MainViewModel()
-        { 
+        {
             homeVM = new HomeViewModel();
             settingsVM = new SettingsViewModel();
             eventsVM = new EventsViewModel();
