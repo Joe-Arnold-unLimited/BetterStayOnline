@@ -1,4 +1,5 @@
 ﻿using BetterStayOnline2.Charts;
+using BetterStayOnline2.ConnectionLoss;
 using BetterStayOnline2.Core;
 using LiveChartsCore.Defaults;
 using System;
@@ -7,6 +8,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace BetterStayOnline2.MVVM.ViewModel
 {
@@ -24,6 +27,23 @@ namespace BetterStayOnline2.MVVM.ViewModel
         public SettingsViewModel settingsVM { get; set; }
         public EventsViewModel eventsVM { get; set; }
 
+
+        public DownDetector downDetector;
+
+        private bool _testRunning;
+        public bool testRunning
+        {
+            get
+            {
+                return _testRunning;
+            }
+            set
+            {
+                _testRunning = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand RunTaskCommand { get; }
 
         private Color _appColor = Color.FromArgb(0, PlotManager.appColor.R, PlotManager.appColor.G, PlotManager.appColor.B);
         public string appColor
@@ -51,6 +71,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             }
         }
 
+
+
         public MainViewModel()
         {
             homeVM = new HomeViewModel();
@@ -73,6 +95,34 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 currentView = eventsVM;
             });
+
+            downDetector = new DownDetector();
+
+            RunTaskCommand = new RelayCommand(ExecuteRunTask, CanExecuteRunTask);
+            PlotManager.TestStarted += PlotManager_TestStarted;
+            PlotManager.TestCompleted += PlotManager_TestCompleted;
+        }
+
+        private void PlotManager_TestStarted(object sender, EventArgs e)
+        {
+            testRunning = true;
+        }
+
+        public event EventHandler TaskCompleted;
+
+        private void PlotManager_TestCompleted(object sender, EventArgs e)
+        {
+            testRunning = false;
+        }
+
+        private bool CanExecuteRunTask(object parameter)
+        {
+            return !testRunning;
+        }
+
+        private void ExecuteRunTask(object parameter)
+        {
+            PlotManager.RunSpeedtest();
         }
     }
 }

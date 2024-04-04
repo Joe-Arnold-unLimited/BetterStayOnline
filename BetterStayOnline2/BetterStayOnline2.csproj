@@ -152,6 +152,7 @@
     </Compile>
     <Compile Include="Charts\PlotManager.cs" />
     <Compile Include="Charts\Configuration.cs" />
+    <Compile Include="ConnectionLoss\DownDetector.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\EventCoordinator.cs" />
     <Compile Include="Events\TimerFactory.cs" />
@@ -176,6 +177,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\MenuButtonTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\RunButtonTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

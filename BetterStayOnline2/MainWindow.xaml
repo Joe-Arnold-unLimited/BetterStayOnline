@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:BetterStayOnline2"
         xmlns:viewModel="clr-namespace:BetterStayOnline2.MVVM.ViewModel"
         mc:Ignorable="d"
-        Height="1000" Width="1800"
-        MinHeight="800"
-        MinWidth="1100">
+        Height="600" Width="1060"
+        MinHeight="600"
+        MinWidth="940">
 
     <Window.DataContext>
         <viewModel:MainViewModel/>
@@ -17,14 +17,14 @@
     <Border Background="{Binding appColor}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="60"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <StackPanel>
 
                 <RadioButton Content="Home"
-                             Height="70"
+                             Height="60"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
@@ -32,20 +32,27 @@
                              Command="{Binding homeViewCommand}"/>
 
                 <RadioButton Content="Settings"
-                             Height="70"
+                             Height="60"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding settingsViewCommand}"/>
 
                 <RadioButton Content="Events"
-                             Height="70"
+                             Height="60"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding eventsViewCommand}"/>
-
             </StackPanel>
+
+            <Button Name="RunButton"
+                    Content="Run"
+                    Height="60"
+                    Foreground="White"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding RunTaskCommand}"
+                    Style="{StaticResource RunButtonTheme}"/>
 
             <ContentControl Grid.Column="1"
                             Margin="10"

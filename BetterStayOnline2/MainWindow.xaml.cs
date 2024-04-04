@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BetterStayOnline2.Charts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace BetterStayOnline2
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void StartTest_Click(object sender, RoutedEventArgs e)
+        {
+            PlotManager.RunSpeedtest();
         }
     }
 }

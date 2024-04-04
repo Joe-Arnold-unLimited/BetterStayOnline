@@ -48,10 +48,5 @@ namespace BetterStayOnline2.MVVM.View
 
             PlotManager.UpdatePlot();
         }
-
-        private void StartTest_Click(object sender, RoutedEventArgs e)
-        {
-            PlotManager.RunSpeedtest();
-        }
     }
 }

@@ -37,6 +37,8 @@ namespace BetterStayOnline2.Charts
         static double[] uploadSpeeds = { };
         static double[] datetimes = { };
 
+        private static ConnectionOutage[] outages = new ConnectionOutage[0];
+
         static PlotManager()
         {
             AddTestResults(ReadPreexistingData());
@@ -84,6 +86,7 @@ namespace BetterStayOnline2.Charts
             bool drawMinUpload = Configuration.ShowMinUp();
             double minDownloadValue = Configuration.MinDown();
             double minUploadValue = Configuration.MinUp();
+            bool drawOutages = true;
 
             ResultsTable.Plot.Clear();
 
@@ -93,6 +96,11 @@ namespace BetterStayOnline2.Charts
 
             // Draw data
             // We draw upload first usually as download should be in front of upload
+            // Draw outage blocks behind everything else
+            if (drawOutages)
+            {
+                DrawOutages();
+            }
             // Draw upload trendline
             if (drawDownloadTrendline)
             {
@@ -137,7 +145,7 @@ namespace BetterStayOnline2.Charts
             
             if(drawMinDownload || drawMinUpload)
             {
-                DrawAmountAboveAverageAxisLabel(minDownloadValue, minUploadValue, datetimes, downloadSpeeds, uploadSpeeds, drawMinDownload, drawMinUpload);
+                DrawAmountAboveAverageAxisLabel(minDownloadValue, minUploadValue, drawMinDownload, drawMinUpload);
             }
 
             if (tableHasBeenRefreshedSinceCreation)
@@ -175,12 +183,14 @@ namespace BetterStayOnline2.Charts
 
         #region Tasks
 
-        private static bool canStartTest = true;
+        public static event EventHandler TestStarted;
+        public static event EventHandler TestCompleted;
 
         public static void RunSpeedtest()
         {
+            TestStarted?.Invoke(null, EventArgs.Empty);
+
             Thread thread = null;
-            canStartTest = false;
 
             thread = new Thread(new ThreadStart(() =>
             {
@@ -189,10 +199,11 @@ namespace BetterStayOnline2.Charts
                 {
                     BandwidthTest Test = (BandwidthTest)test;
                     AddDatapoint(Test.downSpeed, Test.upSpeed, Test.date.ToOADate());
-                    canStartTest = true;
 
                     if(CurrentContext.currentView == "HomeViewModel")
                         UpdatePlot();
+
+                    TestCompleted?.Invoke(null, EventArgs.Empty);
                 }
             }));
             thread.Start();
@@ -275,7 +286,7 @@ namespace BetterStayOnline2.Charts
             averageScatter.MarkerStyle = MarkerStyle.None;
         }
 
-        private static List<int> GetIndexesInDateRange(double[] dates, DateTime startDate, DateTime endDate)
+        private static List<int> GetIndexesInDateRange(DateTime startDate, DateTime endDate)
         {
             List<int> indexesInRange = new List<int>();
             bool foundOne = false;
@@ -296,7 +307,7 @@ namespace BetterStayOnline2.Charts
             return indexesInRange;
         }
 
-        private static void DrawAmountAboveAverageAxisLabel(double minDown, double minUp, double[] datetimes, double[] downloadSpeeds, double[] uploadSpeeds, bool showDown, bool showUp)
+        private static void DrawAmountAboveAverageAxisLabel(double minDown, double minUp, bool showDown, bool showUp)
         {
             if (datetimes.Length > 1)
             {
@@ -323,7 +334,7 @@ namespace BetterStayOnline2.Charts
                     var invisibleDownloadLine = ResultsTable.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
                     var invisibleUploadLine = ResultsTable.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
 
-                    List<int> indexesInRange = GetIndexesInDateRange(datetimes, startDate, nextMonth);
+                    List<int> indexesInRange = GetIndexesInDateRange(startDate, nextMonth);
 
                     if (indexesInRange.Count == 0) continue;
 
@@ -538,6 +549,14 @@ namespace BetterStayOnline2.Charts
             line.LineStyle.Width = 2;
         }
 
+        private static void DrawOutages()
+        {
+            foreach(var outage in outages)
+            {
+                ResultsTable.Plot.Add.HorizontalSpan(outage.startTime, outage.endTime, new Color(149, 50, 217));
+            }
+        }
+
         #endregion
 
         #region Data Handling
@@ -694,6 +713,45 @@ namespace BetterStayOnline2.Charts
 
         #endregion
 
+        #region Connection Losses
+
+        private struct ConnectionOutage
+        {
+            public double startTime;
+            public double endTime;
+        }
+
+        private static double invalidOutageStartTimeConst { get { return -99999; } }
+        private static double outageStarted = invalidOutageStartTimeConst;
+
+        public static void NetworkConnectionLost()
+        {
+            outageStarted = DateTime.Now.ToOADate();
+        }
+
+        public static void NetworkConnectionEstablished()
+        {
+            if (outageStarted == invalidOutageStartTimeConst) return;
+
+            ConnectionOutage outage = new ConnectionOutage()
+            {
+                startTime = outageStarted,
+                endTime = DateTime.Now.ToOADate()
+            };
+
+            ConnectionOutage[] newArray = new ConnectionOutage[outages.Length + 1];
+            Array.Copy(outages, newArray, outages.Length);
+            newArray[newArray.Length - 1] = outage;
+
+            outages = newArray;
+
+            UpdatePlot();
+
+            outageStarted = invalidOutageStartTimeConst;
+        }
+
+        #endregion
+
         #region Themes
 
         #region Vivid Dark Theme
@@ -714,6 +772,7 @@ namespace BetterStayOnline2.Charts
         private static Color darkWindowsBlue = new Color(29, 99, 168);
         private static Color mustard = new Color(243, 182, 5);
         private static Color darkPastelRed = new Color(200, 72, 72);
+        private static Color violet = new Color(85, 38, 117);
 
         private static void AssignVividDarkTheme()
         {
@@ -745,6 +804,8 @@ namespace BetterStayOnline2.Charts
 
             uploadDownCandleColor = darkPastelRed;
             uploadDownLineColor = uploadDownCandleColor;
+
+            outageBlockColor = violet;
         }
 
         #endregion
@@ -782,6 +843,8 @@ namespace BetterStayOnline2.Charts
         private static Color uploadDownCandleColor;
         private static Color uploadDownLineColor;
 
+        private static Color outageBlockColor;
+        
         private static int candleLineWidth = 2;
 
         private static void AssignPlotStyle()
