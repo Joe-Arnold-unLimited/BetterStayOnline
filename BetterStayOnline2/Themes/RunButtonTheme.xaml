@@ -15,21 +15,21 @@
                             <Grid VerticalAlignment="Center"
                               HorizontalAlignment="Center">
                                 <Image x:Name="LoadingImage" gif:ImageBehavior.AnimatedSource="../Images/spinner2.gif" Height="38" Width="38" Visibility="Collapsed" Opacity="0.5" HorizontalAlignment="Center"/>
-                                <TextBlock x:Name="ButtonTextBlock" Text="Run" Visibility="Visible" HorizontalAlignment="Center"/>
+                                <Image x:Name="PlayImage" Source="/images/play.png" Height="32" Width="32" Opacity="0.5" HorizontalAlignment="Center"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#23272a"/>
-                                <Setter Property="BorderBrush" Value="#1fad35"/>
-                            </Trigger>
                             <DataTrigger Binding="{Binding testRunning}" Value="True">
                                 <Setter TargetName="LoadingImage" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="ButtonTextBlock" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="PlayImage" Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="Background" Value="#23272a"/>
+                                <Setter Property="BorderBrush" Value="#5d7fde"/>
+                                <Setter Property="IsEnabled" Value="False"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding testRunning}" Value="False">
                                 <Setter TargetName="LoadingImage" Property="Visibility" Value="Collapsed"/>
-                                <Setter TargetName="ButtonTextBlock" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="PlayImage" Property="Visibility" Value="Visible"/>
+                                <Setter Property="IsEnabled" Value="True"/>
                             </DataTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -39,15 +39,5 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="4,0,0,0"/>
         </Style.Setters>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding testRunning}" Value="True">
-                <Setter Property="Background" Value="#23272a"/>
-                <Setter Property="BorderBrush" Value="#b8181d"/>
-                <Setter Property="IsEnabled" Value="False"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding testRunning}" Value="False">
-                <Setter Property="IsEnabled" Value="True"/>
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
 </ResourceDictionary>

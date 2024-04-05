@@ -71,8 +71,6 @@ namespace BetterStayOnline2.MVVM.ViewModel
             }
         }
 
-
-
         public MainViewModel()
         {
             homeVM = new HomeViewModel();
@@ -101,6 +99,13 @@ namespace BetterStayOnline2.MVVM.ViewModel
             RunTaskCommand = new RelayCommand(ExecuteRunTask, CanExecuteRunTask);
             PlotManager.TestStarted += PlotManager_TestStarted;
             PlotManager.TestCompleted += PlotManager_TestCompleted;
+
+#if !DEBUG
+            if (Configuration.RunTestOnStartup())
+            {
+                PlotManager.RunSpeedtest();
+            }
+#endif
         }
 
         private void PlotManager_TestStarted(object sender, EventArgs e)

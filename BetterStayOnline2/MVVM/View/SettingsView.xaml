@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BetterStayOnline2.MVVM.View"
              mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="1600">
+             Height="540" Width="890">
 
     <Grid HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
@@ -23,7 +23,7 @@
                     <ColumnDefinition Width="300"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="90"/>
+                    <RowDefinition Height="135"/>
                     <RowDefinition Height="90"/>
                     <RowDefinition Height="135"/>
                     <RowDefinition Height="90"/>
@@ -42,6 +42,7 @@
                             <ColumnDefinition Width="300"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
@@ -70,6 +71,19 @@
                         HorizontalAlignment="Center"
                          Margin="10"
                         IsChecked="{Binding ShowUploadPoints}"
+                        VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="0" Grid.Row="2"
+                        Text="Show outages"
+                        Foreground="White"
+                       FontSize="12"
+                       FontFamily="Medium"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="2"
+                        HorizontalAlignment="Center"
+                         Margin="10"
+                        IsChecked="{Binding ShowOutages}"
                         VerticalAlignment="Center"/>
                     </Grid>
                 </Border>

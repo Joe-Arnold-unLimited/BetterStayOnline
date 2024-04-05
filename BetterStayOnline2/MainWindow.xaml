@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:BetterStayOnline2"
         xmlns:viewModel="clr-namespace:BetterStayOnline2.MVVM.ViewModel"
         mc:Ignorable="d"
+        Title="BetterStayOnline"
         Height="600" Width="1060"
         MinHeight="600"
         MinWidth="940">
@@ -22,31 +23,48 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
+                <RadioButton Height="50"
+                 Margin="5,5,0,2.5"
+                 Style="{StaticResource MenuButtonTheme}"
+                 IsChecked="True"
+                 Command="{Binding homeViewCommand}">
+                    <Grid VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="5"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/images/home.png" Height="32" Width="32" Opacity="0.5" HorizontalAlignment="Center"/>
+                    </Grid>
+                </RadioButton>
 
-                <RadioButton Content="Home"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Margin="5,5,5,2.5"
-                             Style="{StaticResource MenuButtonTheme}"
-                             IsChecked="True"
-                             Command="{Binding homeViewCommand}"/>
+                <RadioButton Height="50"
+                 Margin="5,5,0,2.5"
+                 Style="{StaticResource MenuButtonTheme}"
+                 Command="{Binding settingsViewCommand}">
+                    <Grid VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="5"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/images/settingsCog.png" Height="32" Width="32" Opacity="0.5"/>
+                    </Grid>
+                </RadioButton>
 
-                <RadioButton Content="Settings"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Margin="5,5,5,2.5"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding settingsViewCommand}"/>
-
-                <RadioButton Content="Events"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Margin="5,5,5,2.5"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding eventsViewCommand}"/>
+                <RadioButton Height="50"
+                 Margin="5,5,0,2.5"
+                 Style="{StaticResource MenuButtonTheme}"
+                 Command="{Binding eventsViewCommand}">
+                    <Grid VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="5"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/images/events.png" Height="32" Width="32" Opacity="0.5" HorizontalAlignment="Center"/>
+                    </Grid>
+                </RadioButton>
             </StackPanel>
 
             <Button Name="RunButton"
@@ -54,12 +72,13 @@
                     Margin="5,5,0,5"
                     Foreground="White"
                     VerticalAlignment="Bottom"
+                    FontSize="14"
                     Command="{Binding RunTaskCommand}"
                     Style="{StaticResource RunButtonTheme}"/>
 
             <ContentControl Grid.Column="1"
-                            Margin="10"
-                            Content="{Binding currentView}"/>
+                        Margin="10"
+                        Content="{Binding currentView}"/>
 
         </Grid>
     </Border>

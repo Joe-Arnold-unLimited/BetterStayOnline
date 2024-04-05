@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>BSO2_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommunityToolkit.Mvvm, Version=8.2.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
       <HintPath>..\packages\CommunityToolkit.Mvvm.8.2.2\lib\netstandard2.0\CommunityToolkit.Mvvm.dll</HintPath>
@@ -248,12 +251,16 @@
     <Folder Include="MVVM\Model\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\homeicon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="Images\events.png" />
+    <Resource Include="Images\home.png" />
+    <Resource Include="Images\play.png" />
+    <Resource Include="Images\settingsCog.png" />
+    <Resource Include="BSO2_icon.ico" />
     <Content Include="Charts\SpeedTest\speedtest.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\BSO2_icon.ico" />
+    <Resource Include="Images\BSO2_icon.png" />
     <Resource Include="Images\spinner2.gif" />
     <Resource Include="Images\spinner.gif" />
   </ItemGroup>

@@ -1,6 +1,7 @@
 {
   "ShowDownloadPoints": false,
   "ShowUploadPoints": false,
+  "ShowOutages": true,
   "ShowDownloadTrendline": false,
   "ShowUploadTrendline": true,
   "ShowMinDown": false,

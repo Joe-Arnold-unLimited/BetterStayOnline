@@ -19,6 +19,6 @@
         </Grid.RowDefinitions>
 
         <ScottPlot:WpfPlot Grid.Row="0" Name="ResultsTable"
-                           Margin="20,8,0,20"/>
+                           Margin="20,6,-4,18"/>
     </Grid>
 </UserControl>

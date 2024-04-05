@@ -72,6 +72,7 @@ namespace BetterStayOnline2.Charts
         // Getters
         public static bool ShowDownloadPoints() { return Get("ShowDownloadPoints").ToLower() == "true"; }
         public static bool ShowUploadPoints() { return Get("ShowUploadPoints").ToLower() == "true"; }
+        public static bool ShowOutages() { return Get("ShowOutages").ToLower() == "true"; }
         public static bool ShowDownloadTrendline() { return Get("ShowDownloadTrendline").ToLower() == "true"; }
         public static bool ShowUploadTrendline() { return Get("ShowUploadTrendline").ToLower() == "true"; }
         public static int DaysForAverage() { return int.Parse(Get("DaysForAverage")); }
@@ -89,6 +90,7 @@ namespace BetterStayOnline2.Charts
         // Setters
         public static void SetShowDownloadPoints(bool value) { Set("ShowDownloadPoints", value); }
         public static void SetShowUploadPoints(bool value) { Set("ShowUploadPoints", value); }
+        public static void SetShowOutages(bool value) { Set("ShowOutages", value); }
         public static void SetShowDownloadTrendline(bool value) { Set("ShowDownloadTrendline", value); }
         public static void SetShowUploadTrendline(bool value) { Set("ShowUploadTrendline", value); }
         public static void SetDaysForAverage(int value) { Set("DaysForAverage", value); }

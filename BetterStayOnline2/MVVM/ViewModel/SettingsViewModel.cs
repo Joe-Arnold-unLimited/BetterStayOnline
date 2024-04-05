@@ -36,6 +36,17 @@ namespace BetterStayOnline2.MVVM.ViewModel
             }
         }
 
+        private bool _showOutages;
+        public bool ShowOutages
+        {
+            get { return _showOutages; }
+            set
+            {
+                _showOutages = value;
+                OnPropertyChanged();
+            }
+        }
+
         private int _minDownload;
         public int MinDownload
         {
@@ -180,6 +191,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
         {
             ShowDownloadPoints = Configuration.ShowDownloadPoints();
             ShowUploadPoints = Configuration.ShowUploadPoints();
+            ShowOutages = Configuration.ShowOutages();
             ShowDownloadTrendline = Configuration.ShowDownloadTrendline();
             ShowUploadTrendline = Configuration.ShowUploadTrendline();
             DaysForAverage = Configuration.DaysForAverage();
@@ -203,6 +215,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 Configuration.SetShowDownloadPoints(ShowDownloadPoints);
                 Configuration.SetShowUploadPoints(ShowUploadPoints);
+                Configuration.SetShowOutages(ShowOutages);
                 Configuration.SetShowDownloadTrendline(ShowDownloadTrendline);
                 Configuration.SetShowUploadTrendline(ShowUploadTrendline);
                 Configuration.SetDaysForAverage(DaysForAverage);

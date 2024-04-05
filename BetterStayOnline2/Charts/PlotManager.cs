@@ -1,4 +1,5 @@
 ﻿using BetterStayOnline2.MVVM.ViewModel;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenTK;
 using ScottPlot;
@@ -18,6 +19,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Transactions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -41,7 +43,9 @@ namespace BetterStayOnline2.Charts
 
         static PlotManager()
         {
-            AddTestResults(ReadPreexistingData());
+            AddTestResults(ReadPreexistingTestResults());
+
+            outages = ReadPreexistingOutages().ToArray();
 
             AssignVividDarkTheme();
         }
@@ -76,6 +80,7 @@ namespace BetterStayOnline2.Charts
             // TODO: Get from settings
             bool drawDownloadScatter = Configuration.ShowDownloadPoints();
             bool drawUploadScatter = Configuration.ShowUploadPoints();
+            bool drawOutages = Configuration.ShowOutages();
             bool drawDownloadTrendline = Configuration.ShowDownloadTrendline();
             bool drawUploadTrendline = Configuration.ShowUploadTrendline();
             int trendByDays = Configuration.DaysForAverage();
@@ -87,7 +92,6 @@ namespace BetterStayOnline2.Charts
             double minDownloadValue = Configuration.MinDown();
             double minUploadValue = Configuration.MinUp();
             bool drawPercentAboveMinimums = Configuration.ShowPercentagesAboveMinimums();
-            bool drawOutages = true;
 
             ResultsTable.Plot.Clear();
 
@@ -576,7 +580,7 @@ namespace BetterStayOnline2.Charts
             public double upSpeed;
         }
 
-        private static List<BandwidthTest> ReadPreexistingData()
+        private static List<BandwidthTest> ReadPreexistingTestResults()
         {
             JArray jsonResults = new JArray();
             List<BandwidthTest> testResults = new List<BandwidthTest>();
@@ -600,12 +604,37 @@ namespace BetterStayOnline2.Charts
                     }
                 }
             }
-            catch (Exception)
-            {
-                int x = 0;
-            }
+            catch (Exception) { }
 
             return testResults;
+        }
+
+        private static List<ConnectionOutage> ReadPreexistingOutages()
+        {
+            JArray jsonOutages = new JArray();
+            List<ConnectionOutage> outages = new List<ConnectionOutage>();
+
+            try
+            {
+                string data = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\\External\\testresults.json");
+                JObject obj = JObject.Parse(data);
+                if (obj.ContainsKey("Outages"))
+                {
+                    jsonOutages = (JArray)obj.GetValue("Outages");
+
+                    outages.Clear();
+                    foreach (var jsonOutage in jsonOutages)
+                    {
+                        ConnectionOutage outage = new ConnectionOutage();
+                        outage.startTime = DateTime.Parse((string)((JObject)jsonOutage).GetValue("StartTime")).ToOADate();
+                        outage.endTime = DateTime.Parse((string)((JObject)jsonOutage).GetValue("EndTime")).ToOADate();
+                        outages.Add(outage);
+                    }
+                }
+            }
+            catch (Exception) { }
+
+            return outages;
         }
 
         private async static void AddTestResults(List<BandwidthTest> testResults)
@@ -756,6 +785,68 @@ namespace BetterStayOnline2.Charts
             UpdatePlot();
 
             outageStarted = invalidOutageStartTimeConst;
+
+#if !DEBUG
+            // Save outage to json
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\External\\testresults.json";
+
+            try
+            {
+                using (var scope = new TransactionScope())
+                {
+                    try
+                    {
+                        // Read existing data
+                        string existingData = File.ReadAllText(path);
+                        JObject obj = JObject.Parse(existingData);
+
+                        JArray outagesArr = new JArray();
+
+                        foreach(var o in outages)
+                        {
+                            JObject jsonOutage = new JObject();
+
+                            jsonOutage["StartTime"] = o.startTime;
+                            jsonOutage["EndTime"] = o.endTime;
+
+                            outagesArr.Add(jsonOutage);
+                        }
+
+                        obj["Outages"] = outagesArr;
+
+                        // Validate updated JSON
+                        try
+                        {
+                            JToken.Parse(obj.ToString());
+                        }
+                        catch (JsonReaderException)
+                        {
+                            Console.WriteLine("Updated JSON is not valid. Aborting update.");
+                            return;
+                        }
+                        finally
+                        {
+                            // Perform atomic write to the file
+                            string tempPath = path + ".temp";
+                            File.WriteAllText(tempPath, obj.ToString());
+                            File.Replace(tempPath, path, null);
+
+                            scope.Complete(); // Commit the transaction
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle exceptions or log errors
+                        Console.WriteLine($"Error processing outage: {ex.Message}");
+                    }
+                }
+            }
+            catch (TransactionAbortedException)
+            {
+                // Transaction was rolled back
+                Console.WriteLine("Transaction aborted. File not modified.");
+            }
+#endif
         }
 
         #endregion
