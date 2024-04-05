@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:BetterStayOnline2.MVVM.View"
              mc:Ignorable="d" 
              Height="540" Width="890">
-
+    
     <Grid HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1100"/>

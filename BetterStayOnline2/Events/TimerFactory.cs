@@ -16,11 +16,13 @@ namespace BetterStayOnline2.Events
 
         static TimerFactory()
         {
+#if DEBUG
             Minutes = new string[60];
             for(int i = 0; i < 60; i++)
             {
                 Minutes[i] = i.ToString();
             }
+#endif
         }
 
         private static int CalcHour(Event e)

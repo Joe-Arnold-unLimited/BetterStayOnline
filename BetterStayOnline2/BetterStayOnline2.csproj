@@ -7,7 +7,7 @@
     <ProjectGuid>{68D10C95-728F-4C8F-8585-C39BA513744E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>BetterStayOnline2</RootNamespace>
-    <AssemblyName>BetterStayOnline2</AssemblyName>
+    <AssemblyName>Better Stay Online 2</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>BSO2_icon.ico</ApplicationIcon>
+    <ApplicationIcon>BSO2_icon-01.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommunityToolkit.Mvvm, Version=8.2.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
@@ -251,16 +251,16 @@
     <Folder Include="MVVM\Model\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\BSO2_icon-01.ico" />
+    <Resource Include="Images\BSO2_icon.png" />
     <Resource Include="Images\events.png" />
     <Resource Include="Images\home.png" />
     <Resource Include="Images\play.png" />
     <Resource Include="Images\settingsCog.png" />
-    <Resource Include="BSO2_icon.ico" />
+    <Resource Include="BSO2_icon-01.ico" />
     <Content Include="Charts\SpeedTest\speedtest.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Images\BSO2_icon.ico" />
-    <Resource Include="Images\BSO2_icon.png" />
     <Resource Include="Images\spinner2.gif" />
     <Resource Include="Images\spinner.gif" />
   </ItemGroup>

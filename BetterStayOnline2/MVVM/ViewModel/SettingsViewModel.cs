@@ -227,6 +227,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
                 Configuration.SetShowUploadCandles(ShowUploadCandles);
                 Configuration.SetCandlePeriod(CandlePeriod);
                 Configuration.SetShowPercentagesAboveMinimums(ShowPercentagesAboveMinimums);
+                Configuration.SetRunTestOnStartup(RunSpeedtestOnStartup);
             });
         }
     }

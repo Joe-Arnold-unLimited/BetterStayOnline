@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BetterStayOnline2"
         xmlns:viewModel="clr-namespace:BetterStayOnline2.MVVM.ViewModel"
         mc:Ignorable="d"
-        Title="BetterStayOnline"
+        Title="Better Stay Online 2"
         Height="600" Width="1060"
         MinHeight="600"
         MinWidth="940">
