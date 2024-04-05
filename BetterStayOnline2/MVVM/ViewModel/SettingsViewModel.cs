@@ -110,13 +110,13 @@ namespace BetterStayOnline2.MVVM.ViewModel
             }
         }
 
-        private bool _showPercentagesBelowMinimums;
-        public bool ShowPercentagesBelowMinimums
+        private bool _ShowPercentagesAboveMinimums;
+        public bool ShowPercentagesAboveMinimums
         {
-            get { return _showPercentagesBelowMinimums; }
+            get { return _ShowPercentagesAboveMinimums; }
             set
             {
-                _showPercentagesBelowMinimums = value;
+                _ShowPercentagesAboveMinimums = value;
                 OnPropertyChanged();
             }
         }
@@ -189,7 +189,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
             ShowDownloadCandles = Configuration.ShowDownloadCandles();
             ShowUploadCandles = Configuration.ShowUploadCandles();
             CandlePeriod = Configuration.CandlePeriod();
-            ShowPercentagesBelowMinimums = Configuration.ShowPercentagesBelowMinimums();
+            ShowPercentagesAboveMinimums = Configuration.ShowPercentagesAboveMinimums();
             RunSpeedtestOnStartup = Configuration.RunTestOnStartup();
 
             DaysForAverageUpCommand = new RelayCommand(o => { if (DaysForAverage < 14) DaysForAverage++; });
@@ -213,7 +213,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
                 Configuration.SetShowDownloadCandles(ShowDownloadCandles);
                 Configuration.SetShowUploadCandles(ShowUploadCandles);
                 Configuration.SetCandlePeriod(CandlePeriod);
-                Configuration.SetShowPercentagesBelowMinimums(ShowPercentagesBelowMinimums);
+                Configuration.SetShowPercentagesAboveMinimums(ShowPercentagesAboveMinimums);
             });
         }
     }

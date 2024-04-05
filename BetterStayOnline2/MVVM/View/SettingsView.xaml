@@ -246,7 +246,7 @@
                         </StackPanel>
 
                         <TextBlock Grid.Column="0" Grid.Row="2"
-                        Text="Show percent below minimums"
+                        Text="Show % above minimums"
                         Foreground="White"
                        FontSize="12"
                        FontFamily="Medium"
@@ -256,7 +256,7 @@
                         HorizontalAlignment="Center"
                         Margin="10"
                         IsEnabled="True"
-                        IsChecked="{Binding ShowPercentagesBelowMinimums}"
+                        IsChecked="{Binding ShowPercentagesAboveMinimums}"
                         VerticalAlignment="Center">
                             <CheckBox.Style>
                                 <Style TargetType="CheckBox">

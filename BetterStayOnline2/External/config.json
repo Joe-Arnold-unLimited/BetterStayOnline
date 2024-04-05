@@ -8,7 +8,7 @@
   "MinDown": 50,
   "MinUp": 10,
   "RunTestOnStartup": true,
-  "ShowPercentagesBelowMinimums": false,
+  "ShowPercentagesAboveMinimums": false,
   "ShowDownloadCandles": true,
   "ShowUploadCandles": false,
   "CandlePeriod": "Daily",

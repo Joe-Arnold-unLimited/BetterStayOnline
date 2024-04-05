@@ -10264,6 +10264,301 @@
       "DateTime": "29/03/2024 06:00 PM",
       "Download": 0.0,
       "Upload": 0.0
+    },
+    {
+      "DateTime": "29/03/2024 08:30 PM",
+      "Download": 6.66,
+      "Upload": 0.0
+    },
+    {
+      "DateTime": "29/03/2024 09:25 PM",
+      "Download": 6.69,
+      "Upload": 0.0
+    },
+    {
+      "DateTime": "30/03/2024 09:50 AM",
+      "Download": 9.57,
+      "Upload": 14.88
+    },
+    {
+      "DateTime": "30/03/2024 10:00 AM",
+      "Download": 2.04,
+      "Upload": 12.28
+    },
+    {
+      "DateTime": "30/03/2024 10:00 AM",
+      "Download": 1.17,
+      "Upload": 6.2
+    },
+    {
+      "DateTime": "30/03/2024 10:18 AM",
+      "Download": 20.91,
+      "Upload": 15.87
+    },
+    {
+      "DateTime": "30/03/2024 10:33 AM",
+      "Download": 20.6,
+      "Upload": 15.85
+    },
+    {
+      "DateTime": "30/03/2024 11:00 AM",
+      "Download": 20.67,
+      "Upload": 15.64
+    },
+    {
+      "DateTime": "30/03/2024 12:00 PM",
+      "Download": 21.0,
+      "Upload": 15.83
+    },
+    {
+      "DateTime": "30/03/2024 01:00 PM",
+      "Download": 20.92,
+      "Upload": 15.79
+    },
+    {
+      "DateTime": "30/03/2024 02:00 PM",
+      "Download": 20.65,
+      "Upload": 15.58
+    },
+    {
+      "DateTime": "30/03/2024 03:00 PM",
+      "Download": 20.93,
+      "Upload": 15.86
+    },
+    {
+      "DateTime": "30/03/2024 04:00 PM",
+      "Download": 20.99,
+      "Upload": 15.8
+    },
+    {
+      "DateTime": "30/03/2024 05:00 PM",
+      "Download": 20.94,
+      "Upload": 15.83
+    },
+    {
+      "DateTime": "30/03/2024 06:00 PM",
+      "Download": 19.36,
+      "Upload": 15.86
+    },
+    {
+      "DateTime": "30/03/2024 06:40 PM",
+      "Download": 20.96,
+      "Upload": 15.85
+    },
+    {
+      "DateTime": "30/03/2024 07:14 PM",
+      "Download": 19.14,
+      "Upload": 15.86
+    },
+    {
+      "DateTime": "30/03/2024 08:00 PM",
+      "Download": 20.74,
+      "Upload": 15.67
+    },
+    {
+      "DateTime": "30/03/2024 09:00 PM",
+      "Download": 14.41,
+      "Upload": 15.87
+    },
+    {
+      "DateTime": "30/03/2024 10:00 PM",
+      "Download": 13.75,
+      "Upload": 15.7
+    },
+    {
+      "DateTime": "30/03/2024 11:00 PM",
+      "Download": 20.16,
+      "Upload": 15.81
+    },
+    {
+      "DateTime": "31/03/2024 12:00 AM",
+      "Download": 20.07,
+      "Upload": 15.82
+    },
+    {
+      "DateTime": "31/03/2024 09:15 AM",
+      "Download": 8.71,
+      "Upload": 14.59
+    },
+    {
+      "DateTime": "31/03/2024 10:00 AM",
+      "Download": 20.93,
+      "Upload": 15.81
+    },
+    {
+      "DateTime": "31/03/2024 11:00 AM",
+      "Download": 20.95,
+      "Upload": 15.79
+    },
+    {
+      "DateTime": "31/03/2024 12:00 PM",
+      "Download": 20.89,
+      "Upload": 15.78
+    },
+    {
+      "DateTime": "31/03/2024 01:00 PM",
+      "Download": 21.0,
+      "Upload": 15.86
+    },
+    {
+      "DateTime": "01/04/2024 07:22 AM",
+      "Download": 20.48,
+      "Upload": 15.82
+    },
+    {
+      "DateTime": "01/04/2024 08:00 AM",
+      "Download": 19.1,
+      "Upload": 15.8
+    },
+    {
+      "DateTime": "01/04/2024 09:00 AM",
+      "Download": 20.77,
+      "Upload": 15.87
+    },
+    {
+      "DateTime": "01/04/2024 10:08 AM",
+      "Download": 17.88,
+      "Upload": 15.84
+    },
+    {
+      "DateTime": "01/04/2024 11:08 AM",
+      "Download": 20.75,
+      "Upload": 15.63
+    },
+    {
+      "DateTime": "01/04/2024 12:08 PM",
+      "Download": 20.71,
+      "Upload": 15.4
+    },
+    {
+      "DateTime": "01/04/2024 01:07 PM",
+      "Download": 20.82,
+      "Upload": 15.87
+    },
+    {
+      "DateTime": "01/04/2024 02:08 PM",
+      "Download": 21.09,
+      "Upload": 15.72
+    },
+    {
+      "DateTime": "01/04/2024 03:08 PM",
+      "Download": 20.93,
+      "Upload": 15.85
+    },
+    {
+      "DateTime": "01/04/2024 04:08 PM",
+      "Download": 20.37,
+      "Upload": 15.83
+    },
+    {
+      "DateTime": "01/04/2024 05:08 PM",
+      "Download": 20.51,
+      "Upload": 15.84
+    },
+    {
+      "DateTime": "01/04/2024 06:08 PM",
+      "Download": 20.85,
+      "Upload": 15.84
+    },
+    {
+      "DateTime": "01/04/2024 07:08 PM",
+      "Download": 18.69,
+      "Upload": 15.81
+    },
+    {
+      "DateTime": "01/04/2024 08:08 PM",
+      "Download": 18.84,
+      "Upload": 15.84
+    },
+    {
+      "DateTime": "01/04/2024 09:08 PM",
+      "Download": 21.01,
+      "Upload": 15.85
+    },
+    {
+      "DateTime": "01/04/2024 10:08 PM",
+      "Download": 18.66,
+      "Upload": 15.61
+    },
+    {
+      "DateTime": "02/04/2024 06:45 PM",
+      "Download": 19.65,
+      "Upload": 15.71
+    },
+    {
+      "DateTime": "02/04/2024 07:00 PM",
+      "Download": 11.12,
+      "Upload": 15.7
+    },
+    {
+      "DateTime": "02/04/2024 08:21 PM",
+      "Download": 12.66,
+      "Upload": 15.73
+    },
+    {
+      "DateTime": "03/04/2024 06:06 PM",
+      "Download": 8.52,
+      "Upload": 5.98
+    },
+    {
+      "DateTime": "03/04/2024 07:00 PM",
+      "Download": 18.23,
+      "Upload": 6.69
+    },
+    {
+      "DateTime": "03/04/2024 08:00 PM",
+      "Download": 19.57,
+      "Upload": 6.7
+    },
+    {
+      "DateTime": "03/04/2024 09:00 PM",
+      "Download": 19.47,
+      "Upload": 6.68
+    },
+    {
+      "DateTime": "04/04/2024 01:44 PM",
+      "Download": 16.89,
+      "Upload": 6.52
+    },
+    {
+      "DateTime": "04/04/2024 02:00 PM",
+      "Download": 17.87,
+      "Upload": 6.64
+    },
+    {
+      "DateTime": "04/04/2024 03:00 PM",
+      "Download": 17.25,
+      "Upload": 6.68
+    },
+    {
+      "DateTime": "04/04/2024 04:00 PM",
+      "Download": 17.83,
+      "Upload": 6.84
+    },
+    {
+      "DateTime": "05/04/2024 08:33 AM",
+      "Download": 12.69,
+      "Upload": 6.76
+    },
+    {
+      "DateTime": "05/04/2024 09:00 AM",
+      "Download": 17.87,
+      "Upload": 6.85
+    },
+    {
+      "DateTime": "05/04/2024 10:00 AM",
+      "Download": 16.66,
+      "Upload": 6.68
+    },
+    {
+      "DateTime": "05/04/2024 11:00 AM",
+      "Download": 17.85,
+      "Upload": 6.83
+    },
+    {
+      "DateTime": "05/04/2024 12:00 PM",
+      "Download": 17.72,
+      "Upload": 6.73
     }
   ]
 }

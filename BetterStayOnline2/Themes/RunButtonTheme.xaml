@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:gif="http://wpfanimatedgif.codeplex.com">
     <Style BasedOn="{StaticResource {x:Type Button}}"
        TargetType="{x:Type Button}"
        x:Key="RunButtonTheme">
@@ -9,32 +10,43 @@
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Border"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="0,2,2,0"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="0,20,0,0">
-                            <Grid VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch">
-                                <TextBlock Text="{TemplateBinding Property=Content}"
-                                       VerticalAlignment="Center"
-                                       Margin="10,0,0,0"/>
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}">
+                            <Grid VerticalAlignment="Center"
+                              HorizontalAlignment="Center">
+                                <Image x:Name="LoadingImage" gif:ImageBehavior.AnimatedSource="../Images/spinner2.gif" Height="38" Width="38" Visibility="Collapsed" Opacity="0.5" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="ButtonTextBlock" Text="Run" Visibility="Visible" HorizontalAlignment="Center"/>
                             </Grid>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#23272a"/>
+                                <Setter Property="BorderBrush" Value="#1fad35"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding testRunning}" Value="True">
+                                <Setter TargetName="LoadingImage" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="ButtonTextBlock" Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding testRunning}" Value="False">
+                                <Setter TargetName="LoadingImage" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="ButtonTextBlock" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Background" Value="#3f9144"/>
-            <Setter Property="BorderBrush" Value="#345A34"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="4,0,0,0"/>
         </Style.Setters>
         <Style.Triggers>
             <DataTrigger Binding="{Binding testRunning}" Value="True">
+                <Setter Property="Background" Value="#23272a"/>
+                <Setter Property="BorderBrush" Value="#b8181d"/>
                 <Setter Property="IsEnabled" Value="False"/>
-                <Setter Property="Background" Value="#9e3341"/>
-                <Setter Property="BorderBrush" Value="#47181e"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding testRunning}" Value="False">
                 <Setter Property="IsEnabled" Value="True"/>
-                <Setter Property="Background" Value="#3f9144"/>
-                <Setter Property="BorderBrush" Value="#345A34"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>

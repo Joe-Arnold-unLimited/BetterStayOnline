@@ -82,7 +82,7 @@ namespace BetterStayOnline2.Charts
         public static bool ShowDownloadCandles() { return Get("ShowDownloadCandles").ToLower() == "true"; }
         public static bool ShowUploadCandles() { return Get("ShowUploadCandles").ToLower() == "true"; }
         public static string CandlePeriod() { return Get("CandlePeriod"); }
-        public static bool ShowPercentagesBelowMinimums() { return Get("ShowPercentagesBelowMinimums").ToLower() == "true"; }
+        public static bool ShowPercentagesAboveMinimums() { return Get("ShowPercentagesAboveMinimums").ToLower() == "true"; }
         public static bool RunTestOnStartup() { return Get("RunTestOnStartup").ToLower() == "true"; }
 
 
@@ -99,7 +99,7 @@ namespace BetterStayOnline2.Charts
         public static void SetShowDownloadCandles(bool value) { Set("ShowDownloadCandles", value); }
         public static void SetShowUploadCandles(bool value) { Set("ShowUploadCandles", value); }
         public static void SetCandlePeriod(string value) { Set("CandlePeriod", value); }
-        public static void SetShowPercentagesBelowMinimums(bool value) { Set("ShowPercentagesBelowMinimums", value); }
+        public static void SetShowPercentagesAboveMinimums(bool value) { Set("ShowPercentagesAboveMinimums", value); }
         public static void SetRunTestOnStartup(bool value) { Set("RunTestOnStartup", value); }
     }
 }

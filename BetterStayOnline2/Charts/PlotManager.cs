@@ -86,6 +86,7 @@ namespace BetterStayOnline2.Charts
             bool drawMinUpload = Configuration.ShowMinUp();
             double minDownloadValue = Configuration.MinDown();
             double minUploadValue = Configuration.MinUp();
+            bool drawPercentAboveMinimums = Configuration.ShowPercentagesAboveMinimums();
             bool drawOutages = true;
 
             ResultsTable.Plot.Clear();
@@ -95,12 +96,14 @@ namespace BetterStayOnline2.Charts
             DrawMonthLines(numberOfMonthsEitherSideToDraw);
 
             // Draw data
-            // We draw upload first usually as download should be in front of upload
+            // We draw upload before download usually as download should be in front of upload
+
             // Draw outage blocks behind everything else
             if (drawOutages)
             {
                 DrawOutages();
             }
+
             // Draw upload trendline
             if (drawDownloadTrendline)
             {
@@ -111,6 +114,19 @@ namespace BetterStayOnline2.Charts
             {
                 DrawTrendlines(trendByDays, false);
             }
+
+            // Show Upload Candles on top of Download candles because upload usually has smaller vertical range and will cover less
+            // Draw Download Candles
+            if (drawDownloadCandles)
+            {
+                DrawCandles(candleDays, downloadSpeeds);
+            }
+            // Draw Upload Candles
+            if (drawUploadCandles)
+            {
+                DrawCandles(candleDays, uploadSpeeds, false);
+            }
+
             // Draw upload scatter
             if (drawUploadScatter)
             {
@@ -123,27 +139,19 @@ namespace BetterStayOnline2.Charts
                 var downloadScatter = ResultsTable.Plot.Add.Scatter(datetimes, downloadSpeeds, downloadLineColor);
                 downloadScatter.MarkerStyle.Outline.Color = downloadLineColor;
             }
-            // Show Upload Candles on top of Download candles because upload usually has smaller vertical range and will cover less
-            // Draw Download Candles
-            if (drawDownloadCandles)
-            {
-                DrawCandles(candleDays, downloadSpeeds);
-            }
-            // Draw Upload Candles
-            if (drawUploadCandles)
-            {
-                DrawCandles(candleDays, uploadSpeeds, false);
-            }
+
+            // Draw min download line
             if (drawMinDownload)
             {
                 DrawMinLine(minDownloadValue);
             }
+            // Draw min upload line
             if (drawMinUpload)
             {
                 DrawMinLine(minUploadValue, false);
             }
-            
-            if(drawMinDownload || drawMinUpload)
+            // Draw percentage above minimums
+            if(drawPercentAboveMinimums && (drawMinDownload || drawMinUpload))
             {
                 DrawAmountAboveAverageAxisLabel(minDownloadValue, minUploadValue, drawMinDownload, drawMinUpload);
             }
