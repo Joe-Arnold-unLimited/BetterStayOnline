@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BetterStayOnline2.MVVM.View"
              mc:Ignorable="d" 
-             Height="540" Width="890">
-    
+             Height="540" Width="860">
+
     <Grid HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1100"/>
@@ -20,16 +20,16 @@
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="210"/>
                     <ColumnDefinition Width="120"/>
-                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="270"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="135"/>
-                    <RowDefinition Height="90"/>
-                    <RowDefinition Height="135"/>
-                    <RowDefinition Height="90"/>
-                    <RowDefinition Height="90"/>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
-
+                
                 <!--BASIC LINES-->
                 <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5"
                     VerticalAlignment="Center">
@@ -39,7 +39,7 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="210"/>
                             <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="270"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>
@@ -48,43 +48,43 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                        Text="Show download"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show download"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="0"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowDownloadPoints}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowDownloadPoints}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                        Text="Show upload"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show upload"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="1"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowUploadPoints}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowUploadPoints}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="2"
-                        Text="Show outages"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show outages"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="2"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowOutages}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowOutages}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
 
@@ -97,54 +97,54 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="210"/>
                             <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="270"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="45"/>
-                            <RowDefinition Height="45"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                        Text="Show download trendline"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show download trendline"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="0"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowDownloadTrendline}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowDownloadTrendline}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                        Text="Show upload trendline"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show upload trendline"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="1"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowUploadTrendline}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowUploadTrendline}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
-                        Text="Number of days to group by"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Number of days to group by"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"
-                        Text="Calculated using grouped averages"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"/>
+                            Text="Calculated using grouped averages"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal">
                             <TextBlock
                             Text="{Binding DaysForAverage}"
@@ -173,47 +173,47 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="210"/>
                             <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="270"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="45"/>
-                            <RowDefinition Height="45"/>
-                            <RowDefinition Height="45"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                        Text="Show minimum download"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show minimum download"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="0"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowMinDownload}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowMinDownload}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="2" Grid.Row="0"
-                        Text="Minimum download"
-                        Foreground="White"
-                        FontSize="12"
-                        FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Minimum download"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
 
                         <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal">
                             <TextBlock
-                            Text="{Binding MinDownload}"
-                            HorizontalAlignment="Right"
-                            IsEnabled="False"
-                            Foreground="Black"
-                           FontSize="12"
-                           FontFamily="Medium"
-                            VerticalAlignment="Center"
-                            Margin="10"
-                            Width="32"
-                            Background="Gray"/>
+                                Text="{Binding MinDownload}"
+                                HorizontalAlignment="Right"
+                                IsEnabled="False"
+                                Foreground="Black"
+                                FontSize="12"
+                                FontFamily="Medium"
+                                VerticalAlignment="Center"
+                                Margin="10"
+                                Width="32"
+                                Background="Gray"/>
                             <StackPanel
                             VerticalAlignment="Center">
                                 <RepeatButton Content="&#9650;" Command="{Binding MinDownloadUpCommand}" Interval="100"/>
@@ -223,75 +223,55 @@
 
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                        Text="Show minimum upload"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show minimum upload"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="1"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowMinUpload}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowMinUpload}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2" Grid.Row="1"
-                        Text="Minimum upload"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Minimum upload"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
 
                         <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
                             <TextBlock
-                            Text="{Binding MinUpload}"
-                            IsEnabled="False"
-                            HorizontalAlignment="Right"
-                            Foreground="Black"
-                            VerticalAlignment="Center"
-                            Margin="10"
-                            Width="32"
-                            Background="Gray"/>
+                                Text="{Binding MinUpload}"
+                                IsEnabled="False"
+                                HorizontalAlignment="Right"
+                                Foreground="Black"
+                                VerticalAlignment="Center"
+                                Margin="10"
+                                Width="32"
+                                Background="Gray"/>
                             <StackPanel
-                            VerticalAlignment="Center">
+                                VerticalAlignment="Center">
                                 <RepeatButton Content="&#9650;" Command="{Binding MinUploadUpCommand}" Interval="100"/>
                                 <RepeatButton Content="&#9660;" Command="{Binding MinUploadDownCommand}" Interval="100"/>
                             </StackPanel>
                         </StackPanel>
 
                         <TextBlock Grid.Column="0" Grid.Row="2"
-                        Text="Show % above minimums"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show % above minimums"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="2"
-                        HorizontalAlignment="Center"
-                        Margin="10"
-                        IsEnabled="True"
-                        IsChecked="{Binding ShowPercentagesAboveMinimums}"
-                        VerticalAlignment="Center">
-                            <CheckBox.Style>
-                                <Style TargetType="CheckBox">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=ShowMinDownload}" Value="True">
-                                            <Setter Property="IsEnabled" Value="True" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=ShowMinUpload}" Value="True">
-                                            <Setter Property="IsEnabled" Value="True" />
-                                        </DataTrigger>
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding Path=ShowMinDownload}" Value="False" />
-                                                <Condition Binding="{Binding Path=ShowMinUpload}" Value="False" />
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter Property="IsEnabled" Value="False" />
-                                        </MultiDataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </CheckBox.Style>
-                        </CheckBox>
+                            HorizontalAlignment="Center"
+                            IsEnabled="True"
+                            IsChecked="{Binding ShowPercentagesAboveMinimums}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
 
@@ -304,37 +284,37 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="210"/>
                             <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="270"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="45"/>
-                            <RowDefinition Height="45"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                        Text="Show download candles"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show download candles"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="0"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowDownloadCandles}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowDownloadCandles}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                        Text="Show upload candles"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Show upload candles"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="1"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding ShowUploadCandles}"
-                        VerticalAlignment="Center"/>
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding ShowUploadCandles}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center"/>
 
                         <Border Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
                             <Grid>
@@ -344,57 +324,60 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0"
-                                Text="Candle Period"
-                                Foreground="White"
-                               FontSize="12"
-                               FontFamily="Medium"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"/>
+                                    Text="Candle Period"
+                                    Foreground="White"
+                                    FontSize="12"
+                                    FontFamily="Medium"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"/>
 
                                 <ComboBox Grid.Column="1" Height="26" Width="80" Margin="8" HorizontalAlignment="Left"
-                                  ItemsSource="{Binding CandlePeriods}"
-                                  SelectedItem="{Binding CandlePeriod}">
+                                    ItemsSource="{Binding CandlePeriods}"
+                                    SelectedItem="{Binding CandlePeriod}"
+                                    Style="{StaticResource DarkComboBox}">
                                 </ComboBox>
                             </Grid>
                         </Border>
                         <TextBlock Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"
-                        Text="The candles show the target period's mean,&#x0a;standard deviation, and error margins."
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"/>
+                            Text="The candles show the target period's mean,&#x0a;standard deviation, and error margins."
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
 
                 <!--RUN TEST ON STARTUP-->
                 <Border Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="5"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center"
+                    Height="100">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="200"/>
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="210"/>
                             <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="270"/>
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                        Text="Run speedtest on startup"
-                        Foreground="White"
-                       FontSize="12"
-                       FontFamily="Medium"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                            Text="Run speedtest on startup"
+                            Foreground="White"
+                            FontSize="12"
+                            FontFamily="Medium"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="6"
-                        HorizontalAlignment="Center"
-                         Margin="10"
-                        IsChecked="{Binding RunSpeedtestOnStartup}"
-                        VerticalAlignment="Center">
+                            HorizontalAlignment="Center"
+                            IsChecked="{Binding RunSpeedtestOnStartup}"
+                            Style="{StaticResource DarkCheckBox}"
+                            VerticalAlignment="Center">
                         </CheckBox>
 
                         <StackPanel Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="2"
-                                HorizontalAlignment="Right">
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
                             <TextBlock
                                 Text="Turning this off will mean speedtests will not be run on app startup"
                                 TextWrapping="Wrap"
@@ -412,22 +395,19 @@
                                 VerticalAlignment="Center"/>
                         </StackPanel>
 
-
-
-                        <Button Grid.Column="4" Grid.Row="0"
+                        <Button Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2"
                             Content="Save"
                             Foreground="White"
-                            FontSize="14 "
-                            FontWeight="Bold" Grid.ColumnSpan="2"
+                            FontSize="14"
                             Command="{Binding SaveSettingsCommand}"
                             Margin="0,0,0,0">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#fe6584"/>
+                                    <Setter Property="Background" Value="#1f73c4"/>
                                     <Setter Property="Cursor" Value="Hand"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#1b911b"/>
+                                            <Setter Property="Background" Value="#155899"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -435,21 +415,18 @@
 
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border Width="150" Height="50"
-                                CornerRadius="10"
-                                Background="{TemplateBinding Background}">
-                                        <ContentPresenter VerticalAlignment="Center"
-                                              HorizontalAlignment="Center"/>
+                                    <Border Width="120" Height="40"
+                                        CornerRadius="20"
+                                        Background="{TemplateBinding Background}">
+                                        <ContentPresenter 
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
-
-
-
                     </Grid>
                 </Border>
-
             </Grid>
         </StackPanel>
     </Grid>

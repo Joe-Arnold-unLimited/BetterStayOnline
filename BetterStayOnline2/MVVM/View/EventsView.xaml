@@ -5,100 +5,91 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BetterStayOnline2.MVVM.View"
              mc:Ignorable="d" 
-             Height="540" Width="740">
+             Height="536" Width="640">
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="116"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Border Grid.ColumnSpan="2" Background="Transparent">
             <Grid Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="160"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="4"
-                       Foreground="White"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="14"
-                       FontFamily="Medium"
-                       Text="Here you can create events to run tests at your chosen time, provided the app is running"/>
-
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
                     <TextBlock Foreground="White"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         FontSize="14"
                         FontFamily="Medium"
                         Text="Day"
-                        Margin="20"
+                        Margin="10,0,0,0"
                         Width="60"/>
-                    <ComboBox Width="90" Height="30"
-                      HorizontalAlignment="Left"
-                      ItemsSource="{Binding Days}"
-                      SelectedValue="{Binding SelectedDay}">
+                    <ComboBox Width="90" Height="26"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding Days}"
+                        SelectedValue="{Binding SelectedDay}"
+                        Style="{StaticResource DarkComboBox}">
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
                     <TextBlock Foreground="White"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    FontFamily="Medium"
-                    Text="Hour"
-                    Margin="20"
-                    Width="60"/>
-                    <ComboBox Width="90" Height="30"
-                      HorizontalAlignment="Center"
-                      ItemsSource="{Binding Hours}"
-                      SelectedValue="{Binding SelectedHour}">
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        FontFamily="Medium"
+                        Text="Hour"
+                        Margin="10,0,0,0"
+                        Width="60"/>
+                    <ComboBox Width="90" Height="26"
+                        HorizontalAlignment="Center"
+                        ItemsSource="{Binding Hours}"
+                        SelectedValue="{Binding SelectedHour}"
+                        Style="{StaticResource DarkComboBox}">
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
                     <TextBlock Foreground="White"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    FontFamily="Medium"
-                    Text="Minute"
-                    Margin="20"
-                    Width="60"/>
-                    <ComboBox Width="90" Height="30"
-                      HorizontalAlignment="Center"
-                      ItemsSource="{Binding Minutes}"
-                      SelectedValue="{Binding SelectedMinute}">
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        FontFamily="Medium"
+                        Text="Minute"
+                        Margin="10,0,0,0"
+                        Width="60"/>
+                    <ComboBox Width="90" Height="26"
+                        HorizontalAlignment="Center"
+                        ItemsSource="{Binding Minutes}"
+                        SelectedValue="{Binding SelectedMinute}"
+                        Style="{StaticResource DarkComboBox}">
                     </ComboBox>
                 </StackPanel>
 
-                <Button Grid.Row="1" Grid.Column="3"
+                <Button Grid.Column="3"
                     Content="Add Event"
                     Foreground="White"
                     FontSize="14"
-                    FontWeight="Bold"
-                    Margin="0,0,0,12"
-                Command="{Binding CreateEventCommand}">
+                    VerticalAlignment="Center"
+                    Command="{Binding CreateEventCommand}">
                     <Button.Style>
                         <Style TargetType="Button">
-                            <Setter Property="Background" Value="#fe6584"/>
+                            <Setter Property="Background" Value="#1f73c4"/>
                             <Setter Property="Cursor" Value="Hand"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#1b911b"/>
+                                    <Setter Property="Background" Value="#155899"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -106,11 +97,12 @@
 
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Width="150" Height="50"
-                                CornerRadius="10"
+                            <Border Width="120" Height="40"
+                                CornerRadius="20"
                                 Background="{TemplateBinding Background}">
-                                <ContentPresenter VerticalAlignment="Center"
-                                              HorizontalAlignment="Center"/>
+                                <ContentPresenter 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
                     </Button.Template>
@@ -118,28 +110,27 @@
             </Grid>
         </Border>
 
-
-
-        <Border Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+        <Border Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,6,0,6">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="500"/>
-                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="480"/>
+                    <ColumnDefinition Width="160"/>
                 </Grid.ColumnDefinitions>
-                <DataGrid ItemsSource="{Binding EventList}" 
-                  AutoGenerateColumns="False" CanUserAddRows="false"
-                  Foreground="Black" Background="#030f17"
-                  Margin="20,20,0,20">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Day" Binding="{Binding Day}" Width="80" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Hour" Binding="{Binding Hour}" Width="80" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Minute" Binding="{Binding Minute}" Width="80" IsReadOnly="True"/>
-                        <DataGridCheckBoxColumn Header="Select" Binding="{Binding Selected}"/>
-                    </DataGrid.Columns>
 
+                <DataGrid ItemsSource="{Binding EventList}" 
+                    AutoGenerateColumns="False" CanUserAddRows="false"
+                    Width="306"
+                    Style="{StaticResource DarkDataGrid}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Day" Binding="{Binding Day}" Width="108" IsReadOnly="True" ElementStyle="{StaticResource CustomTextBlockStyle}"/>
+                        <DataGridTextColumn Header="Hour" Binding="{Binding Hour}" Width="80" IsReadOnly="True" ElementStyle="{StaticResource CustomTextBlockStyle}"/>
+                        <DataGridTextColumn Header="Minute" Binding="{Binding Minute}" Width="60" IsReadOnly="True" ElementStyle="{StaticResource CustomTextBlockStyle}"/>
+                        <DataGridCheckBoxColumn Header="Select" Binding="{Binding Selected}" Width="60" ElementStyle="{StaticResource SmallDarkCheckBox}"/>
+                    </DataGrid.Columns>
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <EventSetter Event="PreviewMouseDown" Handler="DataGridRow_PreviewMouseDown"/>
+                            <Setter Property="BorderThickness" Value="0"/>
                         </Style>
                     </DataGrid.RowStyle>
                 </DataGrid>
@@ -151,18 +142,17 @@
                             <RowDefinition Height="90"/>
                         </Grid.RowDefinitions>
                         <Button Grid.Row="0"
-                    Content="Remove"
-                    Foreground="White"
-                    FontSize="14"
-                    FontWeight="Bold"
-                    Command="{Binding RemoveEventCommand}">
+                            Content="Remove"
+                            Foreground="White"
+                            FontSize="14"
+                            Command="{Binding RemoveEventCommand}">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#fe6584"/>
+                                    <Setter Property="Background" Value="#1f73c4"/>
                                     <Setter Property="Cursor" Value="Hand"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#1b911b"/>
+                                            <Setter Property="Background" Value="#155899"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -170,29 +160,29 @@
 
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border Width="150" Height="50"
-                                CornerRadius="10"
+                                    <Border Width="120" Height="40"
+                                CornerRadius="20"
                                 Background="{TemplateBinding Background}">
-                                        <ContentPresenter VerticalAlignment="Center"
-                                              HorizontalAlignment="Center"/>
+                                        <ContentPresenter 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
 
                         <Button Grid.Row="1"
-                    Content="Remove All"
-                    Foreground="White"
-                    FontSize="14"
-                    FontWeight="Bold"
-                    Command="{Binding RemoveAllEventsCommand}">
+                            Content="Remove All"
+                            Foreground="White"
+                            FontSize="14"
+                            Command="{Binding RemoveAllEventsCommand}">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#fe6584"/>
+                                    <Setter Property="Background" Value="#1f73c4"/>
                                     <Setter Property="Cursor" Value="Hand"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#1b911b"/>
+                                            <Setter Property="Background" Value="#155899"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -200,11 +190,12 @@
 
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border Width="150" Height="50"
-                                CornerRadius="10"
+                                    <Border Width="120" Height="40"
+                                CornerRadius="20"
                                 Background="{TemplateBinding Background}">
-                                        <ContentPresenter VerticalAlignment="Center"
-                                              HorizontalAlignment="Center"/>
+                                        <ContentPresenter 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
                             </Button.Template>

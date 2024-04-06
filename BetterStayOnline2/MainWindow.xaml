@@ -9,7 +9,7 @@
         Title="Better Stay Online 2"
         Height="600" Width="1060"
         MinHeight="600"
-        MinWidth="940">
+        MinWidth="1000">
 
     <Window.DataContext>
         <viewModel:MainViewModel/>
