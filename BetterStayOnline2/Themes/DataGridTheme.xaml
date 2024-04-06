@@ -2,14 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <Style x:Key="CustomTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="#9d9fa1"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Padding" Value="4,0,0,0"/>
     </Style>
     
     <Style x:Key="DarkDataGrid" TargetType="DataGrid">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="#9d9fa1"/>
         <Setter Property="Background" Value="#2B2B2B"/>
         <Setter Property="BorderBrush" Value="#3C3C3C"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -52,7 +52,7 @@
             <Setter.Value>
                 <Style TargetType="{x:Type DataGridColumnHeader}">
                     <Setter Property="Background" Value="#2B2B2B"/>
-                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Foreground" Value="#9d9fa1"/>
                     <Setter Property="BorderBrush" Value="#3C3C3C"/>
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -93,6 +93,7 @@
     <Style TargetType="ScrollBar">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Width" Value="10"/>
+        <Setter Property="Margin" Value="0,4,0,4"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollBar">

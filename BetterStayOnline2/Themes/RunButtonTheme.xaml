@@ -23,7 +23,7 @@
                                 <Setter TargetName="LoadingImage" Property="Visibility" Value="Visible"/>
                                 <Setter TargetName="PlayImage" Property="Visibility" Value="Collapsed"/>
                                 <Setter Property="Background" Value="#23272a"/>
-                                <Setter Property="BorderBrush" Value="#5d7fde"/>
+                                <Setter Property="BorderBrush" Value="#007ACC"/>
                                 <Setter Property="IsEnabled" Value="False"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding testRunning}" Value="False">

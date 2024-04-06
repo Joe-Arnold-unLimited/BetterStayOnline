@@ -27,11 +27,10 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="0">
-                    <TextBlock Foreground="White"
+                    <TextBlock 
+                        Style="{StaticResource DarkTextBlock}"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        FontSize="14"
-                        FontFamily="Medium"
                         Text="Day"
                         Margin="10,0,0,0"
                         Width="60"/>
@@ -44,11 +43,10 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <TextBlock Foreground="White"
+                    <TextBlock 
+                        Style="{StaticResource DarkTextBlock}"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        FontSize="14"
-                        FontFamily="Medium"
                         Text="Hour"
                         Margin="10,0,0,0"
                         Width="60"/>
@@ -61,11 +59,10 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
-                    <TextBlock Foreground="White"
+                    <TextBlock 
+                        Style="{StaticResource DarkTextBlock}"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        FontSize="14"
-                        FontFamily="Medium"
                         Text="Minute"
                         Margin="10,0,0,0"
                         Width="60"/>
@@ -161,11 +158,11 @@
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border Width="120" Height="40"
-                                CornerRadius="20"
-                                Background="{TemplateBinding Background}">
+                                        CornerRadius="20"
+                                        Background="{TemplateBinding Background}">
                                         <ContentPresenter 
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"/>
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
                             </Button.Template>
@@ -191,11 +188,11 @@
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border Width="120" Height="40"
-                                CornerRadius="20"
-                                Background="{TemplateBinding Background}">
+                                        CornerRadius="20"
+                                        Background="{TemplateBinding Background}">
                                         <ContentPresenter 
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"/>
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
                             </Button.Template>
@@ -204,20 +201,5 @@
                 </Border>
             </Grid>
         </Border>
-
-        <!--<StackPanel Grid.Row="2" Grid.ColumnSpan="2">
-        <TextBlock Foreground="White" 
-                FontSize="14"
-                FontFamily="Medium"
-                Text="You can set a maximum of 50 events of your choosing"
-                HorizontalAlignment="Center"
-                Margin="0,30,0,0"/>
-        <TextBlock Foreground="White" 
-                FontSize="14"
-                FontFamily="Medium"
-                Text="You can run multiple tests at the same time but they could compromise each other's results"
-                HorizontalAlignment="Center"
-                Margin="0,20,0,0"/>
-    </StackPanel>-->
     </Grid>
 </UserControl>

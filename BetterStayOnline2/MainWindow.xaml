@@ -70,7 +70,6 @@
             <Button Name="RunButton"
                     Height="55"
                     Margin="5,5,0,5"
-                    Foreground="White"
                     VerticalAlignment="Bottom"
                     FontSize="14"
                     Command="{Binding RunTaskCommand}"

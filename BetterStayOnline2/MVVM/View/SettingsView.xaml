@@ -29,7 +29,27 @@
                     <RowDefinition Height="80"/>
                     <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
-                
+
+                <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="1"
+                        BorderThickness="0,0,6,0"
+                        CornerRadius="0,12,12,0"
+                        BorderBrush="#278764"/>
+
+                <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="1"
+                        BorderThickness="0,0,6,0"
+                        CornerRadius="0,12,12,0"
+                        BorderBrush="#237dad"/>
+
+                <Border Grid.Column="1" Grid.Row="2" Grid.RowSpan="1"
+                        BorderThickness="0,0,6,0"
+                        CornerRadius="0,12,12,0"
+                        BorderBrush="#4255d4"/>
+
+                <Border Grid.Column="1" Grid.Row="3" Grid.RowSpan="1"
+                        BorderThickness="0,0,6,0"
+                        CornerRadius="0,12,12,0"
+                        BorderBrush="#7c288f"/>
+
                 <!--BASIC LINES-->
                 <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5"
                     VerticalAlignment="Center">
@@ -48,10 +68,8 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                            Text="Show download"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Download Scatter"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="0"
@@ -61,10 +79,8 @@
                             VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                            Text="Show upload"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Upload Scatter"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="1"
@@ -74,10 +90,8 @@
                             VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="2"
-                            Text="Show outages"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Outage Periods"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="2"
@@ -105,10 +119,8 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                            Text="Show download trendline"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Download Trendline"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="0"
@@ -118,10 +130,8 @@
                             VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                            Text="Show upload trendline"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Upload Trendline"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="1"
@@ -131,36 +141,40 @@
                             VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                            Style="{StaticResource DarkTextBlock}"
                             Text="Number of days to group by"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"
+                            Style="{StaticResource DarkTextBlock}"
                             Text="Calculated using grouped averages"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"/>
-                        <StackPanel Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal">
-                            <TextBlock
-                            Text="{Binding DaysForAverage}"
-                            IsEnabled="False"
-                            HorizontalAlignment="Right"
-                            Foreground="Black"
-                            VerticalAlignment="Center"
-                            Margin="10"
-                            Width="32"
-                            Background="Gray"/>
-                            <StackPanel
-                            VerticalAlignment="Center">
-                                <RepeatButton Content="&#9650;" Command="{Binding DaysForAverageUpCommand}" Interval="100"/>
-                                <RepeatButton Content="&#9660;" Command="{Binding DaysForAverageDownCommand}" Interval="100"/>
+
+                        <Border Grid.Column="3" Grid.Row="0" Grid.RowSpan="2"
+                            BorderThickness="1"
+                            BorderBrush="#333232"
+                            Width="64"
+                            Height="40">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                Text="{Binding DaysForAverage}"
+                                IsEnabled="False"
+                                HorizontalAlignment="Right"
+                                Foreground="#9d9fa1"
+                                VerticalAlignment="Center"
+                                Margin="16,0,6,0"
+                                Width="20"/>
+                                <StackPanel
+                                    VerticalAlignment="Center">
+                                    <RepeatButton Content="&#9650;" Command="{Binding DaysForAverageUpCommand}" Interval="100"
+                                        Style="{StaticResource DarkRepeatButtonStyle}"/>
+                                    <RepeatButton Content="&#9660;" Command="{Binding DaysForAverageDownCommand}" Interval="100"
+                                        Style="{StaticResource DarkRepeatButtonStyle}"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
+                        </Border>
                     </Grid>
                 </Border>
 
@@ -182,10 +196,8 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                            Text="Show minimum download"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Minimum Download Line"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="0"
@@ -195,38 +207,40 @@
                             VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="2" Grid.Row="0"
-                            Text="Minimum download"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Minimum Download"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
 
-                        <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal">
-                            <TextBlock
+                        <Border Grid.Column="3" Grid.Row="0"
+                            BorderThickness="1"
+                            BorderBrush="#333232"
+                            Width="64"
+                            Height="40">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
                                 Text="{Binding MinDownload}"
                                 HorizontalAlignment="Right"
                                 IsEnabled="False"
-                                Foreground="Black"
+                                Foreground="#9d9fa1"
                                 FontSize="12"
                                 FontFamily="Medium"
                                 VerticalAlignment="Center"
-                                Margin="10"
-                                Width="32"
-                                Background="Gray"/>
-                            <StackPanel
-                            VerticalAlignment="Center">
-                                <RepeatButton Content="&#9650;" Command="{Binding MinDownloadUpCommand}" Interval="100"/>
-                                <RepeatButton Content="&#9660;" Command="{Binding MinDownloadDownCommand}" Interval="100"/>
+                                Margin="16,0,6,0"
+                                Width="20"/>
+                                <StackPanel
+                                    VerticalAlignment="Center">
+                                    <RepeatButton Content="&#9650;" Command="{Binding MinDownloadUpCommand}" Interval="100"
+                                        Style="{StaticResource DarkRepeatButtonStyle}"/>
+                                    <RepeatButton Content="&#9660;" Command="{Binding MinDownloadDownCommand}" Interval="100"
+                                        Style="{StaticResource DarkRepeatButtonStyle}"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-
+                        </Border>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                            Text="Show minimum upload"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Minimum Upload Line"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="1"
@@ -235,35 +249,39 @@
                             Style="{StaticResource DarkCheckBox}"
                             VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2" Grid.Row="1"
-                            Text="Minimum upload"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Minimum Upload"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
 
-                        <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
-                            <TextBlock
+                        <Border Grid.Column="3" Grid.Row="1"
+                            BorderThickness="1"
+                            BorderBrush="#333232"
+                            Width="64"
+                            Height="40">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
                                 Text="{Binding MinUpload}"
-                                IsEnabled="False"
                                 HorizontalAlignment="Right"
-                                Foreground="Black"
+                                IsEnabled="False"
+                                Foreground="#9d9fa1"
+                                FontFamily="Medium"
                                 VerticalAlignment="Center"
-                                Margin="10"
-                                Width="32"
-                                Background="Gray"/>
-                            <StackPanel
-                                VerticalAlignment="Center">
-                                <RepeatButton Content="&#9650;" Command="{Binding MinUploadUpCommand}" Interval="100"/>
-                                <RepeatButton Content="&#9660;" Command="{Binding MinUploadDownCommand}" Interval="100"/>
+                                Margin="16,0,6,0"
+                                Width="20"/>
+                                <StackPanel
+                                    VerticalAlignment="Center">
+                                    <RepeatButton Content="&#9650;" Command="{Binding MinUploadUpCommand}" Interval="100"
+                                        Style="{StaticResource DarkRepeatButtonStyle}"/>
+                                    <RepeatButton Content="&#9660;" Command="{Binding MinUploadDownCommand}" Interval="100"
+                                        Style="{StaticResource DarkRepeatButtonStyle}"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
+                        </Border>
 
                         <TextBlock Grid.Column="0" Grid.Row="2"
-                            Text="Show % above minimums"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Show % Above Minimums"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="2"
@@ -291,10 +309,8 @@
                             <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                            Text="Show download candles"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Download Candles"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="0"
@@ -304,10 +320,8 @@
                             VerticalAlignment="Center"/>
 
                         <TextBlock Grid.Column="0" Grid.Row="1"
-                            Text="Show upload candles"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Upload Candles"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="1"
@@ -324,10 +338,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0"
+                                    Style="{StaticResource DarkTextBlock}"
                                     Text="Candle Period"
-                                    Foreground="White"
-                                    FontSize="12"
-                                    FontFamily="Medium"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"/>
 
@@ -339,10 +351,8 @@
                             </Grid>
                         </Border>
                         <TextBlock Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"
-                            Text="The candles show the target period's mean,&#x0a;standard deviation, and error margins."
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="The candles show the target period's mean,&#x0a;standard deviation, and error margins"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"/>
                     </Grid>
@@ -362,10 +372,8 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                            Text="Run speedtest on startup"
-                            Foreground="White"
-                            FontSize="12"
-                            FontFamily="Medium"
+                            Style="{StaticResource DarkTextBlock}"
+                            Text="Run Speedtest on Startup"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Grid.Row="6"
@@ -379,19 +387,15 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center">
                             <TextBlock
+                                Style="{StaticResource DarkTextBlock}"
                                 Text="Turning this off will mean speedtests will not be run on app startup"
                                 TextWrapping="Wrap"
-                                Foreground="White"
-                                FontSize="12"
-                                FontFamily="Medium"
                                 VerticalAlignment="Center"/>
                             <TextBlock
+                                Style="{StaticResource DarkTextBlock}"
                                 Text="Turn this off if you just want to run tests manually or with events only"
                                 TextWrapping="Wrap"
                                 Margin="0,6,0,0"
-                                Foreground="White"
-                                FontSize="12"
-                                FontFamily="Medium"
                                 VerticalAlignment="Center"/>
                         </StackPanel>
 

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenTK;
 using ScottPlot;
+using ScottPlot.AxisPanels;
 using ScottPlot.AxisRules;
 using ScottPlot.Colormaps;
 using ScottPlot.DataSources;
@@ -689,12 +690,17 @@ namespace BetterStayOnline2.Charts
 
         private static void SetYAxisView()
         {
-            double yAxisTopLimit = 100;
+            double yAxisTopLimit = currentTopYAxis;
 
             if (downloadSpeeds.Length > 0)
             {
                 var highestYValue = downloadSpeeds.Concat(uploadSpeeds).Max();
                 yAxisTopLimit = highestYValue + 10 - (highestYValue % 10);
+
+                if(yAxisTopLimit != currentTopYAxis)
+                {
+                    currentTopYAxis = yAxisTopLimit;
+                }
             }
             ResultsTable.Plot.Axes.SetLimitsY(0, yAxisTopLimit);
 
@@ -735,9 +741,32 @@ namespace BetterStayOnline2.Charts
             ResultsTable.Plot.Axes.Left.TickGenerator = ticks;
         }
 
+        // Fixed LockedVertical Axis Rule because ScottPlott wasn't working probably
+        class NewLockedVertical : IAxisRule
+        {
+            private readonly IYAxis YAxis;
+
+            public NewLockedVertical(IYAxis yAxis)
+            {
+                YAxis = yAxis;
+            }
+
+            public void Apply(RenderPack rp, bool beforeLayout)
+            {
+                if (rp.Plot.LastRender.Count != 0)
+                {
+                    double bottom = 0;
+                    double top = PlotManager.currentTopYAxis;
+                    YAxis.Range.Set(bottom, top);
+                }
+            }
+        }
+
+        public static double currentTopYAxis { get; private set; } = 100;
+
         private static void LockVerticalZoom()
         {
-            LockedVertical lockedVerticalRule = new LockedVertical(ResultsTable.Plot.Axes.Left);
+            NewLockedVertical lockedVerticalRule = new NewLockedVertical(ResultsTable.Plot.Axes.Left);
 
             ResultsTable.Plot.Axes.Rules.Clear();
             ResultsTable.Plot.Axes.Rules.Add(lockedVerticalRule);
