@@ -215,9 +215,9 @@ namespace BetterStayOnline2.Charts
 
                     if(CurrentContext.currentView == "HomeViewModel")
                         UpdatePlot();
-
-                    TestCompleted?.Invoke(null, EventArgs.Empty);
                 }
+
+                TestCompleted?.Invoke(null, EventArgs.Empty);
             }));
             thread.Start();
         }
