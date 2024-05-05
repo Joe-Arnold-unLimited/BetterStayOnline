@@ -13,7 +13,6 @@ namespace BetterStayOnline2.MVVM.ViewModel
         public RelayCommand MinDownloadDownCommand { get; set; }
         public RelayCommand MinUploadUpCommand { get; set; }
         public RelayCommand MinUploadDownCommand { get; set; }
-        public RelayCommand SaveSettingsCommand { get; set; }
 
 
         private bool _showDownloadPoints;
@@ -24,6 +23,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showDownloadPoints = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowDownloadPoints(_showDownloadPoints);
             }
         }
 
@@ -35,6 +36,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showUploadPoints = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowUploadPoints(_showUploadPoints);
             }
         }
 
@@ -46,6 +49,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showOutages = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowOutages(_showOutages);
             }
         }
 
@@ -57,6 +62,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _minDownload = value;
                 OnPropertyChanged();
+
+                Configuration.SetMinDown(_minDownload);
             }
         }
 
@@ -68,6 +75,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _minUpload = value;
                 OnPropertyChanged();
+
+                Configuration.SetMinUp(_minUpload);
             }
         }
 
@@ -87,6 +96,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _candlePeriod = value;
                 OnPropertyChanged();
+
+                Configuration.SetCandlePeriod(_candlePeriod);
             }
         }
 
@@ -98,6 +109,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _daysForAverage = value;
                 OnPropertyChanged();
+
+                Configuration.SetDaysForAverage(_daysForAverage);
             }
         }
 
@@ -109,6 +122,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showMinDownload = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowMinDown(_showMinDownload);
             }
         }
 
@@ -120,6 +135,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showMinUpload = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowMinUp(_showMinUpload);
             }
         }
 
@@ -131,6 +148,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _ShowPercentagesAboveMinimums = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowPercentagesAboveMinimums(_ShowPercentagesAboveMinimums);
             }
         }
 
@@ -142,6 +161,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showDownloadRange = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowDownloadCandles(_showDownloadRange);
             }
         }
 
@@ -153,6 +174,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showUploadRange = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowUploadCandles(_showUploadRange);
             }
         }
 
@@ -164,6 +187,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showDownloadTrendline = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowDownloadTrendline(_showDownloadTrendline);
             }
         }
 
@@ -175,6 +200,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _showUploadTrendline = value;
                 OnPropertyChanged();
+
+                Configuration.SetShowUploadTrendline(_showUploadTrendline);
             }
         }
 
@@ -186,6 +213,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             {
                 _runSpeedtestOnStartup = value;
                 OnPropertyChanged();
+
+                Configuration.SetRunTestOnStartup(_runSpeedtestOnStartup);
             }
         }
 
@@ -225,25 +254,6 @@ namespace BetterStayOnline2.MVVM.ViewModel
             MinDownloadDownCommand = new RelayCommand(o => { if (MinDownload > 1) MinDownload--; });
             MinUploadUpCommand = new RelayCommand(o => { MinUpload++; });
             MinUploadDownCommand = new RelayCommand(o => { if (MinUpload > 1) MinUpload--; });
-
-            SaveSettingsCommand = new RelayCommand(o =>
-            {
-                Configuration.SetShowDownloadPoints(ShowDownloadPoints);
-                Configuration.SetShowUploadPoints(ShowUploadPoints);
-                Configuration.SetShowOutages(ShowOutages);
-                Configuration.SetShowDownloadTrendline(ShowDownloadTrendline);
-                Configuration.SetShowUploadTrendline(ShowUploadTrendline);
-                Configuration.SetDaysForAverage(DaysForAverage);
-                Configuration.SetMinDown(MinDownload);
-                Configuration.SetMinUp(MinUpload);
-                Configuration.SetShowMinDown(ShowMinDownload);
-                Configuration.SetShowMinUp(ShowMinUpload);
-                Configuration.SetShowDownloadCandles(ShowDownloadCandles);
-                Configuration.SetShowUploadCandles(ShowUploadCandles);
-                Configuration.SetCandlePeriod(CandlePeriod);
-                Configuration.SetShowPercentagesAboveMinimums(ShowPercentagesAboveMinimums);
-                Configuration.SetRunTestOnStartup(RunSpeedtestOnStartup);
-            });
         }
     }
 }

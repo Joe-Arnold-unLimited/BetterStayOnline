@@ -416,37 +416,6 @@
                                 Margin="0,6,0,0"
                                 VerticalAlignment="Center"/>
                         </StackPanel>
-
-                        <Button Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2"
-                            Content="Save"
-                            Foreground="White"
-                            FontSize="14"
-                            Command="{Binding SaveSettingsCommand}"
-                            Margin="0,0,0,0">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#1f73c4"/>
-                                    <Setter Property="Cursor" Value="Hand"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#155899"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Width="120" Height="40"
-                                        CornerRadius="20"
-                                        Background="{TemplateBinding Background}">
-                                        <ContentPresenter 
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
                     </Grid>
                 </Border>
             </Grid>
