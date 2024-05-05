@@ -4,6 +4,7 @@ using BetterStayOnline2.Core;
 using LiveChartsCore.Defaults;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -97,6 +98,8 @@ namespace BetterStayOnline2.MVVM.ViewModel
             downDetector = new DownDetector();
 
             RunTaskCommand = new RelayCommand(ExecuteRunTask, CanExecuteRunTask);
+
+            PlotManager.FillData(settingsVM.NetworkList);
             PlotManager.TestStarted += PlotManager_TestStarted;
             PlotManager.TestCompleted += PlotManager_TestCompleted;
 

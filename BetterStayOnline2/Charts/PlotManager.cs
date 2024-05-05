@@ -1,4 +1,6 @@
-﻿using BetterStayOnline2.MVVM.ViewModel;
+﻿using BetterStayOnline2.Events;
+using BetterStayOnline2.MVVM.ViewModel;
+using Microsoft.WindowsAPICodePack.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenTK;
@@ -13,6 +15,7 @@ using ScottPlot.TickGenerators.TimeUnits;
 using ScottPlot.WPF;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -24,6 +27,7 @@ using System.Transactions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using static BetterStayOnline2.MVVM.ViewModel.SettingsViewModel;
 using static ScottPlot.Colors;
 using static SkiaSharp.HarfBuzz.SKShaper;
 using Color = ScottPlot.Color;
@@ -39,38 +43,55 @@ namespace BetterStayOnline2.Charts
         static double[] downloadSpeeds = { };
         static double[] uploadSpeeds = { };
         static double[] datetimes = { };
+        static string[] networkNames = { };
+        static string[] isps = { };
 
         private static ConnectionOutage[] outages = new ConnectionOutage[0];
 
         static PlotManager()
         {
-            AddTestResults(ReadPreexistingTestResults());
-
-            outages = ReadPreexistingOutages().ToArray();
-
             AssignVividDarkTheme();
         }
 
-        public static void AddDatapoint(double down, double up, double time)
+        public static void FillData(ObservableCollection<Network> networkList)
+        {
+            NetworkList = networkList;
+
+            AddTestResults(ReadPreexistingTestResults());
+
+            outages = ReadPreexistingOutages().ToArray();
+        }
+
+        public static void AddDatapoint(double down, double up, double time, string network, string isp)
         {
             double[] newDownloadSpeeds = new double[downloadSpeeds.Length + 1];
             double[] newUploadSpeeds = new double[uploadSpeeds.Length + 1];
             double[] newDatetimes = new double[datetimes.Length + 1];
+            string[] newNetworkNames = new string[networkNames.Length + 1];
+            string[] newIsps = new string[isps.Length + 1];
 
             for (int i = 0; i < downloadSpeeds.Length; i++)
             {
                 newDownloadSpeeds[i] = downloadSpeeds[i];
                 newUploadSpeeds[i] = uploadSpeeds[i];
                 newDatetimes[i] = datetimes[i];
+                newNetworkNames[i] = networkNames[i];
+                newIsps[i] = isps[i];
             }
 
             newDownloadSpeeds[downloadSpeeds.Length] = down;
             newUploadSpeeds[uploadSpeeds.Length] = up;
             newDatetimes[datetimes.Length] = time;
+            newNetworkNames[networkNames.Length] = network;
+            newIsps[isps.Length] = isp;
 
             downloadSpeeds = newDownloadSpeeds;
             uploadSpeeds = newUploadSpeeds;
             datetimes = newDatetimes;
+            networkNames = newNetworkNames;
+            isps = newIsps;
+
+            AddNetworkToNetworkList(network, isp);
         }
 
         private static bool tableHasBeenRefreshedSinceCreation = true;
@@ -100,6 +121,13 @@ namespace BetterStayOnline2.Charts
             int numberOfMonthsEitherSideToDraw = 24;
             DrawMonthLines(numberOfMonthsEitherSideToDraw);
 
+            // Get indexes of values to show by looking at the network list
+            var indexesToShow = GetIndexesOfResultsToShowFromNetworkList();
+
+            double[] downloadSpeeds = GetDownloadSpeedsFromIndexesToShow(indexesToShow);
+            double[] uploadSpeeds = GetUploadSpeedsFromIndexesToShow(indexesToShow);
+            double[] datetimes = GetDatetimesFromIndexesToShow(indexesToShow);
+
             // Draw data
             // We draw upload before download usually as download should be in front of upload
 
@@ -112,36 +140,42 @@ namespace BetterStayOnline2.Charts
             // Draw upload trendline
             if (drawDownloadTrendline)
             {
-                DrawTrendlines(trendByDays);
+                DrawTrendlines(downloadSpeeds, uploadSpeeds, datetimes,
+                    trendByDays);
             }
             // Draw download trendline
             if (drawUploadTrendline)
             {
-                DrawTrendlines(trendByDays, false);
+                DrawTrendlines(downloadSpeeds, uploadSpeeds, datetimes, 
+                    trendByDays, false);
             }
 
             // Show Upload Candles on top of Download candles because upload usually has smaller vertical range and will cover less
             // Draw Download Candles
             if (drawDownloadCandles)
             {
-                DrawCandles(candleDays, downloadSpeeds);
+                DrawCandles(datetimes, 
+                    candleDays, downloadSpeeds);
             }
             // Draw Upload Candles
             if (drawUploadCandles)
             {
-                DrawCandles(candleDays, uploadSpeeds, false);
+                DrawCandles(datetimes, 
+                    candleDays, uploadSpeeds, false);
             }
 
             // Draw upload scatter
             if (drawUploadScatter)
             {
-                var uploadScatter = ResultsTable.Plot.Add.Scatter(datetimes, uploadSpeeds, uploadLineColor);
+                var uploadScatter = ResultsTable.Plot.Add.Scatter(datetimes, uploadSpeeds, 
+                    uploadLineColor);
                 uploadScatter.MarkerStyle.Outline.Color = uploadLineColor;
             }
             // Draw download scatter
             if (drawDownloadScatter)
             {
-                var downloadScatter = ResultsTable.Plot.Add.Scatter(datetimes, downloadSpeeds, downloadLineColor);
+                var downloadScatter = ResultsTable.Plot.Add.Scatter(datetimes, downloadSpeeds, 
+                    downloadLineColor);
                 downloadScatter.MarkerStyle.Outline.Color = downloadLineColor;
             }
 
@@ -158,17 +192,18 @@ namespace BetterStayOnline2.Charts
             // Draw percentage above minimums
             if(drawPercentAboveMinimums && (drawMinDownload || drawMinUpload))
             {
-                DrawAmountAboveAverageAxisLabel(minDownloadValue, minUploadValue, drawMinDownload, drawMinUpload);
+                DrawAmountAboveAverageAxisLabel(downloadSpeeds, uploadSpeeds, datetimes, 
+                    minDownloadValue, minUploadValue, drawMinDownload, drawMinUpload);
             }
 
             if (tableHasBeenRefreshedSinceCreation)
             {
                 CopyXAxisView();
-                SetYAxisView();
+                SetYAxisView(downloadSpeeds);
             }
             else
             {
-                SetXAxisStartingView();
+                SetXAxisStartingView(datetimes);
             }
 
             ResultsTable.Refresh();
@@ -181,9 +216,13 @@ namespace BetterStayOnline2.Charts
         // Nowhere in here should we be drawing any plots, as they will be cleared immediately after
         public static void DrawTable()
         {
-            SetXAxisStartingView();
+            var indexesToShow = GetIndexesOfResultsToShowFromNetworkList();
+            double[] downloadSpeeds = GetDownloadSpeedsFromIndexesToShow(indexesToShow);
+            double[] datetimes = GetDatetimesFromIndexesToShow(indexesToShow);
 
-            SetYAxisView();
+            SetXAxisStartingView(datetimes);
+
+            SetYAxisView(downloadSpeeds);
 
             LockVerticalZoom();
 
@@ -211,7 +250,7 @@ namespace BetterStayOnline2.Charts
                 if (test != null)
                 {
                     BandwidthTest Test = (BandwidthTest)test;
-                    AddDatapoint(Test.downSpeed, Test.upSpeed, Test.date.ToOADate());
+                    AddDatapoint(Test.downSpeed, Test.upSpeed, Test.date.ToOADate(), Test.networkName, Test.isp);
 
                     if(CurrentContext.currentView == "HomeViewModel")
                         UpdatePlot();
@@ -225,6 +264,8 @@ namespace BetterStayOnline2.Charts
         #endregion
 
         #region PlotResultsTables
+
+        // Note: For all draw functions we must pass in arrays of data as we filter the original arrays depending on NetworkList.Show
 
         // Month lines are created using Vertical Lines which are plots
         private static void DrawMonthLines(int numberOfMonthsEitherSideToDraw)
@@ -254,7 +295,8 @@ namespace BetterStayOnline2.Charts
             }
         }
 
-        private static void DrawTrendlines(int trendByDays, bool download = true)
+        private static void DrawTrendlines(double[] downloadSpeeds, double[] uploadSpeeds, double[] datetimes,
+            int trendByDays, bool download = true)
         {
             if (datetimes.Length == 0) return;
 
@@ -299,7 +341,8 @@ namespace BetterStayOnline2.Charts
             averageScatter.MarkerStyle = MarkerStyle.None;
         }
 
-        private static List<int> GetIndexesInDateRange(DateTime startDate, DateTime endDate)
+        private static List<int> GetIndexesInDateRange(double[] datetimes,
+            DateTime startDate, DateTime endDate)
         {
             List<int> indexesInRange = new List<int>();
             bool foundOne = false;
@@ -320,7 +363,8 @@ namespace BetterStayOnline2.Charts
             return indexesInRange;
         }
 
-        private static void DrawAmountAboveAverageAxisLabel(double minDown, double minUp, bool showDown, bool showUp)
+        private static void DrawAmountAboveAverageAxisLabel(double[] downloadSpeeds, double[] uploadSpeeds, double[] datetimes,
+            double minDown, double minUp, bool showDown, bool showUp)
         {
             if (datetimes.Length > 1)
             {
@@ -347,7 +391,8 @@ namespace BetterStayOnline2.Charts
                     var invisibleDownloadLine = ResultsTable.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
                     var invisibleUploadLine = ResultsTable.Plot.Add.VerticalLine(x: month.ToOADate(), width: 0);
 
-                    List<int> indexesInRange = GetIndexesInDateRange(startDate, nextMonth);
+                    List<int> indexesInRange = GetIndexesInDateRange(datetimes,
+                        startDate, nextMonth);
 
                     if (indexesInRange.Count == 0) continue;
 
@@ -416,7 +461,8 @@ namespace BetterStayOnline2.Charts
             }
         }
 
-        private static void DrawCandles(string candlePeriod, double[] speeds, bool download = true)
+        private static void DrawCandles(double[] datetimes,
+            string candlePeriod, double[] speeds, bool download = true)
         {
             if (datetimes.Length == 0) return;
 
@@ -579,6 +625,8 @@ namespace BetterStayOnline2.Charts
             public DateTime date;
             public double downSpeed;
             public double upSpeed;
+            public string networkName;
+            public string isp;
         }
 
         private static List<BandwidthTest> ReadPreexistingTestResults()
@@ -601,6 +649,8 @@ namespace BetterStayOnline2.Charts
                         newTest.date = DateTime.Parse((string)((JObject)result).GetValue("DateTime"));
                         newTest.downSpeed = double.Parse((string)((JObject)result).GetValue("Download"));
                         newTest.upSpeed = double.Parse((string)((JObject)result).GetValue("Upload"));
+                        newTest.networkName = (string)((JObject)result).GetValue("NetworkName");
+                        newTest.isp = (string)((JObject)result).GetValue("ISP");
                         testResults.Add(newTest);
                     }
                 }
@@ -648,18 +698,94 @@ namespace BetterStayOnline2.Charts
 
         private async static void AddTestResult(BandwidthTest result)
         {
-            AddDatapoint(result.downSpeed, result.upSpeed, result.date.ToOADate());
+            AddDatapoint(result.downSpeed, result.upSpeed, result.date.ToOADate(), result.networkName, result.isp);
+        }
+
+        #endregion
+
+        #region Networks
+
+        // Reference to SettingsViewModel.NetworkList
+        public static ObservableCollection<Network> NetworkList { get; set; }
+
+        private static void AddNetworkToNetworkList(string network, string isp)
+        {
+            // If this is a new network add it to the list
+            if (!NetworkList.Any(n => n.Name == network && n.ISP == isp))
+            {
+                NetworkList.Add(new Network()
+                {
+                    Name = network,
+                    ISP = isp,
+                    Show = true
+                });
+
+                NetworkList.OrderBy(n => n.ISP).ThenBy(n => n.Name);
+            }
+        }
+
+        private static int[] GetIndexesOfResultsToShowFromNetworkList()
+        {
+            Network[] networksToShow = NetworkList.Where(network => network.Show).ToArray();
+
+            List<int> indexesToShow = new List<int>();
+
+            for(int i = 0; i < networkNames.Length; i++)
+            {
+                if(networksToShow.Any(network => network.Name == networkNames[i] && network.ISP == isps[i]))
+                {
+                    indexesToShow.Add(i);
+                }
+            }
+
+            return indexesToShow.ToArray();
+        }
+
+        private static double[] GetDownloadSpeedsFromIndexesToShow(int[] indexesToShow)
+        {
+            double[] selectedItems = new double[indexesToShow.Length];
+            for (int i = 0; i < indexesToShow.Length; i++)
+            {
+                int index = indexesToShow[i];
+                selectedItems[i] = downloadSpeeds[index];
+            }
+
+            return selectedItems;
+        }
+
+        private static double[] GetUploadSpeedsFromIndexesToShow(int[] indexesToShow)
+        {
+            double[] selectedItems = new double[indexesToShow.Length];
+            for (int i = 0; i < indexesToShow.Length; i++)
+            {
+                int index = indexesToShow[i];
+                selectedItems[i] = uploadSpeeds[index];
+            }
+
+            return selectedItems;
+        }
+
+        private static double[] GetDatetimesFromIndexesToShow(int[] indexesToShow)
+        {
+            double[] selectedItems = new double[indexesToShow.Length];
+            for (int i = 0; i < indexesToShow.Length; i++)
+            {
+                int index = indexesToShow[i];
+                selectedItems[i] = datetimes[index];
+            }
+
+            return selectedItems;
         }
 
         #endregion
 
         #region Table Drawing
 
-        private static void SetXAxisStartingView()
+        private static void SetXAxisStartingView(double[] datetimes)
         {
             bool moreThan31DaysOfResults = false;
 
-            if (datetimes.Length > 0 && DateTime.FromOADate(datetimes.Min()) < DateTime.Now.AddDays(-31)) moreThan31DaysOfResults = true;
+            if (datetimes.Length > 0 && DateTime.FromOADate(datetimes.Min()) < DateTime.FromOADate(datetimes.Max()).AddDays(-31)) moreThan31DaysOfResults = true;
 
             if (datetimes.Length == 0)
                 ResultsTable.Plot.Axes.SetLimitsX(DateTime.Now.AddDays(-1).ToOADate(), DateTime.Now.AddDays(1).ToOADate());
@@ -667,16 +793,36 @@ namespace BetterStayOnline2.Charts
                 ResultsTable.Plot.Axes.SetLimitsX(DateTime.Now.AddDays(-34).ToOADate(), DateTime.FromOADate(datetimes.Max()).AddDays(3).ToOADate());
             else
             {
-                double lengthOfTests = (DateTime.FromOADate(datetimes.Max()) - DateTime.FromOADate(datetimes.Min())).TotalMinutes;
-                if (lengthOfTests < TimeSpan.FromHours(2).TotalMinutes)
+                double lengthOfTests = (DateTime.FromOADate(datetimes.Max()) - DateTime.FromOADate(datetimes.Min())).TotalHours;
+                double hours = lengthOfTests / 60;
+
+                if(hours < 22) // Less than a day, show a day
                 {
-                    ResultsTable.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddHours(-1).ToOADate(),
-                        DateTime.FromOADate(datetimes.Max()).AddHours(1).ToOADate());
+                    double minutesEitherSide = (24 - lengthOfTests) / 2;
+
+                    ResultsTable.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddHours(-minutesEitherSide).ToOADate(), 
+                        DateTime.FromOADate(datetimes.Max()).AddHours(minutesEitherSide).ToOADate());
                 }
-                else
+                else if (hours < 3 * 22) // Less than 3 days, show 3 hours either side
                 {
-                    ResultsTable.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddMinutes(-(lengthOfTests / 5)).ToOADate(),
-                        DateTime.FromOADate(datetimes.Max()).AddMinutes(lengthOfTests / 5).ToOADate());
+                    double minutesEitherSide = 60 * 3;
+
+                    ResultsTable.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddHours(-minutesEitherSide).ToOADate(),
+                        DateTime.FromOADate(datetimes.Max()).AddHours(minutesEitherSide).ToOADate());
+                }
+                else if (hours < 3 * 22) // Less than a week, show 1 day either side
+                {
+                    double minutesEitherSide = 60 * 24;
+
+                    ResultsTable.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddHours(-minutesEitherSide).ToOADate(),
+                        DateTime.FromOADate(datetimes.Max()).AddHours(minutesEitherSide).ToOADate());
+                }
+                else // Show 3 days  either side
+                {
+                    double minutesEitherSide = 60 * 24 * 3;
+
+                    ResultsTable.Plot.Axes.SetLimitsX(DateTime.FromOADate(datetimes.Min()).AddHours(-minutesEitherSide).ToOADate(),
+                        DateTime.FromOADate(datetimes.Max()).AddHours(minutesEitherSide).ToOADate());
                 }
             }
         }
@@ -688,7 +834,7 @@ namespace BetterStayOnline2.Charts
             ResultsTable.Plot.Axes.SetLimitsX(axisLimits.Left, axisLimits.Right);
         }
 
-        private static void SetYAxisView()
+        private static void SetYAxisView(double[] downloadSpeeds)
         {
             double yAxisTopLimit = currentTopYAxis;
 

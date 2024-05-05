@@ -1,5 +1,7 @@
 ﻿using BetterStayOnline2.Charts;
 using BetterStayOnline2.Core;
+using BetterStayOnline2.Events;
+using System.Collections.ObjectModel;
 
 namespace BetterStayOnline2.MVVM.ViewModel
 {
@@ -187,8 +189,21 @@ namespace BetterStayOnline2.MVVM.ViewModel
             }
         }
 
+        private ObservableCollection<Network> _networkList;
+        public ObservableCollection<Network> NetworkList
+        {
+            get { return _networkList; }
+            set
+            {
+                _networkList = value;
+                OnPropertyChanged();
+            }
+        }
+
         public SettingsViewModel()
         {
+            NetworkList = new ObservableCollection<Network>();
+
             ShowDownloadPoints = Configuration.ShowDownloadPoints();
             ShowUploadPoints = Configuration.ShowUploadPoints();
             ShowOutages = Configuration.ShowOutages();

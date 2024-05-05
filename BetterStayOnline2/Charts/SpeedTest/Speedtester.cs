@@ -6,7 +6,13 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Transactions;
+using Microsoft.WindowsAPICodePack.Net;
 using static BetterStayOnline2.Charts.PlotManager;
+using System.Net.NetworkInformation;
+using System.Linq;
+using BetterStayOnline2.Events;
+using System.Collections.ObjectModel;
+using System.Windows.Shapes;
 
 namespace BetterStayOnline2.Charts
 {
@@ -77,6 +83,28 @@ namespace BetterStayOnline2.Charts
                 BandwidthTest bandwidthTest = new BandwidthTest();
                 bandwidthTest.date = DateTime.Now;
 
+                // Get active network
+                NetworkCollection networks = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected);
+                NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+                var activeAdapter = networkInterfaces.First(networkInterface => networkInterface.NetworkInterfaceType != NetworkInterfaceType.Loopback
+                    && networkInterface.NetworkInterfaceType != NetworkInterfaceType.Tunnel
+                    && networkInterface.OperationalStatus == OperationalStatus.Up
+                    && networkInterface.Name.StartsWith("vEthernet") == false);
+
+                var activeNetwork = networks.FirstOrDefault(network =>
+                {
+                    if (network.Connections.Any(conn => conn.AdapterId == Guid.Parse(activeAdapter.Id)))
+                    {
+                        return true;
+                    }
+                    return false;
+                });
+
+                string activeNetworkName = activeNetwork != null ? activeNetwork.Name : "";
+                bandwidthTest.networkName = activeNetworkName;
+
+                // Catch data from Speedtest CLI
                 RegexOptions options = RegexOptions.None;
                 Regex regex = new Regex("[ ]{2,}", options);
                 output = regex.Replace(output, " ");
@@ -96,6 +124,12 @@ namespace BetterStayOnline2.Charts
                         try
                         {
                             bandwidthTest.upSpeed = double.Parse(words[1]);
+                        }
+                        catch (Exception) { }
+                    if (words[0].Contains("isp"))
+                        try
+                        {
+                            bandwidthTest.isp = words[1].ToUpper();
                         }
                         catch (Exception) { }
                 }
@@ -120,7 +154,9 @@ namespace BetterStayOnline2.Charts
                             {
                                 { "DateTime", bandwidthTest.date.ToString("dd/MM/yyyy hh:mm tt") },
                                 { "Download", bandwidthTest.downSpeed },
-                                { "Upload", bandwidthTest.upSpeed }
+                                { "Upload", bandwidthTest.upSpeed },
+                                { "NetworkName", bandwidthTest.networkName },
+                                { "ISP", bandwidthTest.isp }
                             };
 
                             jsonTestResults.Add(newTest);
