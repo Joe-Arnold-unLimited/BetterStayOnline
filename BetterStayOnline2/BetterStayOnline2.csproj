@@ -340,6 +340,7 @@
     <Folder Include="MVVM\Model\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\editPencil.png" />
     <Resource Include="Images\BSO2_icon-01.ico" />
     <Resource Include="Images\BSO2_icon.png" />
     <Resource Include="Images\events.png" />

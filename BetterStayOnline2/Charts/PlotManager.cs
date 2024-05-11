@@ -1,5 +1,6 @@
 ﻿using BetterStayOnline2.Editing;
 using BetterStayOnline2.MVVM.ViewModel;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ScottPlot;
 using ScottPlot.Plottables;
@@ -11,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Transactions;
 using Color = ScottPlot.Color;
 using Fonts = ScottPlot.Fonts;
 

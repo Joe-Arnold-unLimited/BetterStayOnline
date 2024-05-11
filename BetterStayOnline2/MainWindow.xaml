@@ -76,7 +76,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="5"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/images/events.png" Height="32" Width="32" Opacity="0.5" HorizontalAlignment="Center"/>
+                        <Image Grid.Column="0" Source="/images/editPencil.png" Height="32" Width="32" Opacity="0.5" HorizontalAlignment="Center"/>
                     </Grid>
                 </RadioButton>
             </StackPanel>
