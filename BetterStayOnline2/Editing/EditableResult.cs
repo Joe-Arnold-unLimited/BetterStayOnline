@@ -20,7 +20,7 @@ namespace BetterStayOnline2.Editing
         {
             get
             {
-                return _datetime.ToString("dd MMM yyyy hh:mm");
+                return _datetime.ToString("dd MMM yyyy HH:mm:ss");
             }
         }
 
