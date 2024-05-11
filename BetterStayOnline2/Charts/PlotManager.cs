@@ -20,6 +20,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -713,14 +714,18 @@ namespace BetterStayOnline2.Charts
             // If this is a new network add it to the list
             if (!NetworkList.Any(n => n.Name == network && n.ISP == isp))
             {
-                NetworkList.Add(new Network()
+                // Force NetworkList changing to the UI thread where it was created to avoid thread affinity issues
+                App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    Name = network,
-                    ISP = isp,
-                    Show = true
-                });
+                    NetworkList.Add(new Network()
+                    {
+                        Name = network,
+                        ISP = isp,
+                        Show = true
+                    });
 
-                NetworkList.OrderBy(n => n.ISP).ThenBy(n => n.Name);
+                    NetworkList.OrderBy(n => n.ISP).ThenBy(n => n.Name);
+                });
             }
         }
 

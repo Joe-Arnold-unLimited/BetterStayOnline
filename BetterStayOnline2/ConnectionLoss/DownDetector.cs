@@ -1,10 +1,13 @@
 ﻿using BetterStayOnline2.Charts;
+using BetterStayOnline2.Events;
+using BetterStayOnline2.MVVM.ViewModel;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BetterStayOnline2.ConnectionLoss

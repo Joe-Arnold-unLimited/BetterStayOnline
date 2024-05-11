@@ -1,6 +1,7 @@
 ﻿using BetterStayOnline2.Charts;
 using BetterStayOnline2.Core;
 using BetterStayOnline2.Events;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -94,7 +95,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
         }
 
         public static ICollection<Timer> _eventRunners;
-        private Func<bool> runSpeedTest = () => { PlotManager.RunSpeedtest(); return true; };
+        public Func<bool> runSpeedTest = () => { PlotManager.RunSpeedtest(); return true; };
 
         public EventsViewModel()
         {
@@ -111,7 +112,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
             _eventList = SortEvents(_eventList);
 
             _eventRunners = new List<Timer>();
-            _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
+            RefreshEventRunners();
 
             var threads = System.Diagnostics.Process.GetCurrentProcess().Threads;
 
@@ -164,8 +165,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
                     }
 
                     _eventList = SortEvents(_eventList);
-
-                    _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
+                    RefreshEventRunners();
                 }
             });
 
@@ -176,8 +176,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
                 EventCoordinator.SaveEvents(_eventList);
 
                 _eventList = SortEvents(_eventList);
-
-                _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
+                RefreshEventRunners();
             });
 
             RemoveAllEventsCommand = new RelayCommand(o =>
@@ -186,9 +185,10 @@ namespace BetterStayOnline2.MVVM.ViewModel
                 EventCoordinator.SaveEvents(_eventList);
 
                 _eventList = SortEvents(_eventList);
-
-                _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
+                RefreshEventRunners();
             });
+
+            SystemEvents.PowerModeChanged += OnPowerModeChanged;
         }
 
         private ObservableCollection<Event> SortEvents(ObservableCollection<Event> eventList)
@@ -206,64 +206,83 @@ namespace BetterStayOnline2.MVVM.ViewModel
             return eventList;
         }
 
-        private void SetupEventRunners()
+        // Redraw Event Runner Timers
+        public void RefreshEventRunners()
         {
-            DayOfWeek day = DateTime.Now.DayOfWeek;
-            _eventRunners.Clear();
+            _eventRunners = TimerFactory.CreateTimers(_eventRunners, _eventList, runSpeedTest).ToList();
+        }
 
-            foreach (var e in _eventList)
+        // Event Runners need to be refreshed when the environment goes to sleep, because the timers will stop counting in this time and throw the timinmg off
+        private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            if (e.Mode == PowerModes.Suspend)
             {
-                DateTime current = DateTime.Now;
-                Timer timer;
-
-                int daysUntil = 0;
-                int daysBetweenRunning = 7;
-                if (e.Day == "Every day")
-                    daysBetweenRunning = 1;
-                else
-                {
-                    DayOfWeek dayToRun = DayOfWeek.Monday;
-                    switch (e.Day)
-                    {
-                        case "Monday": dayToRun = DayOfWeek.Monday; break;
-                        case "Tuesday": dayToRun = DayOfWeek.Tuesday; break;
-                        case "Wednesday": dayToRun = DayOfWeek.Wednesday; break;
-                        case "Thursday": dayToRun = DayOfWeek.Thursday; break;
-                        case "Friday": dayToRun = DayOfWeek.Friday; break;
-                        case "Saturday": dayToRun = DayOfWeek.Saturday; break;
-                        case "Sunday": dayToRun = DayOfWeek.Sunday; break;
-                    }
-                    daysUntil = ((int)dayToRun - (int)DateTime.Today.DayOfWeek + 7) % 7;
-                }
-
-                int hour = 0;
-                if (e.Hour == "Midnight") hour = 0;
-                else if (e.Hour == "Midday") hour = 12;
-                else hour = int.Parse(e.Hour);
-
-                int minute = int.Parse(e.Minute);
-
-                int second = 0;
-                if (hour == 0 && minute == 0)
-                {
-                    hour = 23;
-                    minute = 59;
-                    second = 59;
-                }
-
-                TimeSpan timeToGo = (new TimeSpan(hour, minute, second) - current.TimeOfDay) + TimeSpan.FromDays(daysUntil);
-                if (timeToGo < TimeSpan.Zero)
-                    timeToGo += TimeSpan.FromDays(daysBetweenRunning);
-
-                if (timeToGo > TimeSpan.Zero)
-                {
-                    timer = new System.Threading.Timer(x =>
-                    {
-                        Speedtester.RunSpeedTest();
-                    }, null, timeToGo, new TimeSpan(daysBetweenRunning, 0, 0, 0, 0));
-                    _eventRunners.Add(timer);
-                }
+                _eventRunners.Clear();
+            }
+            else if (e.Mode == PowerModes.Resume)
+            {
+                RefreshEventRunners();
             }
         }
+
+        //private void SetupEventRunners()
+        //{
+        //    DayOfWeek day = DateTime.Now.DayOfWeek;
+        //    _eventRunners.Clear();
+
+        //    foreach (var e in _eventList)
+        //    {
+        //        DateTime current = DateTime.Now;
+        //        Timer timer;
+
+        //        int daysUntil = 0;
+        //        int daysBetweenRunning = 7;
+        //        if (e.Day == "Every day")
+        //            daysBetweenRunning = 1;
+        //        else
+        //        {
+        //            DayOfWeek dayToRun = DayOfWeek.Monday;
+        //            switch (e.Day)
+        //            {
+        //                case "Monday": dayToRun = DayOfWeek.Monday; break;
+        //                case "Tuesday": dayToRun = DayOfWeek.Tuesday; break;
+        //                case "Wednesday": dayToRun = DayOfWeek.Wednesday; break;
+        //                case "Thursday": dayToRun = DayOfWeek.Thursday; break;
+        //                case "Friday": dayToRun = DayOfWeek.Friday; break;
+        //                case "Saturday": dayToRun = DayOfWeek.Saturday; break;
+        //                case "Sunday": dayToRun = DayOfWeek.Sunday; break;
+        //            }
+        //            daysUntil = ((int)dayToRun - (int)DateTime.Today.DayOfWeek + 7) % 7;
+        //        }
+
+        //        int hour = 0;
+        //        if (e.Hour == "Midnight") hour = 0;
+        //        else if (e.Hour == "Midday") hour = 12;
+        //        else hour = int.Parse(e.Hour);
+
+        //        int minute = int.Parse(e.Minute);
+
+        //        int second = 0;
+        //        if (hour == 0 && minute == 0)
+        //        {
+        //            hour = 23;
+        //            minute = 59;
+        //            second = 59;
+        //        }
+
+        //        TimeSpan timeToGo = (new TimeSpan(hour, minute, second) - current.TimeOfDay) + TimeSpan.FromDays(daysUntil);
+        //        if (timeToGo < TimeSpan.Zero)
+        //            timeToGo += TimeSpan.FromDays(daysBetweenRunning);
+
+        //        if (timeToGo > TimeSpan.Zero)
+        //        {
+        //            timer = new System.Threading.Timer(x =>
+        //            {
+        //                Speedtester.RunSpeedTest();
+        //            }, null, timeToGo, new TimeSpan(daysBetweenRunning, 0, 0, 0, 0));
+        //            _eventRunners.Add(timer);
+        //        }
+        //    }
+        //}
     }
 }
