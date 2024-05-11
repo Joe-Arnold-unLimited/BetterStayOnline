@@ -65,6 +65,20 @@
                         <Image Grid.Column="0" Source="/images/events.png" Height="32" Width="32" Opacity="0.5" HorizontalAlignment="Center"/>
                     </Grid>
                 </RadioButton>
+
+                <RadioButton Height="50"
+                 Margin="5,5,0,2.5"
+                 Style="{StaticResource MenuButtonTheme}"
+                 Command="{Binding editViewCommand}">
+                    <Grid VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="5"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/images/events.png" Height="32" Width="32" Opacity="0.5" HorizontalAlignment="Center"/>
+                    </Grid>
+                </RadioButton>
             </StackPanel>
 
             <Button Name="RunButton"

@@ -36,7 +36,7 @@ namespace BetterStayOnline2.MVVM.View
             if (sender is DataGridRow row)
             {
                 e.Handled = true;
-                Network rowData = (Network)row.Item; // Replace Network with the actual type of your data items
+                Network rowData = (Network)row.Item;
                 rowData.Show = !rowData.Show; // Toggle Show property
             }
         }

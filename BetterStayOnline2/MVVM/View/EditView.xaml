@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="BetterStayOnline2.MVVM.View.EditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BetterStayOnline2.MVVM.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="58"/>
+        </Grid.RowDefinitions>
+
+        <DataGrid Grid.Row="1"
+            ItemsSource="{Binding EditableResults}" 
+            AutoGenerateColumns="False" CanUserAddRows="false"
+            Style="{StaticResource DarkDataGrid}"
+            MaxWidth="1000">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Time Taken" Binding="{Binding DateConverted}" Width="*" IsReadOnly="True" ElementStyle="{StaticResource CustomTextBlockStyle}"/>
+                <DataGridTextColumn Header="ISP" Binding="{Binding ISP}" Width="*" IsReadOnly="True" ElementStyle="{StaticResource CustomTextBlockStyle}"/>
+                <DataGridTextColumn Header="Network Name" Binding="{Binding NetworkName}" Width="*" IsReadOnly="True" ElementStyle="{StaticResource CustomTextBlockStyle}"/>
+                <DataGridTextColumn Header="Download" Binding="{Binding DownSpeed}" Width="*" IsReadOnly="True" ElementStyle="{StaticResource CustomTextBlockStyle}"/>
+                <DataGridTextColumn Header="Upload" Binding="{Binding UpSpeed}"  Width="*" IsReadOnly="True" ElementStyle="{StaticResource CustomTextBlockStyle}"/>
+                <DataGridCheckBoxColumn Header="Select" Binding="{Binding Selected}" Width="60" ElementStyle="{StaticResource SmallDarkCheckBox}"/>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="PreviewMouseDown" Handler="DataGridRow_PreviewMouseDown"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+
+        <Button Grid.Row="2"
+                            Content="Remove"
+                            Foreground="White"
+                            FontSize="14"
+                            Command="{Binding RemoveEditableResultCommand}"
+                Margin="0,6,0,0">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#1f73c4"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#155899"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="120" Height="40"
+                                        CornerRadius="20"
+                                        Background="{TemplateBinding Background}">
+                        <ContentPresenter 
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </Grid>
+</UserControl>

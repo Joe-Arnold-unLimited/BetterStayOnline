@@ -23,10 +23,12 @@ namespace BetterStayOnline2.MVVM.ViewModel
         public RelayCommand homeViewCommand { get; set; }
         public RelayCommand settingsViewCommand { get; set; }
         public RelayCommand eventsViewCommand { get; set; }
+        public RelayCommand editViewCommand { get; set; }
 
         public HomeViewModel homeVM { get; set; }
         public SettingsViewModel settingsVM { get; set; }
         public EventsViewModel eventsVM { get; set; }
+        public EditViewModel editVM { get; set; }
 
 
         public DownDetector downDetector;
@@ -77,6 +79,7 @@ namespace BetterStayOnline2.MVVM.ViewModel
             homeVM = new HomeViewModel();
             settingsVM = new SettingsViewModel();
             eventsVM = new EventsViewModel();
+            editVM = new EditViewModel();
 
             currentView = homeVM;
 
@@ -95,11 +98,16 @@ namespace BetterStayOnline2.MVVM.ViewModel
                 currentView = eventsVM;
             });
 
+            editViewCommand = new RelayCommand(o =>
+            {
+                currentView = editVM;
+            });
+
             downDetector = new DownDetector();
 
             RunTaskCommand = new RelayCommand(ExecuteRunTask, CanExecuteRunTask);
 
-            PlotManager.FillData(settingsVM.NetworkList);
+            PlotManager.FillData(settingsVM.NetworkList, editVM.EditableResults);
             PlotManager.TestStarted += PlotManager_TestStarted;
             PlotManager.TestCompleted += PlotManager_TestCompleted;
 

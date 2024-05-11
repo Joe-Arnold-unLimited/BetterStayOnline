@@ -219,9 +219,11 @@
     <Compile Include="Charts\PlotManager.cs" />
     <Compile Include="Charts\Configuration.cs" />
     <Compile Include="ConnectionLoss\DownDetector.cs" />
+    <Compile Include="Editing\EditableResult.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\EventCoordinator.cs" />
     <Compile Include="Events\TimerFactory.cs" />
+    <Compile Include="MVVM\ViewModel\EditViewModel.cs" />
     <Compile Include="MVVM\ViewModel\EventsViewModel.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
     <Compile Include="Core\ObservableObject.cs" />
@@ -230,6 +232,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MVVM\View\EditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\View\EventsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -274,6 +280,9 @@
   <ItemGroup>
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
     <Compile Include="MVVM\ViewModel\SettingsViewModel.cs" />
+    <Compile Include="MVVM\View\EditView.xaml.cs">
+      <DependentUpon>EditView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\View\EventsView.xaml.cs">
       <DependentUpon>EventsView.xaml</DependentUpon>
     </Compile>

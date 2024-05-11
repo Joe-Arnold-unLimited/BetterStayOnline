@@ -1,38 +1,17 @@
-﻿using BetterStayOnline2.Events;
+﻿using BetterStayOnline2.Editing;
 using BetterStayOnline2.MVVM.ViewModel;
-using Microsoft.WindowsAPICodePack.Net;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using OpenTK;
 using ScottPlot;
-using ScottPlot.AxisPanels;
-using ScottPlot.AxisRules;
-using ScottPlot.Colormaps;
-using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 using ScottPlot.TickGenerators;
-using ScottPlot.TickGenerators.TimeUnits;
 using ScottPlot.WPF;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Transactions;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
-using static BetterStayOnline2.MVVM.ViewModel.SettingsViewModel;
-using static ScottPlot.Colors;
-using static SkiaSharp.HarfBuzz.SKShaper;
 using Color = ScottPlot.Color;
-using Configuration = BetterStayOnline2.Charts.Configuration;
 using Fonts = ScottPlot.Fonts;
 
 namespace BetterStayOnline2.Charts
@@ -54,9 +33,10 @@ namespace BetterStayOnline2.Charts
             AssignVividDarkTheme();
         }
 
-        public static void FillData(ObservableCollection<Network> networkList)
+        public static void FillData(ObservableCollection<Network> networkList, ObservableCollection<EditableResult> editableResults)
         {
             NetworkList = networkList;
+            EditableResults = editableResults;
 
             AddTestResults(ReadPreexistingTestResults());
 
@@ -93,6 +73,55 @@ namespace BetterStayOnline2.Charts
             isps = newIsps;
 
             AddNetworkToNetworkList(network, isp);
+            AddEditableResult(down, up, time, network, isp);
+        }
+
+        public static void RemoveDatapoint(double down, double up, double time, string network, string isp)
+        {
+            if (downloadSpeeds.Length == 0)
+            {
+                return;
+            }
+
+            bool removeNetwork = true;
+
+            int newSize = 0;
+            for (int i = 0; i < downloadSpeeds.Length; i++)
+            {
+                if (downloadSpeeds[i] == down &&
+                    uploadSpeeds[i] == up &&
+                    datetimes[i] == time &&
+                    networkNames[i] == network &&
+                    isps[i] == isp)
+                {
+                    continue;
+                }
+
+                if(networkNames[i] == network && isps[i] == isp)
+                {
+                    removeNetwork = false;
+                }
+
+                downloadSpeeds[newSize] = downloadSpeeds[i];
+                uploadSpeeds[newSize] = uploadSpeeds[i];
+                datetimes[newSize] = datetimes[i];
+                networkNames[newSize] = networkNames[i];
+                isps[newSize] = isps[i];
+
+                newSize++;
+            }
+
+            Array.Resize(ref downloadSpeeds, newSize);
+            Array.Resize(ref uploadSpeeds, newSize);
+            Array.Resize(ref datetimes, newSize);
+            Array.Resize(ref networkNames, newSize);
+            Array.Resize(ref isps, newSize);
+
+            if (removeNetwork)
+            {
+                RemoveNetworkFromNetworkList(network, isp);
+            }
+            RemoveEditableResult(down, up, time, network, isp);
         }
 
         private static bool tableHasBeenRefreshedSinceCreation = true;
@@ -512,7 +541,16 @@ namespace BetterStayOnline2.Charts
 
                 double[] speedsInRange = speeds.Skip(indexesInRange.Min()).Take(indexesInRange.Count).ToArray();
 
-                TimeSpan periodTimeSpan = endOfPeriodDate - currentDate;
+                TimeSpan periodTimeSpan = TimeSpan.FromSeconds(0);
+                try
+                {
+                    periodTimeSpan = endOfPeriodDate - currentDate;
+                }
+                catch(OverflowException oe)
+                {
+                    periodTimeSpan = TimeSpan.FromDays(29);
+                }
+
                 int hoursInPeriod = periodTimeSpan.Days * 24;
                 int halfHours = hoursInPeriod / 2;
                 double marginHours = halfHours * 0.2;
@@ -689,7 +727,7 @@ namespace BetterStayOnline2.Charts
             return outages;
         }
 
-        private async static void AddTestResults(List<BandwidthTest> testResults)
+        private static void AddTestResults(List<BandwidthTest> testResults)
         {
             foreach (var result in testResults)
             {
@@ -697,7 +735,7 @@ namespace BetterStayOnline2.Charts
             }
         }
 
-        private async static void AddTestResult(BandwidthTest result)
+        private static void AddTestResult(BandwidthTest result)
         {
             AddDatapoint(result.downSpeed, result.upSpeed, result.date.ToOADate(), result.networkName, result.isp);
         }
@@ -723,6 +761,25 @@ namespace BetterStayOnline2.Charts
                         ISP = isp,
                         Show = true
                     });
+
+                    NetworkList.OrderBy(n => n.ISP).ThenBy(n => n.Name);
+                });
+            }
+        }
+
+        private static void RemoveNetworkFromNetworkList(string network, string isp)
+        {
+            if (NetworkList.Any(n => n.Name == network && n.ISP == isp))
+            {
+                var networksToRemove = NetworkList.Where(n => n.Name == network && n.ISP == isp);
+
+                // Force NetworkList changing to the UI thread where it was created to avoid thread affinity issues
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    foreach (var networkToRemove in networksToRemove)
+                    {
+                        NetworkList.Remove(networkToRemove);
+                    }
 
                     NetworkList.OrderBy(n => n.ISP).ThenBy(n => n.Name);
                 });
@@ -780,6 +837,54 @@ namespace BetterStayOnline2.Charts
             }
 
             return selectedItems;
+        }
+
+        #endregion
+
+        #region Editable Results
+
+        public static ObservableCollection<EditableResult> EditableResults;
+
+        private static void AddEditableResult(double down, double up, double time, string network, string isp)
+        {
+            // Force EditableResults changing to the UI thread where it was created to avoid thread affinity issues
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                EditableResults.Add(new EditableResult()
+                {
+                    DownSpeed = down,
+                    UpSpeed = up,
+                    Datetime = DateTime.FromOADate(time),
+                    NetworkName = network,
+                    ISP = isp,
+                    Selected = false
+                });
+
+                EditableResults.OrderBy(n => n.Datetime);
+            });
+        }
+
+        private static void RemoveEditableResult(double down, double up, double time, string network, string isp)
+        {
+            var editableResultsToRemove = EditableResults.Where(er =>
+            {
+                return er.Datetime.ToOADate() == time &&
+                    er.DownSpeed == down &&
+                    er.UpSpeed == up &&
+                    er.NetworkName == network &&
+                    er.ISP == isp;
+            }).ToList();
+
+            // Force EditableResults changing to the UI thread where it was created to avoid thread affinity issues
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                foreach(var editableResult in editableResultsToRemove)
+                {
+                    EditableResults.Remove(editableResult);
+                }
+
+                EditableResults.OrderBy(n => n.Datetime);
+            });
         }
 
         #endregion

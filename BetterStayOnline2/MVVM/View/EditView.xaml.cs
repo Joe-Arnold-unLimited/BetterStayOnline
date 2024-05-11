@@ -1,11 +1,9 @@
-﻿using BetterStayOnline2.Charts;
-using BetterStayOnline2.Core;
+﻿using BetterStayOnline2.Editing;
 using BetterStayOnline2.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,11 +18,11 @@ using System.Windows.Shapes;
 namespace BetterStayOnline2.MVVM.View
 {
     /// <summary>
-    /// Interaction logic for EventsView.xaml
+    /// Interaction logic for EditView.xaml
     /// </summary>
-    public partial class EventsView : UserControl
+    public partial class EditView : UserControl
     {
-        public EventsView()
+        public EditView()
         {
             InitializeComponent();
         }
@@ -38,7 +36,7 @@ namespace BetterStayOnline2.MVVM.View
             if (sender is DataGridRow row)
             {
                 e.Handled = true;
-                Event rowData = (Event)row.Item;
+                EditableResult rowData = (EditableResult)row.Item;
                 rowData.Selected = !rowData.Selected; // Toggle Selected property
             }
         }
